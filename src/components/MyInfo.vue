@@ -55,7 +55,7 @@ export default {
             {authUser: response.data, isAuthenticated: true}
           )
           console.log(response.data)
-          this.id = response.data[0].account
+          this.id = response.data[0].username
           this.name = response.data[0].name
           this.email = response.data[0].email
           this.phone = response.data[0].phone

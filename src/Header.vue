@@ -91,7 +91,7 @@ export default {
           {authUser: response.data, isAuthenticated: true}
         )
         console.log(response.data)
-        this.name = response.data[0].name
+        this.name = response.data[0].full_name
         this.$router.push({name: 'sign_up'})
       })
       .catch((error) => {
