@@ -181,12 +181,10 @@ router.beforeEach((to, from, next) => {
     if (window.localStorage.token) {
       next()
     } else {
+      alert('로그인 후 이용 가능합니다.')
       next({name: 'sign_in'})
     }
   }
-  // console.log('to name is ', to.name)
-  // console.log('to path is ', to.path)
-  // console.log('token is ', window.localStorage.token)
   if (window.localStorage.token && to.name === 'sign_in') {
     next({name: 'landing_list'})
   } else if (window.localStorage.token && to.path === '/') {

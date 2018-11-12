@@ -2,8 +2,8 @@
   <div id="app">
 
     <!-- Header component -->
-    <app-header v-if="header_flag === 1"></app-header>
-
+    <app-header v-if="header_flag === 1" key="header" />
+    <div v-else key="no_header"></div>
     <!-- Router component -->
     <router-view/>
 
@@ -14,7 +14,9 @@
 export default {
   name: 'App',
   data: () => ({
-    header_flag: 1
+    header_flag: 1,
+    header_name: '',
+    sign_name: '',
   })
 }
 </script>

@@ -11,26 +11,26 @@
 
         <form class="login_form form-horizontal" id="LoginForm" @submit.prevent="login">
           <div class="form-group">
-            <label for="id_username" class="col-sm-2 control-label">Username</label>
+            <label for="id_username" class="col-sm-12 control-label">아이디</label>
             <div class="col-sm-12">
               <input class="form-control"
                      required
                      v-model="username"
                      type="text"
-                     placeholder="Username"
+                     placeholder="아이디를 입력해주세요."
                      autofocus="autofocus"
                      maxlength="150"
                      id="id_username">
             </div>
           </div>
           <div class="form-group">
-            <label for="id_password" class="col-sm-2 control-label">Password</label>
+            <label for="id_password" class="col-sm-12 control-label">비밀번호</label>
             <div class="col-sm-12">
               <input class="form-control"
                      required
                      v-model="password"
                      type="password"
-                     placeholder="Password"
+                     placeholder="비밀번호를 입력해주세요."
                      id="id_password">
             </div>
           </div>
@@ -45,8 +45,8 @@
           </div>-->
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-              <button type="submit" class="submit_btn btn btn-info">Sign in</button>
-              <router-link to="signup" class="btn btn-link">Sign up</router-link>
+              <button type="submit" class="submit_btn btn btn-info">로그인</button>
+              <router-link to="signup" class="btn btn-link">회원가입</router-link>
             </div>
           </div>
         </form>
@@ -89,6 +89,8 @@ export default {
       axios.post(this.$store.state.endpoints.obtainJWT, payload)
         .then((response) => {
           this.$store.commit('updateToken', response.data.token)
+          var decode = jwt_decode(response.data.token)
+          console.log('decode', decode)
           // get and set auth user
           const base = {
             baseURL: this.$store.state.endpoints.baseUrl,
@@ -101,6 +103,7 @@ export default {
               withCredentials: true
             }
           }
+          console.log('jwt decode', this.$store.jwt_decode)
           // Even though the authentication returned a user object that can be
           // decoded, we fetch it again. This way we aren't super dependant on
           // JWT and can plug in something else.
@@ -114,6 +117,9 @@ export default {
               this.$store.commit('setAuthUser',
                 {authUser: response.data, isAuthenticated: true}
               )
+              console.log('signin auth user ', this.$store.authUser)
+              console.log('response', response)
+              // Have to set as real login user.
               this.$router.push({name: 'landing_list'})
             })
         })
@@ -145,6 +151,7 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
+    font-family: 'Nanum Gothic', 'sans-serif';
     max-width: 500px;
     margin: auto;
   }
@@ -184,7 +191,7 @@ export default {
 
   .warn_wrap {
     position: absolute;
-    width: 40%;
+    /*width: 40%;*/
     max-width: 470px;
     width: 100%;
     margin: 10px auto;
