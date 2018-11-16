@@ -4,19 +4,23 @@ import router from './router'
 import axios from 'axios'
 import Vuex from 'vuex'
 import VeeValidate from 'vee-validate'
+import Decoder from 'jwt-decode'
 // import Bootstrap from 'bootstrap-vue'
+import Paginate from 'vuejs-paginate'
 
 // Routers
 import Header from './Header'
 
 Vue.config.productionTip = false
 Vue.component('app-header', Header)
+Vue.component('paginate', Paginate)
 
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
 Vue.use(VeeValidate)
 
+Vue.prototype.$jwt_decode = Decoder
 Vue.prototype.$axios = axios
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'

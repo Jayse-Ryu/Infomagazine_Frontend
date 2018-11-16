@@ -1,5 +1,13 @@
 <template>
-
+  <div class="main">
+    <div class="text_navigation">
+      <router-link to="/">로그인</router-link>
+      <span>></span>
+      <router-link to="/company">업체 리스트</router-link>
+      <span>></span>
+      <router-link to="/company/detail/{{}}">업체 정보</router-link>
+    </div>
+  </div>
 </template>
 
 <script>

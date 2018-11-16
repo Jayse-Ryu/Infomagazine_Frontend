@@ -82,15 +82,27 @@ export default {
   methods: {
     login () {
       let axios = this.$axios
+      let decode = this.$jwt_decode
       const payload = {
         username: this.username,
         password: this.password
       }
       axios.post(this.$store.state.endpoints.obtainJWT, payload)
         .then((response) => {
-          this.$store.commit('updateToken', response.data.token)
-          var decode = jwt_decode(response.data.token)
-          console.log('decode', decode)
+          // Token change to this user.
+          let current = Date.now
+          let token_base = response.data.token
+
+          if (decode(token_base).exp < current) {
+            axios.post(this.$store.state.endpoints.refreshJWT, token_base)
+              .then((response) => {
+                console.log(response)
+              })
+          }
+
+          this.$store.commit('updateToken', token_base)
+          let decoder = decode(this.$store.state.jwt)
+          // this.$store.state.authUser = decoder
           // get and set auth user
           const base = {
             baseURL: this.$store.state.endpoints.baseUrl,
@@ -103,7 +115,6 @@ export default {
               withCredentials: true
             }
           }
-          console.log('jwt decode', this.$store.jwt_decode)
           // Even though the authentication returned a user object that can be
           // decoded, we fetch it again. This way we aren't super dependant on
           // JWT and can plug in something else.
@@ -114,12 +125,17 @@ export default {
             params: {}
           })
             .then((response) => {
-              this.$store.commit('setAuthUser',
-                {authUser: response.data, isAuthenticated: true}
-              )
-              console.log('signin auth user ', this.$store.authUser)
-              console.log('response', response)
-              // Have to set as real login user.
+              // Make sure this token user detail only
+              for(let i = 0; i < response.data.length; i++) {
+                let usr_obj = response.data[i]
+                if (usr_obj.id === decoder.user_id) {
+                  this.$store.commit('setAuthUser',
+                    {authUser: usr_obj, isAuthenticated: true}
+                  )
+                  break
+                }
+              }
+              // Auto move to inner main page.
               this.$router.push({name: 'landing_list'})
             })
         })

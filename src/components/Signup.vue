@@ -1,5 +1,10 @@
 <template>
   <div class="main">
+      <div class="text_navigation">
+        <router-link to="/">로그인</router-link>
+        <span>></span>
+        <router-link to="/signup">회원가입</router-link>
+      </div>
     <!-- back to signin button input forms logo -->
     <div class="login_box container">
       <div class="login_border">

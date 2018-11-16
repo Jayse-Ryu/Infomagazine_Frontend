@@ -1,5 +1,12 @@
 <template>
-  <div>
+  <div class="main">
+    <div class="main">
+      <div class="text_navigation">
+        <router-link to="/">로그인</router-link>
+        <span>></span>
+        <router-link to="/myinfo">내 정보</router-link>
+      </div>
+    </div>
   <div>My info page</div>
     <div>
       <input type="button" @click="show" value="Who am I?">
@@ -28,8 +35,12 @@ export default {
   }),
   methods: {
     show () {
-      const axios = this.$axios
-
+      let axios = this.$axios
+      let decode = this.$jwt_decode
+      console.log('jwttttttttttttttttttt')
+      let decoder = decode(this.$store.state.jwt)
+      // this.$store.state.authUser = decoder
+      // get and set auth user
       const base = {
         baseURL: this.$store.state.endpoints.baseUrl,
         headers: {
@@ -51,18 +62,26 @@ export default {
         params: {}
       })
         .then((response) => {
-          this.$store.commit('setAuthUser',
-            {authUser: response.data, isAuthenticated: true}
-          )
-          console.log(response.data)
-          this.id = response.data[0].username
-          this.name = response.data[0].name
-          this.email = response.data[0].email
-          this.phone = response.data[0].phone
-          this.org = response.data[0].organization
-          this.creda = response.data[0].created_date
-          this.upda = response.data[0].updated_date
-          // this.$router.push({name: 'Signup'})
+          // Make sure this token user detail only
+          for(let i = 0; i < response.data.length; i++) {
+            let usr_obj = response.data[i]
+            if (usr_obj.id === decoder.user_id) {
+              this.$store.commit('setAuthUser',
+                {authUser: usr_obj, isAuthenticated: true}
+              )
+              break
+            }
+          }
+          this.name = this.$store.state.authUser.full_name
+          this.id = this.$store.state.authUser.username
+          this.name = this.$store.state.authUser.full_name
+          this.email = this.$store.state.authUser.email
+          this.phone = this.$store.state.authUser.phone
+          this.org = this.$store.state.authUser.organization
+          this.creda = this.$store.state.authUser.created_date
+          this.upda = this.$store.state.authUser.updated_date
+          // Auto move to inner main page.
+          // this.$router.push({name: 'landing_list'})
         })
         .catch((error) => {
           console.log(error)

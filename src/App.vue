@@ -15,9 +15,57 @@ export default {
   name: 'App',
   data: () => ({
     header_flag: 1,
-    header_name: '',
-    sign_name: '',
-  })
+    auth_user: '',
+    global_page: 1
+  }),
+  mounted() {
+    if(this.$store.state.jwt){
+      let axios = this.$axios
+      let decode = this.$jwt_decode
+      console.log('(App vue) There is JWT in Local store.')
+      let decoder = decode(this.$store.state.jwt)
+      // this.$store.state.authUser = decoder
+      // get and set auth user
+      const base = {
+        baseURL: this.$store.state.endpoints.baseUrl,
+        headers: {
+          // Set your Authorization to 'JWT', not Bearer!!!
+          Authorization: `JWT ${this.$store.state.jwt}`,
+          'Content-Type': 'application/json'
+        },
+        xhrFields: {
+          withCredentials: true
+        }
+      }
+      // Even though the authentication returned a user object that can be
+      // decoded, we fetch it again. This way we aren't super dependant on
+      // JWT and can plug in something else.
+      const axiosInstance = axios.create(base)
+      axiosInstance({
+        url: '/users/',
+        method: 'get',
+        params: {}
+      })
+        .then((response) => {
+          // Make sure this token user detail only
+          for(let i = 0; i < response.data.length; i++) {
+            let usr_obj = response.data[i]
+            if (usr_obj.id === decoder.user_id) {
+              this.$store.commit('setAuthUser',
+                {authUser: usr_obj, isAuthenticated: true}
+              )
+              break
+            }
+          }
+          console.log('(App vue) auth', this.$store.state.authUser.full_name)
+          this.auth_user = this.$store.state.authUser.full_name
+          // Auto move to inner main page.
+          // this.$router.push({name: 'landing_list'})
+        })
+    } else {
+      console.log('(App vue) There is not JWT in Local Store.')
+    }
+  }
 }
 </script>
 
@@ -132,7 +180,7 @@ export default {
 
   a:active,
   a:hover {
-    outline: 0;
+    outline: 0 !important;
   }
 
   /* Text-level semantics
@@ -515,5 +563,23 @@ export default {
     -moz-osx-font-smoothing: grayscale;
     /*overflow-x: hidden;*/
   } /* body normalize more */
+
+  .text_navigation {
+    display: inline-block;
+    margin: 15px 0 5px 15px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 5px;
+    padding: 8px;
+  }
+
+  .text_navigation span {
+    font-size: 14px;
+    color: #818181;
+  }
+
+  .text_navigation a {
+    font-size: 14px;
+    color: #007aff;
+  }
 
 </style>

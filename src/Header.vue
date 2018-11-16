@@ -58,52 +58,12 @@ export default {
     }
   },
   mounted () {
-    if (this.$data.header_name) {
-      this.temp = this.$data.header_name
-    }
-
-    if (this.$store.state.jwt) {
-      this.flag = 'Logined'
+    this.name = this.$data.auth_user
+    if(this.$data.auth_user) {
+      this.name = this.$data.auth_user
     } else {
-      this.flag = 'out'
+      this.name = this.$store.state.authUser.full_name
     }
-
-    // const axios = this.$axios
-    // console.log('clicked')
-    //
-    // const base = {
-    //   baseURL: this.$store.state.endpoints.baseUrl,
-    //   headers: {
-    //     // Set your Authorization to 'JWT', not Bearer!!!
-    //     Authorization: `JWT ${this.$store.state.jwt}`,
-    //     'Content-Type': 'application/json'
-    //   },
-    //   xhrFields: {
-    //     withCredentials: true
-    //   }
-    // }
-    // // Even though the authentication returned a user object that can be
-    // // decoded, we fetch it again. This way we aren't super dependant on
-    // // JWT and can plug in something else.
-    // const axiosInstance = axios.create(base)
-    // axiosInstance({
-    //   url: "/users/",
-    //   method: "get",
-    //   params: {}
-    // })
-    //   .then((response) => {
-    //     this.$store.commit("setAuthUser",
-    //       {authUser: response.data, isAuthenticated: true}
-    //     )
-    //     console.log(response.data)
-    //     this.name = response.data[0].full_name
-    //     this.$router.push({name: 'sign_up'})
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     console.debug(error);
-    //     console.dir(error);
-    //   })
   }
 }
 </script>
