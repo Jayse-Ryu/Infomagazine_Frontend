@@ -1,45 +1,68 @@
 <template>
-  <header class="header">
+  <nav class="navbar navbar-light bg-light navbar-expand-md">
     <!-- Logo and nav, buttons. -->
-    <section class="header_section">
+    <!--<nav class="header_section">-->
 
-      <router-link to="/landing" class="logo_wrap"><div class="logo_inner"><img src="./assets/logo3.png" alt="Infomag logo"></div></router-link>
+      <router-link to="/landing" class="navbar-brand">
+        <span class="logo">
+          <img src="./assets/logo3.png" alt="Infomag logo">
+        </span>
+      </router-link>
 
-      <ul v-if="this.$store.state.jwt" class="header_ul">
-        <li>
-          <router-link to="/landing"><div class="menu_btn">Landing List</div></router-link>
-        </li>
-        <li>
-          <router-link to="/company"><div class="menu_btn">Company List</div></router-link>
-        </li>
-        <li>
-          <router-link to="/db"><div class="menu_btn">DB List</div></router-link>
-        </li>
-        <li>
-          <router-link to="/users"><div class="menu_btn">User List</div></router-link>
-        </li>
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-        <li>
-          <router-link to="/myinfo">
-            <div class="user_info">{{ name }}</div>
-          </router-link>
-        </li>
-        <li>
-          <input type="button" class="logout" @click="logout" value="LogOut">
-        </li>
-      </ul>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
 
-      <ul v-else class="header_ul">
-        <li>
-          <router-link to="/"><div class="menu_btn">SignIn</div></router-link>
-        </li>
-        <li>
-          <router-link to="/signup"><div class="menu_btn">SignUp</div></router-link>
-        </li>
-      </ul>
+        <ul v-if="this.$store.state.jwt" class="navbar-nav ml-auto">
+          <li class="navbar-item">
+            <router-link to="/landing">
+              <div class="nav-link">Landing List</div>
+            </router-link>
+          </li>
+          <li class="navbar-item">
+            <router-link to="/company">
+              <div class="nav-link">Company List</div>
+            </router-link>
+          </li>
+          <li class="navbar-item">
+            <router-link to="/db">
+              <div class="nav-link">DB List</div>
+            </router-link>
+          </li>
+          <li class="navbar-item">
+            <router-link to="/users">
+              <div class="nav-link">User List</div>
+            </router-link>
+          </li>
+          <li class="navbar-item">
+            <router-link to="/myinfo">
+              <div class="nav-link">{{ name }}</div>
+            </router-link>
+          </li>
+          <li class="navbar-item">
+            <input type="button" class="submit_btn btn btn-outline-dark nav-link" @click="logout" value="LogOut">
+          </li>
+        </ul>
 
-    </section>
-  </header>
+        <ul v-else class="navbar-nav ml-auto">
+          <li class="navbar-item">
+            <router-link to="/">
+              <div class="nav-link">SignIn</div>
+            </router-link>
+          </li>
+          <li class="navbar-item">
+            <router-link to="/signup">
+              <div class="nav-link">SignUp</div>
+            </router-link>
+          </li>
+        </ul>
+
+      </div>
+
+    <!--</nav>-->
+  </nav>
 </template>
 
 <script>
@@ -69,56 +92,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .header {
-    width: 100%;
-    padding: 5px 0;
-    // background-color: #efefef;
-    border-bottom: 2px solid #efefef;
-  }
-  .header_section {
-    &:after {
-      content: '';
-      display: block;
-      clear: both;
-    }
-  }
-  .logo_wrap {
-    float: left;
-    .logo_inner {
-      padding: 20px;
-    }
-  }
-
-  .header_ul {
-    width: calc(100% - 260px);
-    float: left;
-    li {
-      float: left;
-      width: 15%;
-      padding: 28px;
-      text-align: center;
-      .menu_btn {
-        text-align: center;
-        padding: 4px;
-        border: 1px solid;
-        border-radius: 5px;
-      }
-      .user_info {
-        text-align: center;
-        padding: 4px;
-      }
-      .logout {
-        padding: 4px;
-        background-color: #ffffff;
-        border: 1px solid #c1c1c1;
-        border-radius: 4px;
-        padding: 4px;
-      }
-    }
-    &:after {
-      content: '';
-      display: block;
-      clear: both;
+  li .router-link-exact-active {
+    color: #efefef;
+    div {
+      background-color: #00737a;
+      color: #efefef;
+      font-weight: bold;
     }
   }
 </style>
