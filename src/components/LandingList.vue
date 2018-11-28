@@ -20,9 +20,9 @@
         <ul class="board_ul">
           <li class="board_li row" v-for="result in result_obj">
             <div class="col-1">{{ result.id }}</div>
-            <div class="col-2">{{ result.company }}</div>
-            <div class="col-5">{{ result.name }}</div>
-            <div class="col-2">{{  }}</div>
+            <div class="col-2">{{ result.company_name }}</div>
+            <div class="col-5"><a href="">{{ result.name }}</a></div>
+            <div class="col-2">{{ result.manager_name }}</div>
             <div class="col-1 board_centre">{{ result.views }}</div>
             <div class="col-1 board_centre">{{ result.hits }}</div>
           </li>
@@ -60,7 +60,8 @@ export default {
     result_obj: [],
     index_max: 0,
     index_top: 0,
-    index_bottom: 0
+    index_bottom: 0,
+    company_obj: []
   }),
   methods: {
     pagination: function(pageNum) {
@@ -102,6 +103,13 @@ export default {
       let temp_arr = this.landing_obj
       let res_arr = []
       for(let i = this.index_top - 1; i >= this.index_bottom - 1; i--) {
+        for(let j = 0; j < this.company_obj.length; j++) {
+          if(temp_arr[i].company === this.company_obj[j].id) {
+            temp_arr[i].company_name = this.company_obj[j].name
+            temp_arr[i].manager_name = this.company_obj[j].manager_name
+            // console.log(temp_arr[i])
+          }
+        }
         res_arr.push(temp_arr[i])
       }
       this.result_obj = res_arr
@@ -134,8 +142,35 @@ export default {
           this.page_max = Math.floor(response.data.length/this.page_chunk) + 1
         }
 
-        // Run init pagination with global page number
-        this.pagination(this.page_current)
+        // Get company names
+        this_url = 'company/'
+        axios.get(this.$store.state.endpoints.baseUrl + this_url)
+          .then((response) => {
+            this.company_obj = response.data
+            // Add manager name into company object
+            this_url = 'users/'
+            axios.get(this.$store.state.endpoints.baseUrl + this_url)
+              .then((response) => {
+                // make obj in here for security
+                for (let i = 0; i < this.company_obj.length; i++) {
+                  for(let j = 0; j < response.data.length; j++) {
+                    if (this.company_obj[i].manager === response.data[j].id) {
+                      this.company_obj[i].manager_name = response.data[j].full_name
+                    }
+                  }
+                }
+                this.pagination(this.page_current)
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      })
+      .catch((error) => {
+        console.log(error)
       })
     // axios is done.
   }
