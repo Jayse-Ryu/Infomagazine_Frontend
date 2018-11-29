@@ -17,9 +17,10 @@ import Signup from '@/components/Signup'
 import UserDetail from '@/components/UserDetail'
 import UserList from '@/components/UserList'
 
+// use like this.$xx
 Vue.use(Router)
-// Vue.use(Vuex)
 Vue.use(Axios)
+// Vue.use(Vuex)
 
 // export default new Router({
 const router = new Router({
@@ -73,7 +74,7 @@ const router = new Router({
       }
     },
     {
-      path: '/landing/detail',
+      path: '/landing/detail/:landing_id',
       name: 'landing_detail',
       component: LandingDetail,
       meta: {

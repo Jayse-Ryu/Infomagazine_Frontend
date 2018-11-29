@@ -3,7 +3,7 @@
     <div class="text_navigation">
       <router-link to="/">로그인</router-link>
       <span>></span>
-      <router-link to="/landing">랜딩페이지</router-link>
+      <router-link to="/landing">랜딩페이지 리스트</router-link>
     </div>
 
     <!-- ID/Company/Landing name/manager/view/db -->
@@ -21,7 +21,7 @@
           <li class="board_li row" v-for="result in result_obj">
             <div class="col-1">{{ result.id }}</div>
             <div class="col-2">{{ result.company_name }}</div>
-            <div class="col-5"><a href="">{{ result.name }}</a></div>
+            <div class="col-5"><router-link :to="'/landing/detail/' + result.id">{{ result.name }}</router-link></div>
             <div class="col-2">{{ result.manager_name }}</div>
             <div class="col-1 board_centre">{{ result.views }}</div>
             <div class="col-1 board_centre">{{ result.hits }}</div>
