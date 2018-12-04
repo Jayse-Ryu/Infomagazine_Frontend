@@ -19,6 +19,7 @@ Vue.config.productionTip = false
 
 Vue.use(Vuex)
 Vue.use(VeeValidate)
+Vue.use(axios)
 
 Vue.prototype.$jwt_decode = Decoder
 Vue.prototype.$axios = axios
