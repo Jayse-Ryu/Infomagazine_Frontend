@@ -84,8 +84,10 @@ export default {
     this.name = this.$data.auth_user
     if(this.$data.auth_user) {
       this.name = this.$data.auth_user
+      console.log('header name = authuser?', this.$store.state.authUser.full_name)
     } else {
       this.name = this.$store.state.authUser.full_name
+      console.log('header name not auth', this.$store.state.authUser.full_name)
     }
   }
 }
@@ -93,10 +95,10 @@ export default {
 
 <style scoped lang="scss">
   li .router-link-exact-active {
-    color: #efefef;
+    color: #287BFF;
     div {
-      background-color: #00737a;
-      color: #efefef;
+      // background-color: #00737a;
+      color: #287BFF !important;
       font-weight: bold;
     }
   }

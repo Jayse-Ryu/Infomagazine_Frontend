@@ -5,7 +5,6 @@ import axios from 'axios'
 import Vuex from 'vuex'
 import VeeValidate from 'vee-validate'
 import Decoder from 'jwt-decode'
-// import Bootstrap from 'bootstrap-vue'
 import Paginate from 'vuejs-paginate'
 
 // Routers

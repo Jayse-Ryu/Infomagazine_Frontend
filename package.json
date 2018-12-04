@@ -21,6 +21,7 @@
     "jquery": "^3.3.1",
     "jwt-decode": "^2.2.0",
     "node-sass": "^4.10.0",
+    "nuxt-dropzone": "^0.2.8",
     "sass-loader": "^7.1.0",
     "vee-validate": "^2.1.2",
     "vue": "^2.5.2",

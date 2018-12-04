@@ -67,7 +67,13 @@
           <label class="col-sm-3 col-form-label-sm mt-3" for="main_img">페이지 이미지</label>
           <div class="col-sm-12">
             <input type="text" class="form-control" id="main_img">
-            <input type="file" class="form-control-file" id="main_">
+            <!--<input type="file" class="form-control-file" id="main_">-->
+            <!--<upload-image :url="$store.state.endpoints.baseUrl + 'files/'" />-->
+
+            <!--<dropzone id="6" ref="el" :options="options" :destroyDropzone="true"></dropzone>-->
+
+            <!--<dropzone/>-->
+
           </div>
         </div>
 
@@ -75,9 +81,11 @@
 
         <h5>추가내용</h5>
         <div class="form-group row mb-0">
-          <label class="col-sm-3 col-form-label-sm mt-3" for="url">Url</label>
-          <div class="col-sm-9 mt-sm-3">
-            <input type="text" class="form-control" id="url">
+          <label class="col-sm-3 col-form-label-sm mt-3" for="url_title">Url</label>
+          <div class="col-sm-9 mt-sm-3 row ml-0">
+            <input type="text" class="form-control col-sm-5 mr-md-0 mr-lg-2" id="url_title" placeholder="Url 주소">
+            <input type="text" class="form-control col-sm-5 ml-md-3 ml-lg-4" id="url_desc" placeholder="Url 설명">
+            <button class="btn btn-primary col-sm-2 col-md-1 ml-md-4">추가</button>
           </div>
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="db_list">DB</label>
@@ -138,10 +146,14 @@
 
         </div>
 
+        <hr>
+
         <div class="form-group row">
-          <div class="offset-10">
-            <input type="submit" class="btn btn-info">
-            <button class="btn btn-link" @click="back_to_list">Cancel</button>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary col-12">저장</button>
+            <router-link to="/landing">
+              <button type="button" class="btn btn-dark col-12 mt-2">취소</button>
+            </router-link>
           </div>
         </div>
       </form>
@@ -152,9 +164,16 @@
 </template>
 
 <script>
+  // import Dropzone from 'nuxt-dropzone'
+  // import 'nuxt-dropzone/dropzone.css'
+  // import Dropzone from 'nuxt-dropzone'
     export default {
       name: "landing_detail",
+      // components: {
+      //   Dropzone
+      // },
       data: () => ({
+        // options: this.$store.state.endpoints.baseUrl + 'files/',
         page_id: 0,
         landing: {},
         landing_company: '',
@@ -177,6 +196,8 @@
             name: 'landing_list'
           })
         }
+
+        // const instance = this.$refs.el.dropzone
 
         // nor, start loading page contents
         let axios = this.$axios
@@ -261,11 +282,11 @@
   }
 
   input:checked + .slider {
-    background-color: #2196F3;
+    background-color: #287BFF;
   }
 
   input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px #287BFF;
   }
 
   input:checked + .slider:before {
@@ -286,4 +307,6 @@
   .term_label {
     display: inline-block;
   }
+
+
 </style>
