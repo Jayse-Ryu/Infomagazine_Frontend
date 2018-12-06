@@ -38,11 +38,11 @@
           </li>
           <li class="navbar-item">
             <router-link to="/myinfo">
-              <div class="nav-link">{{ name }}</div>
+              <div class="nav-link current_user font" :key="name">{{ fullName }}</div>
             </router-link>
           </li>
           <li class="navbar-item">
-            <input type="button" class="submit_btn btn btn-outline-dark nav-link" @click="logout" value="LogOut">
+            <input type="button" class="btn btn-outline-dark pb-1 pt-1" @click="logout" value="LogOut">
           </li>
         </ul>
 
@@ -80,14 +80,9 @@ export default {
       })
     }
   },
-  mounted () {
-    this.name = this.$data.auth_user
-    if(this.$data.auth_user) {
-      this.name = this.$data.auth_user
-      console.log('header name = authuser?', this.$store.state.authUser.full_name)
-    } else {
-      this.name = this.$store.state.authUser.full_name
-      console.log('header name not auth', this.$store.state.authUser.full_name)
+  computed: {
+    fullName: function () {
+      return this.$store.state.authUser.full_name
     }
   }
 }
@@ -101,5 +96,9 @@ export default {
       color: #287BFF !important;
       font-weight: bold;
     }
+  }
+
+  .current_user {
+    color: cadetblue !important;
   }
 </style>

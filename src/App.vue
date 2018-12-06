@@ -16,7 +16,7 @@ export default {
   data: () => ({
     header_flag: 1,
     auth_user: '',
-    global_page: 1
+    global_page: 1,
   }),
   mounted() {
     if(this.$store.state.jwt){

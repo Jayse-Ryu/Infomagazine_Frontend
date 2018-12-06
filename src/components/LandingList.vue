@@ -6,8 +6,24 @@
       <router-link to="/landing">랜딩페이지 리스트</router-link>
     </div>
 
+    <form class="container">
+      {{ search_option }}
+      {{ search_filter }}
+      <div class="form-group search_group">
+        <select class="search_option" id="src_gbn" v-model="search_option">
+          <option value="0">랜딩 이름</option>
+          <option value="1">업체</option>
+          <option value="2">관리자</option>
+        </select>
+        <input type="text" class="search_text" v-model="search_filter" placeholder="구현전">
+        <button type="submit" class="search_btn">
+          <img src="../assets/common/search.png" />
+        </button>
+      </div>
+    </form>
+
     <!-- ID/Company/Landing name/manager/view/db -->
-    <div class="board_container">
+<!--    <div class="board_container container">
       <div class="board_wrap">
         <div class="board_header row">
           <div class="col-1">번호</div>
@@ -23,6 +39,37 @@
             <div class="col-2">{{ result.company_name }}</div>
             <div class="col-5"><router-link :to="'/landing/detail/' + result.id">{{ result.name }}</router-link></div>
             <div class="col-2">{{ result.manager_name }}</div>
+            <div class="col-1 board_centre">{{ result.views }}</div>
+            <div class="col-1 board_centre">{{ result.hits }}</div>
+          </li>
+        </ul>
+      </div>
+    </div>-->
+
+    <div class="container">
+      <div class="">
+        <!--<ul class="list-group list-group-flush col-12 pr-0">
+          <div class="col-1">번호</div>
+          <div class="col-2">업체</div>
+          <div class="col-5">랜딩페이지</div>
+          <div class="col-2">담당자</div>
+          <div class="col-1 board_centre">조회수</div>
+          <div class="col-1 board_centre">DB</div>
+        </ul>-->
+        <ul class="list-group list-group-flush col-12 pr-0">
+          <li class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
+            <div class="col-1">번호</div>
+            <div class="col-2">업체</div>
+            <div class="col-5">랜딩페이지</div>
+            <div class="col-2">담당자</div>
+            <div class="col-1 board_centre">조회수</div>
+            <div class="col-1 board_centre">DB</div>
+          </li>
+          <li class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1" v-for="result in result_obj">
+            <div class="col-1 col-sm-1">{{ result.id }}</div>
+            <div class="col-3 col-sm-2">{{ result.company_name }}</div>
+            <div class="col-3 col-sm-4"><router-link :to="'/landing/detail/' + result.id">{{ result.name }}</router-link></div>
+            <div class="col-3">{{ result.manager_name }}</div>
             <div class="col-1 board_centre">{{ result.views }}</div>
             <div class="col-1 board_centre">{{ result.hits }}</div>
           </li>
@@ -53,6 +100,8 @@
 export default {
     name: "landing_list",
   data: () => ({
+    search_option: 0,
+    search_filter: '',
     page_current: 1,
     page_max: 0,
     page_chunk: 5,
@@ -73,9 +122,6 @@ export default {
         // console.log('first page!')
         this.index_top = this.index_max
         this.index_bottom = this.index_max - (this.page_chunk * this.page_current) + 1
-        // console.log('index_max', this.index_max)
-        // console.log('index_top', this.index_top)
-        // console.log('index_bottom', this.index_bottom)
         this.landing_result()
       }
       else if(pageNum === this.page_max) {
@@ -83,9 +129,6 @@ export default {
         // console.log('max page!')
         this.index_top = this.index_max - this.page_chunk * (this.page_current - 1)
         this.index_bottom = 1
-        // console.log('index_max', this.index_max)
-        // console.log('index_top', this.index_top)
-        // console.log('index_bottom', this.index_bottom)
         this.landing_result()
       }
       else {
@@ -93,21 +136,19 @@ export default {
         // console.log('middle page!')
         this.index_top = this.index_max - (this.page_chunk * (this.page_current - 1))
         this.index_bottom = this.index_max - (this.page_chunk * this.page_current) + 1
-        // console.log('index_max', this.index_max)
-        // console.log('index_top', this.index_top)
-        // console.log('index_bottom', this.index_bottom)
         this.landing_result()
       }
     },
     landing_result() {
       let temp_arr = this.landing_obj
       let res_arr = []
+      // Get obj for a chunk
       for(let i = this.index_top - 1; i >= this.index_bottom - 1; i--) {
+        // Put company name, manager name to each company object
         for(let j = 0; j < this.company_obj.length; j++) {
           if(temp_arr[i].company === this.company_obj[j].id) {
             temp_arr[i].company_name = this.company_obj[j].name
             temp_arr[i].manager_name = this.company_obj[j].manager_name
-            // console.log(temp_arr[i])
           }
         }
         res_arr.push(temp_arr[i])
@@ -123,7 +164,6 @@ export default {
     } else {
       this.page_current = 1
     }
-
     // Start Contents handler
     let axios = this.$axios
     let this_url = 'landing/'
@@ -131,10 +171,9 @@ export default {
     // Get actual landing pages by using axios
     axios.get(this.$store.state.endpoints.baseUrl + this_url)
       .then((response) => {
-        // Init
+        // init
         this.landing_obj = response.data
         this.index_max = response.data.length
-
         // Calculation for page_max
         if(response.data.length % this.page_chunk === 0) {
           this.page_max = Math.floor(response.data.length/this.page_chunk)
@@ -161,13 +200,13 @@ export default {
                 }
                 this.pagination(this.page_current)
               })
-              .catch((error) => {
-                console.log(error)
-              })
+              // .catch((error) => {
+              //   console.log(error)
+              // })
           })
-          .catch((error) => {
-            console.log(error)
-          })
+          // .catch((error) => {
+          //   console.log(error)
+          // })
       })
       .catch((error) => {
         console.log(error)
@@ -178,6 +217,60 @@ export default {
 </script>
 
 <style lang="scss">
+  /* Search bar */
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  .search_group {
+    text-align: right;
+  }
+
+  .search_option {
+    display: inline-block;
+    width: 75px;
+    height: 30px;
+    text-align: center;
+    font-size: 0.8em;
+    line-height: 1em;
+    outline: 0;
+    border: 1px solid #c1c1c1;
+    border-radius: 5px 0 0 5px;
+    background-color: #ffffff;
+    vertical-align: top;
+    padding: 0 0 0 10px;
+  }
+
+  .search_text {
+    display: inline-block;
+    width: 160px;
+    height: 30px;
+    font-size: 0.8em;
+    line-height: 0.8em;
+    vertical-align: top;
+    border: 1px solid #c1c1c1;
+    padding: 10px;
+    margin-left: -6px;
+  }
+
+  .search_btn {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    text-align: center;
+    border: 1px solid #c1c1c1;
+    border-radius: 0 5px 5px 0;
+    margin-left: -6px;
+    img {
+      width: 55%;
+      height: 60%;
+    }
+  }
+  /* Search box ended */
+
   /* Pagination */
   .pagination {
     display: block;
