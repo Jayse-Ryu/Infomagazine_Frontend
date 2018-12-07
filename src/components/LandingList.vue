@@ -11,6 +11,7 @@
       {{ search_filter }}
       <div class="form-group search_group">
         <select class="search_option" id="src_gbn" v-model="search_option">
+          <option value="-1" selected>검색 옵션</option>
           <option value="0">랜딩 이름</option>
           <option value="1">업체</option>
           <option value="2">관리자</option>
@@ -100,7 +101,7 @@
 export default {
     name: "landing_list",
   data: () => ({
-    search_option: 0,
+    search_option: -1,
     search_filter: '',
     page_current: 1,
     page_max: 0,

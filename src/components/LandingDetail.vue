@@ -107,12 +107,38 @@
             </ul>
           </div>
 
-          <hr>
+          <hr style="width: 100%;">
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="db_list">DB</label>
-          <div class="col-sm-9 mt-sm-3">
-            <input type="text" class="form-control" id="db_list">
+          <div class="col-sm-9 mt-sm-3  row ml-0">
+            <select class="custom-select col-sm-5" id="db_select">
+              <option value="0">DB 필드</option>
+              <option value="1">전화번호</option>
+              <option value="2">Url</option>
+            </select>
+            <div class="margin_div"></div>
+            <input type="text" class="form-control col-sm-7 col-md-5" id="db_list">
+            <div class="margin_div"></div>
+            <button class="btn btn-primary col-md-1 p-0">추가</button>
           </div>
+
+          <label class="col-sm-3 col-form-label-sm mt-3" for="field_list">DB 리스트</label>
+          <div class="col-sm-9 mt-sm-3 row ml-0">
+            <ul class="list-group list-group-flush col-12 pr-0" id="field_list">
+              <li class="list-group-item list-group-item-action d-inline-flex p-1 font-weight-bold">
+                <div class="col-3 p-2">DB 형식</div>
+                <div class="col-7 p-2">DB 필드</div>
+                <!--<div class="col-2 p-2 text-center"></div>-->
+              </li>
+              <li class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1" v-for="url in url_obj">
+                <div class="col-3 p-2">{{ url.url }}</div>
+                <div class="col-7 p-2">{{ url.description }}</div>
+                <!--<div class="col-2 p-2 text-center"></div>-->
+                <button type="button" class="btn btn-outline-danger p-0 col-2">삭제</button>
+              </li>
+            </ul>
+          </div>
+
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="form">약관 이미지</label>
 
