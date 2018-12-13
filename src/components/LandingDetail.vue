@@ -102,7 +102,7 @@
                 <div class="col-3 p-2">{{ url.url }}</div>
                 <div class="col-5 p-2">{{ url.description }}</div>
                 <div class="col-2 p-2 text-center">{{ url.views }}</div>
-                <button type="button" class="btn btn-outline-danger p-0 col-2">삭제</button>
+                <button type="button" class="btn btn-outline-danger p-0 col-2" @submit.prevent="delete_url">삭제</button>
               </li>
             </ul>
           </div>
@@ -128,12 +128,11 @@
               <li class="list-group-item list-group-item-action d-inline-flex p-1 font-weight-bold">
                 <div class="col-3 p-2">DB 형식</div>
                 <div class="col-7 p-2">DB 필드</div>
-                <!--<div class="col-2 p-2 text-center"></div>-->
               </li>
               <li class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1" v-for="url in url_obj">
+                <!--DB part. not functioning yet-->
                 <div class="col-3 p-2">{{ url.url }}</div>
                 <div class="col-7 p-2">{{ url.description }}</div>
-                <!--<div class="col-2 p-2 text-center"></div>-->
                 <button type="button" class="btn btn-outline-danger p-0 col-2">삭제</button>
               </li>
             </ul>
@@ -232,6 +231,23 @@
       methods: {
         back_to_list: function() {
           this.$router.push({name: 'landing_list'})
+        }
+      },
+      method: {
+        delete_url() {
+          console.log('del function!')
+          // this.$nextTick(function () {
+          //   console.log(url_id)
+          //   let axios = this.$axios
+          //   let this_url = 'urls/'
+          //   axios.delete(this.$store.state.endpoints.baseUrl + this_url + url_id + '/')
+          //     .then((response) => {
+          //       console.log(response)
+          //     })
+          //     .catch((err) => {
+          //       console.log(err)
+          //     })
+          // })
         }
       },
       mounted() {

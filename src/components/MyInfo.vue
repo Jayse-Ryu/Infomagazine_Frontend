@@ -76,64 +76,6 @@ export default {
     creda: '',
     upda: ''
   }),
-  methods: {
-    show () {
-      // let axios = this.$axios
-      // let decode = this.$jwt_decode
-      // console.log('jwttttttttttttttttttt')
-      // let decoder = decode(this.$store.state.jwt)
-      // // this.$store.state.authUser = decoder
-      // // get and set auth user
-      // const base = {
-      //   baseURL: this.$store.state.endpoints.baseUrl,
-      //   headers: {
-      //     // Set your Authorization to 'JWT', not Bearer!!!
-      //     Authorization: `JWT ${this.$store.state.jwt}`,
-      //     'Content-Type': 'application/json'
-      //   },
-      //   xhrFields: {
-      //     withCredentials: true
-      //   }
-      // }
-      // // Even though the authentication returned a user object that can be
-      // // decoded, we fetch it again. This way we aren't super dependant on
-      // // JWT and can plug in something else.
-      // const axiosInstance = axios.create(base)
-      // axiosInstance({
-      //   url: '/users/',
-      //   method: 'get',
-      //   params: {}
-      // })
-      //   .then((response) => {
-      //     // Make sure this token user detail only
-      //     for(let i = 0; i < response.data.length; i++) {
-      //       let usr_obj = response.data[i]
-      //       if (usr_obj.id === decoder.user_id) {
-      //         this.$store.commit('setAuthUser',
-      //           {authUser: usr_obj, isAuthenticated: true}
-      //         )
-      //         break
-      //       }
-      //     }
-      //     this.name = this.$store.state.authUser.full_name
-      //     this.id = this.$store.state.authUser.username
-      //     this.name = this.$store.state.authUser.full_name
-      //     this.email = this.$store.state.authUser.email
-      //     this.phone = this.$store.state.authUser.phone
-      //     this.org = this.$store.state.authUser.organization
-      //     this.creda = this.$store.state.authUser.created_date
-      //     this.upda = this.$store.state.authUser.updated_date
-      //     // Auto move to inner main page.
-      //     // this.$router.push({name: 'landing_list'})
-      //   })
-      //   .catch((error) => {
-      //     console.log(error)
-      //     console.debug(error)
-      //     console.dir(error)
-      //     alert('No information.')
-      //   })
-    }
-  },
   mounted () {
     let axios = this.$axios
     let decode = this.$jwt_decode

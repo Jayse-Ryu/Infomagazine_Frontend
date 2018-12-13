@@ -23,49 +23,19 @@
       </div>
     </form>
 
-    <!-- ID/Company/Landing name/manager/view/db -->
-<!--    <div class="board_container container">
-      <div class="board_wrap">
-        <div class="board_header row">
-          <div class="col-1">번호</div>
-          <div class="col-2">업체</div>
-          <div class="col-5">랜딩페이지</div>
-          <div class="col-2">담당자</div>
-          <div class="col-1 board_centre">조회수</div>
-          <div class="col-1 board_centre">DB</div>
-        </div>
-        <ul class="board_ul">
-          <li class="board_li row" v-for="result in result_obj">
-            <div class="col-1">{{ result.id }}</div>
-            <div class="col-2">{{ result.company_name }}</div>
-            <div class="col-5"><router-link :to="'/landing/detail/' + result.id">{{ result.name }}</router-link></div>
-            <div class="col-2">{{ result.manager_name }}</div>
-            <div class="col-1 board_centre">{{ result.views }}</div>
-            <div class="col-1 board_centre">{{ result.hits }}</div>
-          </li>
-        </ul>
-      </div>
-    </div>-->
-
     <div class="container">
-      <div class="">
-        <!--<ul class="list-group list-group-flush col-12 pr-0">
-          <div class="col-1">번호</div>
-          <div class="col-2">업체</div>
-          <div class="col-5">랜딩페이지</div>
-          <div class="col-2">담당자</div>
-          <div class="col-1 board_centre">조회수</div>
-          <div class="col-1 board_centre">DB</div>
-        </ul>-->
-        <ul class="list-group list-group-flush col-12 pr-0">
-          <li class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
+      <div class="list_area">
+        <div>
+          <div class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1 pt-2 pb-2" style="border-radius: 0; border-bottom: 0;">
             <div class="col-1">번호</div>
             <div class="col-2">업체</div>
             <div class="col-5">랜딩페이지</div>
             <div class="col-2">담당자</div>
             <div class="col-1 board_centre">조회수</div>
             <div class="col-1 board_centre">DB</div>
-          </li>
+          </div>
+        </div>
+        <ul class="list-group list-group-flush col-12 pr-0">
           <li class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1" v-for="result in result_obj">
             <div class="col-1 col-sm-1">{{ result.id }}</div>
             <div class="col-3 col-sm-2">{{ result.company_name }}</div>
@@ -116,7 +86,7 @@ export default {
   methods: {
     pagination: function(pageNum) {
       // Keep this page number
-      this.$parent.global_page = pageNum
+      this.$parent.global_landing_page = pageNum
       // Actual pagination
       if(pageNum === 1) {
         // when page is first, max ~ max-(chunk*current)+1
@@ -160,8 +130,8 @@ export default {
   },
   mounted() {
     // Check previous page position
-    if(this.$parent.global_page !== 1){
-      this.page_current = this.$parent.global_page
+    if(this.$parent.global_landing_page !== 1){
+      this.page_current = this.$parent.global_landing_page
     } else {
       this.page_current = 1
     }

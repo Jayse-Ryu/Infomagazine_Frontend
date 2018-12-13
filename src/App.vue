@@ -14,9 +14,17 @@
 export default {
   name: 'App',
   data: () => ({
+    // Header options
     header_flag: 1,
     auth_user: '',
-    global_page: 1,
+    // Save pagination current
+    global_landing_page: 1,
+    global_company_page: 1,
+    global_db_page: 1,
+    global_user_page: 1,
+    // Save search options
+    global_search_option: -1,
+    global_search_text: '',
   }),
   mounted() {
     if(this.$store.state.jwt){
@@ -561,6 +569,7 @@ export default {
     font: 1rem/1.1 'Avenir', Helvetica, Arial, "Montserrat", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-text-stroke: 0.15px rgba(0,0,0,0.3);
     /*overflow-x: hidden;*/
   } /* body normalize more */
 
