@@ -26,11 +26,11 @@
               <div class="nav-link">Company List</div>
             </router-link>
           </li>
-          <li class="navbar-item">
+          <!--<li class="navbar-item">
             <router-link to="/db">
               <div class="nav-link">DB List</div>
             </router-link>
-          </li>
+          </li>-->
           <li class="navbar-item">
             <router-link to="/users">
               <div class="nav-link">User List</div>
@@ -71,7 +71,6 @@ export default {
   data: () => ({
     name: '',
     temp: '',
-    header: ''
   }),
   methods: {
     logout () {

@@ -139,6 +139,11 @@ const store = new Vuex.Store({
           router.push('/')
           return false
         }
+      } else {
+        this.commit('removeToken')
+        alert('로그인 후 이용 가능합니다.')
+        router.push('/')
+        return false
       }
     },
     getAuthUser () {

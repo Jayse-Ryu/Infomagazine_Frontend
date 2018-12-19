@@ -143,6 +143,7 @@ export default {
       .then((response) => {
         // init
         this.landing_obj = response.data
+        console.log(response.data)
         this.index_max = response.data.length
         // Calculation for page_max
         if(response.data.length % this.page_chunk === 0) {
@@ -182,6 +183,25 @@ export default {
         console.log(error)
       })
     // axios is done.
+    // this_url = 'landing/'
+    // axios.get(this.$store.state.endpoints.baseUrl + this_url)
+    //   .then((response) => {
+    //     this.landing_obj = response.data
+    //     this.index_max = response.data.length
+    //     // Calculation for page_max
+    //     if(response.data.length % this.page_chunk === 0) {
+    //       this.page_max = Math.floor(response.data.length/this.page_chunk)
+    //     } else {
+    //       this.page_max = Math.floor(response.data.length/this.page_chunk) + 1
+    //     }
+    //     console.log('First response ', response)
+    //     // Get company names
+    //     this_url = 'company/'
+    //     return axios.get(this.$store.state.endpoints.baseUrl + this_url)
+    //   })
+    //   .then((response) => {
+    //     console.log('Second response ', response)
+    //   })
   }
 }
 </script>
