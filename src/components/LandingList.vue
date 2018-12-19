@@ -138,7 +138,6 @@ export default {
     // Start Contents handler
     let axios = this.$axios
     let this_url = 'landing/'
-
     // Get actual landing pages by using axios
     axios.get(this.$store.state.endpoints.baseUrl + this_url)
       .then((response) => {

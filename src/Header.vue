@@ -38,7 +38,7 @@
           </li>
           <li class="navbar-item">
             <router-link to="/myinfo">
-              <div class="nav-link current_user font" :key="name">{{ fullName }}</div>
+              <div class="nav-link current_user font" v-model="header_name">{{ header_name }}</div>
             </router-link>
           </li>
           <li class="navbar-item">
@@ -70,7 +70,8 @@ export default {
   name: 'app-header',
   data: () => ({
     name: '',
-    temp: ''
+    temp: '',
+    header: ''
   }),
   methods: {
     logout () {
@@ -80,8 +81,16 @@ export default {
       })
     }
   },
+  mounted() {
+    if (this.$store.state.jwt !== null) {
+      this.$store.dispatch('getAuthUser')
+    } else {
+      // alert('로그인 후 이용 가능합니다.')
+      // this.$router.push('/')
+    }
+  },
   computed: {
-    fullName: function () {
+    header_name: function () {
       return this.$store.state.authUser.full_name
     }
   }

@@ -25,55 +25,7 @@ export default {
     // Save search options
     global_search_option: -1,
     global_search_text: '',
-  }),
-  mounted() {
-    if(this.$store.state.jwt){
-      let axios = this.$axios
-      let decode = this.$jwt_decode
-      console.log('(App vue) There is JWT in Local store.')
-      let decoder = decode(this.$store.state.jwt)
-      // this.$store.state.authUser = decoder
-      // get and set auth user
-      const base = {
-        baseURL: this.$store.state.endpoints.baseUrl,
-        headers: {
-          // Set your Authorization to 'JWT', not Bearer!!!
-          Authorization: `JWT ${this.$store.state.jwt}`,
-          'Content-Type': 'application/json'
-        },
-        xhrFields: {
-          withCredentials: true
-        }
-      }
-      // Even though the authentication returned a user object that can be
-      // decoded, we fetch it again. This way we aren't super dependant on
-      // JWT and can plug in something else.
-      const axiosInstance = axios.create(base)
-      axiosInstance({
-        url: '/users/',
-        method: 'get',
-        params: {}
-      })
-        .then((response) => {
-          // Make sure this token user detail only
-          for(let i = 0; i < response.data.length; i++) {
-            let usr_obj = response.data[i]
-            if (usr_obj.id === decoder.user_id) {
-              this.$store.commit('setAuthUser',
-                {authUser: usr_obj, isAuthenticated: true}
-              )
-              break
-            }
-          }
-          console.log('(App vue) auth', this.$store.state.authUser.full_name)
-          this.auth_user = this.$store.state.authUser.full_name
-          // Auto move to inner main page.
-          // this.$router.push({name: 'landing_list'})
-        })
-    } else {
-      console.log('(App vue) There is not JWT in Local Store.')
-    }
-  }
+  })
 }
 </script>
 

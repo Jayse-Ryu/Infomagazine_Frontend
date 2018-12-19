@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Vuex from 'vuex'
 import Axios from 'axios'
+import Vuex from 'vuex'
 
 import CompanyCreate from '@/components/CompanyCreate'
 import CompanyDetail from '@/components/CompanyDetail'
@@ -20,7 +20,7 @@ import UserList from '@/components/UserList'
 // use like this.$xx
 Vue.use(Router)
 Vue.use(Axios)
-// Vue.use(Vuex)
+Vue.use(Vuex)
 
 // export default new Router({
 const router = new Router({
@@ -112,7 +112,8 @@ const router = new Router({
       name: 'user_detail',
       component: UserDetail,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        is_staff: true
       }
     },
     {
@@ -120,7 +121,8 @@ const router = new Router({
       name: 'user_list',
       component: UserList,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        is_staff: true
       }
     }
   ],
@@ -133,59 +135,19 @@ const router = new Router({
   }
 })
 
-// eslint-disable-next-line
-// function auth_filter () {
-//   // const axios = this.$axios
-//   const axios = new Axios()
-//   console.log(axios)
-//
-//   const base = {
-//     baseURL: this.$store.state.endpoints.baseUrl,
-//     headers: {
-//       // Set your Authorization to 'JWT', not Bearer!!!
-//       Authorization: `JWT ${this.$store.state.jwt}`,
-//       'Content-Type': 'application/json'
-//     },
-//     xhrFields: {
-//       withCredentials: true
-//     }
-//   }
-//   // Even though the authentication returned a user object that can be
-//   // decoded, we fetch it again. This way we aren't super dependant on
-//   // JWT and can plug in something else.
-//   const axiosInstance = axios.create(base)
-//   axiosInstance({
-//     url: '/users/',
-//     method: 'get',
-//     params: {}
-//   })
-//     .then((response) => {
-//       this.$store.commit('setAuthUser',
-//         {authUser: response.data, isAuthenticated: true}
-//       )
-//       console.log(response.data)
-//       console.log(response.data[0].authority_id)
-//       // this.$router.push({name: 'Signup'})
-//     })
-//     .catch((error) => {
-//       console.log(error)
-//       console.debug(error)
-//       console.dir(error)
-//       alert('Error.')
-//       this.$router.push({name: 'Signin'})
-//     })
-// }
-
 // adding differnt authentication for user list or something.
 router.beforeEach((to, from, next) => {
+  // Block not applied users
   if (to.meta.requiresAuth) {
     if (window.localStorage.token) {
+    // if (this.$store.state.isAuthenticated) {
       next()
     } else {
       alert('로그인 후 이용 가능합니다.')
       next({name: 'sign_in'})
     }
   }
+  // When auth user, return to landing page from sign_in
   if (window.localStorage.token && to.name === 'sign_in') {
     next({name: 'landing_list'})
   } else if (window.localStorage.token && to.path === '/') {

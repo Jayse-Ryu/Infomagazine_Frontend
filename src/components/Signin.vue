@@ -34,15 +34,6 @@
                      id="id_password">
             </div>
           </div>
-          <!--<div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox"> Remember me
-                </label>
-              </div>
-            </div>
-          </div>-->
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
               <button type="submit" class="submit_btn btn btn-info">로그인</button>
@@ -58,6 +49,7 @@
           <li>본 사이트는 인포맥 디비시스템 사이트로써 관련자가 아닌 사람은 사용하실 수 없습니다.</li>
           <li>관계자가 아닌 사람이 부정 사용 시 법적 제제 및 민형사 상의 처벌을 받을 수 있음을 알립니다.</li>
         </ol>
+        <div class="copy_right">Copyright© infomag DB system Inc. All Rights Reserved</div>
       </div>
 
     </div>
@@ -87,64 +79,7 @@ export default {
         username: this.username,
         password: this.password
       }
-      axios.post(this.$store.state.endpoints.obtainJWT, payload)
-        .then((response) => {
-          // Token change to this user.
-          let current = Date.now
-          let token_base = response.data.token
-
-          if (decode(token_base).exp < current) {
-            axios.post(this.$store.state.endpoints.refreshJWT, token_base)
-              .then((response) => {
-                console.log(response)
-              })
-          }
-
-          this.$store.commit('updateToken', token_base)
-          let decoder = decode(this.$store.state.jwt)
-          // this.$store.state.authUser = decoder
-          // get and set auth user
-          const base = {
-            baseURL: this.$store.state.endpoints.baseUrl,
-            headers: {
-              // Set your Authorization to 'JWT', not Bearer!!!
-              Authorization: `JWT ${this.$store.state.jwt}`,
-              'Content-Type': 'application/json'
-            },
-            xhrFields: {
-              withCredentials: true
-            }
-          }
-          // Even though the authentication returned a user object that can be
-          // decoded, we fetch it again. This way we aren't super dependant on
-          // JWT and can plug in something else.
-          const axiosInstance = axios.create(base)
-          axiosInstance({
-            url: '/users/',
-            method: 'get',
-            params: {}
-          })
-            .then((response) => {
-              // Make sure this token user detail only
-              for(let i = 0; i < response.data.length; i++) {
-                let usr_obj = response.data[i]
-                if (usr_obj.id === decoder.user_id) {
-                  this.$store.commit('setAuthUser',
-                    {authUser: usr_obj, isAuthenticated: true}
-                  )
-                  break
-                }
-              }
-              // Auto move to inner main page.
-              this.$router.push({name: 'landing_list'})
-            })
-        })
-        .catch((error) => {
-          console.log(error)
-          // console.debug(error)
-          // console.dir(error)
-          alert('아이디와 비밀번호를 확인해주세요.')
-        })
+      this.$store.dispatch('obtainToken', payload)
     }
   }
 }
@@ -157,13 +92,13 @@ export default {
     min-height: 100%;
     overflow: auto;
     background: linear-gradient(217deg, rgba(2,0,36,.8), rgba(255,0,0,0) 70.71%),
-    linear-gradient(127deg, rgba(121,9,114,.8), rgba(0,255,0,0) 70.71%),
+    linear-gradient(127deg, rgba(141,168,185,.8), rgba(0,255,0,0) 70.71%),
     linear-gradient(336deg, rgba(0,212,255,.8), rgba(0,0,255,0) 70.71%);
   }
 
   .login_box {
     position: absolute;
-    top: 50%;
+    top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
@@ -208,8 +143,8 @@ export default {
   .warn_wrap {
     position: absolute;
     /*width: 40%;*/
-    max-width: 470px;
     width: 100%;
+    left: 0;
     margin: 10px auto;
     font-family: 'Nanum Gothic', 'sans-serif';
     font-size: 15px;
@@ -219,13 +154,20 @@ export default {
       padding: 10px 0;
     }
     ol {
-      padding-left: 20px;
+      padding: 0;
       font-weight: bold;
       color: #616161;
       li {
-        list-style: unset;
         padding: 5px 0;
       }
     }
+  }
+
+  .copy_right {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+    color: #515151;
   }
 </style>
