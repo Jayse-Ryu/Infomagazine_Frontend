@@ -16,7 +16,7 @@
             <div class="col-sm-12">
               <input class="form-control"
                      required
-                     v-model="username"
+                     v-model="account"
                      type="text"
                      placeholder="아이디를 입력하세요."
                      autofocus="autofocus"
@@ -135,7 +135,7 @@
 export default {
   name: 'sign_up',
   data: () => ({
-    username: '',
+    account: '',
     password: '',
     re_pass: '',
     full_name: '',
@@ -153,7 +153,7 @@ export default {
         let axios = this.$axios
         ///////
         let formData = new FormData()
-        formData.append('username', this.username)
+        formData.append('account', this.account)
         formData.append('password', this.password)
         formData.append('full_name', this.full_name)
         formData.append('email', this.email)

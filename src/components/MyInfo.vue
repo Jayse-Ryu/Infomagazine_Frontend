@@ -99,7 +99,7 @@ export default {
     // JWT and can plug in something else.
     const axiosInstance = axios.create(base)
     axiosInstance({
-      url: '/users/',
+      url: '/user/',
       method: 'get',
       params: {}
     })
@@ -115,7 +115,7 @@ export default {
           }
         }
         this.name = this.$store.state.authUser.full_name
-        this.id = this.$store.state.authUser.username
+        this.id = this.$store.state.authUser.account
         this.name = this.$store.state.authUser.full_name
         this.email = this.$store.state.authUser.email
         this.phone = this.$store.state.authUser.phone

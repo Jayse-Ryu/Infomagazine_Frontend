@@ -78,10 +78,10 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    // obtainToken (username, password) {
+    // obtainToken (account, password) {
     obtainToken (self, pay) {
       const payload = {
-        username: pay.username,
+        account: pay.account,
         password: pay.password
       }
       axios.post(this.state.endpoints.obtainJWT, payload)
@@ -170,7 +170,7 @@ const store = new Vuex.Store({
           // JWT and can plug in something else.
           const axiosInstance = axios.create(base)
           axiosInstance({
-            url: '/users/' + user_id + '/',
+            url: '/user/' + user_id + '/',
             method: 'get',
             params: {}
           })

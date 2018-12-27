@@ -15,7 +15,7 @@
             <div class="col-sm-12">
               <input class="form-control"
                      required
-                     v-model="username"
+                     v-model="account"
                      type="text"
                      placeholder="아이디를 입력해주세요."
                      autofocus="autofocus"
@@ -62,7 +62,7 @@
 export default {
   name: 'sign_in',
   data: () => ({
-    username: '',
+    account: '',
     password: '',
   }),
   mounted() {
@@ -76,7 +76,7 @@ export default {
       let axios = this.$axios
       let decode = this.$jwt_decode
       const payload = {
-        username: this.username,
+        account: this.account,
         password: this.password
       }
       this.$store.dispatch('obtainToken', payload)

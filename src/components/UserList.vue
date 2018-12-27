@@ -140,6 +140,16 @@
       let axios = this.$axios
       let this_url = 'landing/'
 
+      axios.get(this.$store.state.endpoints.baseUrl + 'collections/')
+        .then((response) => {
+          console.log(response.data)
+          for (let i = 0; i < response.data.length; i++) {
+            console.log(response.data[i])
+            console.log(response.data[i].data)
+            console.log(response.data[i].data.split(','))
+          }
+        })
+
       // Get actual landing pages by using axios
       axios.get(this.$store.state.endpoints.baseUrl + this_url)
         .then((response) => {

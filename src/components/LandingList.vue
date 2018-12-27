@@ -117,6 +117,8 @@ export default {
       for(let i = this.index_top - 1; i >= this.index_bottom - 1; i--) {
         // Put company name, manager name to each company object
         for(let j = 0; j < this.company_obj.length; j++) {
+          console.log('temp com', temp_arr[i].company)
+          console.log('comp id', this.company_obj[j].id)
           if(temp_arr[i].company === this.company_obj[j].id) {
             temp_arr[i].company_name = this.company_obj[j].name
             temp_arr[i].manager_name = this.company_obj[j].manager_name
