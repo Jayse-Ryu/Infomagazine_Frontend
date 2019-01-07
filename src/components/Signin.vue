@@ -35,9 +35,9 @@
             </div>
           </div>
           <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-              <button type="submit" class="submit_btn btn btn-info">로그인</button>
-              <router-link to="signup" class="btn btn-link">회원가입</router-link>
+            <div class="col-12">
+              <button type="submit" class="submit_btn btn btn-info col-12 mt-4 mb-2">로그인</button>
+              <router-link to="signup" class="btn btn-link col-12">회원가입</router-link>
             </div>
           </div>
         </form>
