@@ -6,17 +6,13 @@
       <router-link to="/users">유저 리스트</router-link>
     </div>
 
-    <form class="container">
-      {{ search_option }}
-      {{ search_filter }}
+    <form class="container" v-on:submit.prevent="search(temp_option, temp_text)">
       <div class="form-group search_group">
-        <select class="search_option" id="src_gbn" v-model="search_option">
-          <option value="-1" selected>검색 옵션</option>
-          <option value="0">랜딩 이름</option>
-          <option value="1">업체</option>
-          <option value="2">관리자</option>
+        <select class="search_option" id="src_gbn" v-model="temp_option">
+          <option value="0" selected>검색 옵션</option>
+          <option value="1">이름</option>
         </select>
-        <input type="text" class="search_text" v-model="search_filter" placeholder="구현전">
+        <input type="text" class="search_text" v-model="temp_text" placeholder="검색">
         <button type="submit" class="search_btn">
           <img src="../assets/common/search.png" />
         </button>
@@ -25,33 +21,65 @@
 
     <div class="container">
 
-      <div class="list_area">
+      <div v-if="window_width > 1000" class="list_area">
         <div>
-          <div class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1 pt-2 pb-2" style="border-radius: 0; border-bottom: 0;">
+          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2" style="border-radius: 0; border-bottom: 0; width:100%;">
             <div class="col-1">번호</div>
-            <div class="col-2">업체</div>
-            <div class="col-5">랜딩페이지</div>
-            <div class="col-2">담당자</div>
-            <div class="col-1 board_centre">조회수</div>
-            <div class="col-1 board_centre">DB</div>
+            <div class="col-2 text-center">계정</div>
+            <div class="col-2 text-center">이름</div>
+            <div class="col-1 text-center">관리자</div>
+            <div class="col-1 text-center">방문자</div>
+            <div class="col-1 text-center">활성상태</div>
+            <div class="col-2 board_centre">마지막 로그인</div>
+            <div class="col-2 board_centre">생성일</div>
           </div>
         </div>
         <ul class="list-group list-group-flush col-12 pr-0">
-          <li class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1" v-for="result in result_obj">
-            <div class="col-1 col-sm-1">{{ result.id }}</div>
-            <div class="col-3 col-sm-2">{{ result.company_name }}</div>
-            <div class="col-3 col-sm-4"><router-link :to="'/landing/detail/' + result.id">{{ result.name }}</router-link></div>
-            <div class="col-3">{{ result.manager_name }}</div>
-            <div class="col-1 board_centre">{{ result.views }}</div>
-            <div class="col-1 board_centre">{{ result.hits }}</div>
+          <li v-if="content_obj.length === 0" class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
+            <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
+          </li>
+          <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1" v-for="content in content_obj">
+            <div class="col-1">{{ content.id }}</div>
+            <div class="col-2 text-center">{{ content.account }}</div>
+            <div class="col-2 text-center"><router-link :to="'/landing/detail/' + content.id">{{ content.full_name }}</router-link></div>
+            <div class="col-1 text-center">{{ content.is_staff }}</div>
+            <div class="col-1 text-center">{{ content.is_guest }}</div>
+            <div class="col-1 text-center">{{ content.is_active }}</div>
+            <div v-if="content.last_login" class="col-2 board_centre">{{ (content.last_login).substring(0, 10) }}</div>
+            <div v-else class="col-2 board_centre">없음</div>
+            <div class="col-2 board_centre">{{ (content.created_date).substring(0, 10) }}</div>
           </li>
         </ul>
       </div>
+
+      <div v-else class="list_area">
+        <div>
+          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2" style="border-radius: 0; border-bottom: 0; width:100%;">
+            <div class="col-1">번호</div>
+            <div class="col-3 text-center">계정</div>
+            <div class="col-3 text-center">이름</div>
+            <div class="col-5 board_centre">생성일</div>
+          </div>
+        </div>
+        <ul class="list-group list-group-flush col-12 pr-0">
+          <li v-if="content_obj.length === 0" class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
+            <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
+          </li>
+          <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1" v-for="content in content_obj">
+            <div class="col-1">{{ content.id }}</div>
+            <div class="col-3 text-center">{{ content.account }}</div>
+            <div class="col-3 text-center"><router-link :to="'/landing/detail/' + content.id">{{ content.full_name }}</router-link></div>
+            <div class="col-5 board_centre">{{ (content.created_date).substring(0, 10) }}</div>
+          </li>
+        </ul>
+      </div>
+
     </div>
+    <!-- Container end -->
 
     <paginate class="pagination"
               v-model="page_current"
-              :page-count="this.page_max"
+              :page-count="page_max"
               :page-range="5"
               :margin-pages="1"
               :click-handler="pagination"
@@ -72,128 +100,100 @@
   export default {
     name: "user_list",
     data: () => ({
-      search_option: -1,
-      search_filter: '',
+      // Get width
+      window_width: window.innerWidth,
+      // Page = options, contents
       page_current: 1,
       page_max: 0,
       page_chunk: 5,
-      landing_obj: [],
-      result_obj: [],
-      index_max: 0,
-      index_top: 0,
-      index_bottom: 0,
-      company_obj: []
+      content_obj: [],
+      temp_option: 0,
+      temp_text: '',
+      search_option: 0,
+      search_text: '',
     }),
     methods: {
       pagination: function(pageNum) {
-        // Keep this page number
-        this.$parent.global_user_page = pageNum
-        // Actual pagination
-        if(pageNum === 1) {
-          // when page is first, max ~ max-(chunk*current)+1
-          // console.log('first page!')
-          this.index_top = this.index_max
-          this.index_bottom = this.index_max - (this.page_chunk * this.page_current) + 1
-          this.landing_result()
-        }
-        else if(pageNum === this.page_max) {
-          // when page is max, max-(chunk*(current-1)) ~ 1
-          // console.log('max page!')
-          this.index_top = this.index_max - this.page_chunk * (this.page_current - 1)
-          this.index_bottom = 1
-          this.landing_result()
-        }
-        else {
-          // when page is middle, max-(chunk*(current-1)) ~ max-(chunk*current)+1
-          // console.log('middle page!')
-          this.index_top = this.index_max - (this.page_chunk * (this.page_current - 1))
-          this.index_bottom = this.index_max - (this.page_chunk * this.page_current) + 1
-          this.landing_result()
-        }
+        // when page is first, max ~ max-(chunk*current)+1
+        // when page is max, max-(chunk*(current-1)) ~ 1
+        // when page is middle, max-(chunk*(current-1)) ~ max-(chunk*current)+1
+        let offset = (pageNum - 1)*this.page_chunk
+        this.calling_all_unit(offset)
       },
-      landing_result() {
-        let temp_arr = this.landing_obj
-        let res_arr = []
-        // Get obj for a chunk
-        for(let i = this.index_top - 1; i >= this.index_bottom - 1; i--) {
-          // Put company name, manager name to each company object
-          for(let j = 0; j < this.company_obj.length; j++) {
-            if(temp_arr[i].company === this.company_obj[j].id) {
-              temp_arr[i].company_name = this.company_obj[j].name
-              temp_arr[i].manager_name = this.company_obj[j].manager_name
-            }
+      search: function(option, text) {
+        if (option !== 0 || text !== '') {
+          let option_val
+          this.page_current = 1
+          if (option === '1') {
+            option_val = 'name'
+          } else {
+            console.log('Option not catched')
           }
-          res_arr.push(temp_arr[i])
+          this.search_option = option_val
+          this.search_text = text
+          this.calling_all_unit()
         }
-        this.result_obj = res_arr
-        // console.log(this.result_obj)
       },
+      calling_all_unit: function(page) {
+        // Calling landings with new values
+        let axios = this.$axios
+        let this_url = 'user/'
+        let offset = page
+        axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
+          .then((response) => {
+            // Calculation for page_max
+            if(response.data.count % this.page_chunk === 0) {
+              this.page_max = Math.floor(response.data.count/this.page_chunk)
+            } else {
+              this.page_max = Math.floor(response.data.count/this.page_chunk) + 1
+            }
+            this.content_obj = response.data.results
+          })
+      }
     },
     mounted() {
-      // Check previous page position
-      if(this.$parent.global_user_page !== 1){
-        this.page_current = this.$parent.global_user_page
-      } else {
-        this.page_current = 1
-      }
-      // Start Contents handler
+      // Init other pages options
+      this.$store.state.pageOptions.company.page = 1
+      this.$store.state.pageOptions.company.option = 0
+      this.$store.state.pageOptions.company.text = ''
+      this.$store.state.pageOptions.landing.page = 1
+      this.$store.state.pageOptions.landing.option = 0
+      this.$store.state.pageOptions.landing.text = ''
+
+      // Window width calculator
+      let that = this
+      this.$nextTick(function () {
+        window.addEventListener('resize', function (e) {
+          that.window_width = window.innerWidth
+        })
+      })
+
+      // Calling contents at first with store
       let axios = this.$axios
-      let this_url = 'landing/'
-
-      axios.get(this.$store.state.endpoints.baseUrl + 'collections/')
+      let this_url = 'user/'
+      // Check store values
+      this.page_current = this.$store.state.pageOptions.user.page
+      this.search_option = this.$store.state.pageOptions.user.option
+      this.temp_text = this.$store.state.pageOptions.user.text
+      this.search_text = this.$store.state.pageOptions.user.text
+      let offset = (this.$store.state.pageOptions.user.page - 1)*(3)
+      // Axios get landings
+      axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
         .then((response) => {
-          console.log(response.data)
-          for (let i = 0; i < response.data.length; i++) {
-            console.log(response.data[i])
-            console.log(response.data[i].data)
-            console.log(response.data[i].data.split(','))
-          }
-        })
-
-      // Get actual landing pages by using axios
-      axios.get(this.$store.state.endpoints.baseUrl + this_url)
-        .then((response) => {
-          // init
-          this.landing_obj = response.data
-          this.index_max = response.data.length
           // Calculation for page_max
-          if(response.data.length % this.page_chunk === 0) {
-            this.page_max = Math.floor(response.data.length/this.page_chunk)
+          if(response.data.count % this.page_chunk === 0) {
+            this.page_max = Math.floor(response.data.count/this.page_chunk)
           } else {
-            this.page_max = Math.floor(response.data.length/this.page_chunk) + 1
+            this.page_max = Math.floor(response.data.count/this.page_chunk) + 1
           }
-
-          // Get company names
-          this_url = 'company/'
-          axios.get(this.$store.state.endpoints.baseUrl + this_url)
-            .then((response) => {
-              this.company_obj = response.data
-              // Add manager name into company object
-              this_url = 'users/'
-              axios.get(this.$store.state.endpoints.baseUrl + this_url)
-                .then((response) => {
-                  // make obj in here for security
-                  for (let i = 0; i < this.company_obj.length; i++) {
-                    for(let j = 0; j < response.data.length; j++) {
-                      if (this.company_obj[i].manager === response.data[j].id) {
-                        this.company_obj[i].manager_name = response.data[j].full_name
-                      }
-                    }
-                  }
-                  this.pagination(this.page_current)
-                })
-              // .catch((error) => {
-              //   console.log(error)
-              // })
-            })
-          // .catch((error) => {
-          //   console.log(error)
-          // })
+          this.content_obj = response.data.results
         })
-        .catch((error) => {
-          console.log(error)
-        })
-      // axios is done.
+    },
+    destroyed() {
+      // Save values in the store
+      this.$store.state.pageOptions.user.page = this.page_current
+      this.$store.state.pageOptions.user.option = this.search_option
+      this.$store.state.pageOptions.user.text = this.search_text
     }
   }
 </script>

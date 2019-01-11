@@ -168,7 +168,7 @@ export default {
         /////////////
 
         /* Do axios post */
-        axios.post(`${baseURI}/users/`, formData, config)
+        axios.post(`${baseURI}/user/`, formData, config)
           .then((response) => {
             /*console.log(response)*/
             alert('회원가입 되었습니다.')
