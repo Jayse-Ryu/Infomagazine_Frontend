@@ -6,6 +6,8 @@ import Vuex from 'vuex'
 import VeeValidate from 'vee-validate'
 import Decoder from 'jwt-decode'
 import Paginate from 'vuejs-paginate'
+import VueDragDrop from 'vue-drag-drop'
+import VueGrid from 'vue-grid-layout'
 
 // Routers
 import Header from './Header'
@@ -13,12 +15,16 @@ import Header from './Header'
 Vue.config.productionTip = false
 Vue.component('app-header', Header)
 Vue.component('paginate', Paginate)
+Vue.component('vue-grid', VueGrid)
+Vue.component('vue-drag-drop', VueDragDrop)
 
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
 Vue.use(VeeValidate)
 Vue.use(axios)
+Vue.use(VueDragDrop)
+Vue.use(VueGrid)
 
 Vue.prototype.$jwt_decode = Decoder
 Vue.prototype.$axios = axios

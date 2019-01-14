@@ -7,7 +7,8 @@
     </div>
 
 
-    <form class="container" v-on:submit.prevent="search(temp_option, temp_text)">
+    <form class="container m-auto d-flex justify-content-between flex-row" v-on:submit.prevent="search(temp_option, temp_text)">
+      <router-link to="/company/create/" class="btn-sm h-75 btn-primary p-1 col-md-1 col-sm-2 col text-center">생성</router-link>
       <div class="form-group search_group">
         <select class="search_option" id="src_gbn" v-model="temp_option">
           <option value="0" selected>검색 옵션</option>
@@ -27,10 +28,10 @@
         <div>
           <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2" style="border-radius: 0; border-bottom: 0; width:100%;">
             <div class="col-1">번호</div>
-            <div class="col-2">업체이름</div>
+            <div class="col-2">업체</div>
             <div class="col-2">상호명</div>
             <div class="col-2">담당자</div>
-            <div class="col-2">업체 연락처</div>
+            <div class="col-2">연락처</div>
             <div class="col-3 board_centre">생성일</div>
           </div>
         </div>
@@ -145,6 +146,7 @@
               this.page_max = Math.floor(response.data.count/this.page_chunk) + 1
             }
             this.content_obj = response.data.results
+            console.log(this.content_obj)
           })
       }
     },

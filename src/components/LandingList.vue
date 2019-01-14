@@ -6,7 +6,10 @@
       <router-link to="/landing">랜딩페이지 리스트</router-link>
     </div>
 
-    <form class="container" v-on:submit.prevent="search(temp_option, temp_text)">
+
+
+    <form class="container m-auto d-flex justify-content-between flex-row" v-on:submit.prevent="search(temp_option, temp_text)">
+      <router-link to="/landing/create/" class="btn-sm h-75 btn-primary p-1 col-md-1 col-sm-2 col text-center">생성</router-link>
       <div class="form-group search_group">
         <select class="search_option" id="src_gbn" v-model="temp_option">
           <option value="0" selected>검색 옵션</option>

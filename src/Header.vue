@@ -42,7 +42,7 @@
             </router-link>
           </li>
           <li class="navbar-item">
-            <input type="button" class="btn btn-outline-dark pb-1 pt-1" @click="logout" value="LogOut">
+            <input type="button" class="btn btn-dark pb-1 pt-1" @click="logout" value="LogOut">
           </li>
         </ul>
 
