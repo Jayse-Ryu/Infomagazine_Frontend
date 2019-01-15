@@ -17,8 +17,7 @@
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="company_id">업체</label>
           <div class="col-sm-9 mt-sm-3">
-            <input type="text" class="form-control" id="company_id">
-            <select class="form-control" name="company" id="company_">
+            <select class="form-control" name="company" id="company_id">
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -28,8 +27,7 @@
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="manager">관리자</label>
           <div class="col-sm-9 mt-sm-3">
-            <input type="text" class="form-control" id="manager">
-            <select class="form-control" name="sel" id="sel">
+            <select class="form-control" name="sel" id="manager">
               <option value="1">1</option>
             </select>
           </div>
@@ -60,15 +58,17 @@
             <textarea type="text" class="form-control" id="body_script" rows="4"></textarea>
           </div>
 
-          <label class="col-sm-3 col-form-label-sm mt-3" for="main_img">랜딩 레이아웃</label>
+          <label class="col-sm-3 col-form-label-sm mt-3" for="main_layout">랜딩 레이아웃</label>
           <div class="col-sm-12">
-            <div class="btn btn-dark" @click="check">check</div>
-            <!--<input type="text" class="form-control" id="main_img">-->
-            <div class="btn btn-primary" @click="layout_post">+</div>
-            <div class="btn btn-primary" @click="layout_delete">-</div>
-            <!--  -->
+            <div class="col-12 mb-1">
+              <div class="layout_control btn btn-primary" @click="layout_post">+</div>
+              <div class="layout_control btn btn-danger" @click="layout_delete">-</div>
+              <div class="btn btn-dark" @click="check">check</div>
+            </div>
+
             <grid-layout
               class="landing_layout"
+              id="main_layout"
               :layout="layout"
               :col-num="1"
               :row-height="10"
@@ -80,34 +80,110 @@
               :margin="[15, 15]"
               :use-css-transforms="true"
             >
-
               <grid-item v-for="(item, index) in layout"
                          class="layout_item"
-                         :x="item.x"
+                         :x="0"
                          :y="item.y"
-                         :w="item.w"
-                         :h="item.h"
+                         :w="1"
+                         :h="5"
                          :i="item.i"
                          :key="index"
               >
-                <div v-if="index === clicked" class="item_area bg-danger" @click="get_item(index)" @mouseup="check">{{item.i}}</div>
-                <div v-else class="item_area bg-primary" @click="get_item(index)" @mouseup="check">{{item.i}}</div>
+                <div v-if="item.i === clicked" class="item_area bg-danger" @mouseup="check(item.i)">{{item.i}}</div>
+                <div v-else class="item_area bg-primary" @mouseup="check(item.i)">{{item.i}}</div>
               </grid-item>
             </grid-layout>
 
+            <div class="form-group row mb-0">
 
+              <label class="col-sm-3 col-form-label-sm mt-3" for="layout_font">레이아웃 폰트</label>
+              <div class="col-sm-9 mt-sm-3 row ml-0">
+                <select class="form-control" name="layout_font" id="layout_font">
+                  <option value="0">Font 1</option>
+                  <option value="1">Font 2</option>
+                  <option value="2">Font 3</option>
+                </select>
+              </div>
 
-            <!--<input type="file" class="form-control-file" id="main_">-->
-            <!--<upload-image :url="$store.state.endpoints.baseUrl + 'files/'" />-->
+              <label class="col-sm-3 col-form-label-sm mt-3" for="in_db">레이아웃 내 DB</label>
+              <div class="col-sm-9 mt-sm-3">
+                <label class="switch" for="in_db">
+                  <input type="checkbox" id="in_db">
+                  <span class="slider round"></span>
+                </label>
+              </div>
 
-            <!--<dropzone id="6" ref="el" :options="options" :destroyDropzone="true"></dropzone>-->
+              <label class="col-sm-3 col-form-label-sm mt-3" for="in_company">사업자 표기</label>
+              <div class="col-sm-9 mt-sm-3">
+                <label class="switch" for="in_company">
+                  <input type="checkbox" id="in_company">
+                  <span class="slider round"></span>
+                </label>
+              </div>
 
-            <!--<dropzone/>-->
+              <label class="col-sm-3 col-form-label-sm mt-3" for="in_banner">띠배너</label>
+              <div class="col-sm-9 mt-sm-3">
+                <label class="switch" for="in_banner">
+                  <input type="checkbox" id="in_banner" v-model="is_banner">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+
+              <label v-if="is_banner" class="col-sm-3 col-form-label-sm mt-3" for="url_title">띠배너 옵션</label>
+              <div v-if="is_banner" class="col-sm-9 mt-sm-3 row ml-0">
+                <input type="file" class="form-control col-sm-5 col-md-5" id="in_banner_img" placeholder="이미지">
+                <div class="margin_div"></div>
+                <input type="text" class="form-control col-sm-7 col-md-5" id="in_banner_desc" placeholder="띠배너 주소">
+                <div class="margin_div"></div>
+                <button class="btn btn-primary col-md-1 p-0">추가</button>
+              </div>
+            </div>
 
           </div>
         </div>
 
         <hr>
+
+        <h5>DB</h5>
+        <div class="form-group row mb-0">
+          <label class="col-sm-3 col-form-label-sm mt-3" for="form_group">DB 폼 그룹</label>
+          <div class="col-sm-9 mt-sm-3 row ml-0">
+            <input type="text" class="input_one_btn form-control col-md-11" id="form_group" placeholder="폼 그룹 이름">
+            <button class="btn btn-primary col-md-1 p-0">추가</button>
+          </div>
+          <label class="col-sm-3 col-form-label-sm mt-3" for="form_group_del"></label>
+          <div class="col-sm-9 mt-sm-3 row ml-0">
+            <select class="input_one_btn form-control col-md-11" name="form_del" id="form_group_del" v-model="is_group">
+              <option value="-1">그룹을 선택하세요</option>
+              <option value="0">form_1</option>
+              <option value="1">form_2</option>
+              <option value="2">form_3</option>
+            </select>
+            <button class="btn btn-danger col-md-1 p-0">삭제</button>
+          </div>
+
+          <!-- Somehow !== is not responsible -->
+          <label v-if="is_group != -1" class="col-sm-3 col-form-label-sm mt-3" for="form_group_bg">폼 배경색</label>
+          <div v-if="is_group != -1" class="col-sm-9 mt-sm-3 row ml-0">
+            <div class="form-control col-1" id="form_group_bg" ></div>
+          </div>
+
+          <label v-if="is_group != -1" class="col-sm-3 col-form-label-sm mt-3" for="form_group_col">폼 폰트색</label>
+          <div v-if="is_group != -1" class="col-sm-9 mt-sm-3 row ml-0">
+            <div class="form-control col-1" id="form_group_col" v-model="colors"></div>
+
+            <div class="color-picker form-group col-5">
+              <div></div>
+            </div>
+
+          </div>
+
+
+
+
+        </div>
+
+        <hr style="width: 100%;">
 
         <h5>추가내용</h5>
         <div class="form-group row mb-0">
@@ -128,113 +204,112 @@
                 <div class="col-5 p-2">Url 설명</div>
                 <div class="col-2 p-2 text-center">조회수</div>
               </li>
-              <!--<li class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
+              <li class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
                   v-for="url in url_obj">
                 <div class="col-3 p-2">{{ url.url }}</div>
                 <div class="col-5 p-2">{{ url.description }}</div>
                 <div class="col-2 p-2 text-center">{{ url.views }}</div>
                 <button type="button" class="btn btn-outline-danger p-0 col-2" @click="delete_url">삭제</button>
-              </li>-->
+              </li>
             </ul>
           </div>
 
           <hr style="width: 100%;">
 
-<!--
-          <label class="col-sm-3 col-form-label-sm mt-3" for="db_list">DB</label>
-          <div class="col-sm-9 mt-sm-3  row ml-0">
-            <select class="custom-select col-sm-5" id="db_select">
-              <option value="0">DB 필드</option>
-              <option value="1">전화번호</option>
-              <option value="2">Url</option>
-            </select>
-            <div class="margin_div"></div>
-            <input type="text" class="form-control col-sm-7 col-md-5" id="db_list">
-            <div class="margin_div"></div>
-            <button class="btn btn-primary col-md-1 p-0">추가</button>
-          </div>
+          <!--
+                    <label class="col-sm-3 col-form-label-sm mt-3" for="db_list">DB</label>
+                    <div class="col-sm-9 mt-sm-3  row ml-0">
+                      <select class="custom-select col-sm-5" id="db_select">
+                        <option value="0">DB 필드</option>
+                        <option value="1">전화번호</option>
+                        <option value="2">Url</option>
+                      </select>
+                      <div class="margin_div"></div>
+                      <input type="text" class="form-control col-sm-7 col-md-5" id="db_list">
+                      <div class="margin_div"></div>
+                      <button class="btn btn-primary col-md-1 p-0">추가</button>
+                    </div>
 
-          <label class="col-sm-3 col-form-label-sm mt-3" for="field_list">DB 리스트</label>
-          <div class="col-sm-9 mt-sm-3 row ml-0">
-            <ul class="list-group list-group-flush col-12 pr-0" id="field_list">
-              <li class="list-group-item list-group-item-action d-inline-flex p-1 font-weight-bold">
-                <div class="col-3 p-2">DB 형식</div>
-                <div class="col-7 p-2">DB 필드</div>
-              </li>
-              <li class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
-                  v-for="url in url_obj">
-                &lt;!&ndash;DB part. not functioning yet&ndash;&gt;
-                <div class="col-3 p-2">{{ url.url }}</div>
-                <div class="col-7 p-2">{{ url.description }}</div>
-                <button type="button" class="btn btn-outline-danger p-0 col-2">삭제</button>
-              </li>
-            </ul>
-          </div>
--->
+                    <label class="col-sm-3 col-form-label-sm mt-3" for="field_list">DB 리스트</label>
+                    <div class="col-sm-9 mt-sm-3 row ml-0">
+                      <ul class="list-group list-group-flush col-12 pr-0" id="field_list">
+                        <li class="list-group-item list-group-item-action d-inline-flex p-1 font-weight-bold">
+                          <div class="col-3 p-2">DB 형식</div>
+                          <div class="col-7 p-2">DB 필드</div>
+                        </li>
+                        <li class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
+                            v-for="url in url_obj">
+                          &lt;!&ndash;DB part. not functioning yet&ndash;&gt;
+                          <div class="col-3 p-2">{{ url.url }}</div>
+                          <div class="col-7 p-2">{{ url.description }}</div>
+                          <button type="button" class="btn btn-outline-danger p-0 col-2">삭제</button>
+                        </li>
+                      </ul>
+                    </div>
+          -->
 
+          <!--
+                    <label class="col-sm-3 col-form-label-sm mt-3" for="form">약관 이미지</label>
 
-          <label class="col-sm-3 col-form-label-sm mt-3" for="form">약관 이미지</label>
-<!--
-
-          <div class="col-sm-9 mt-sm-3">
-            <label class="switch" for="term_switch">
-              <input type="checkbox" id="term_switch" v-model="landing.image_switch">
-              <span class="slider round"></span>
-            </label>
-          </div>
--->
+                    <div class="col-sm-9 mt-sm-3">
+                      <label class="switch" for="term_switch">
+                        <input type="checkbox" id="term_switch" v-model="landing.image_switch">
+                        <span class="slider round"></span>
+                      </label>
+                    </div>
+          -->
         </div>
-<!--
+        <!--
 
-        <div class="form-group row" v-if="landing.image_switch">
-          <label class="col-sm-3 col-form-label-sm mt-3" for="form">약관 이미지 파일</label>
+                <div class="form-group row" v-if="landing.image_switch">
+                  <label class="col-sm-3 col-form-label-sm mt-3" for="form">약관 이미지 파일</label>
 
-          <div class="col-sm-9 mt-sm-3">
-            <input type="text" class="form-control" id="form">
-          </div>
-        </div>
--->
-<!--
+                  <div class="col-sm-9 mt-sm-3">
+                    <input type="text" class="form-control" id="form">
+                  </div>
+                </div>
+        -->
+        <!--
 
-        <div class="form-group row" v-else>
-          <label class="col-sm-3 col-form-label-sm mt-3" for="form_title">약관 제목</label>
-          <div class="col-sm-9 mt-sm-3">
-            <input type="text" class="form-control" id="form_title" placeholder="title" v-model="term_text.title">
-          </div>
-          <label class="col-sm-3 col-form-label-sm mt-3" for="form_cont">약관 내용</label>
-          <div class="col-sm-9 mt-sm-3">
-            <textarea type="text" class="form-control" id="form_cont" rows="4" placeholder="content"
-                      v-model="term_text.content"></textarea>
-          </div>
-        </div>
+                <div class="form-group row" v-else>
+                  <label class="col-sm-3 col-form-label-sm mt-3" for="form_title">약관 제목</label>
+                  <div class="col-sm-9 mt-sm-3">
+                    <input type="text" class="form-control" id="form_title" placeholder="title" v-model="term_text.title">
+                  </div>
+                  <label class="col-sm-3 col-form-label-sm mt-3" for="form_cont">약관 내용</label>
+                  <div class="col-sm-9 mt-sm-3">
+                    <textarea type="text" class="form-control" id="form_cont" rows="4" placeholder="content"
+                              v-model="term_text.content"></textarea>
+                  </div>
+                </div>
 
--->
+        -->
         <hr>
-<!--
+        <!--
 
-        <h5>옵션</h5>
-        <div class="form-group row">
-          <label class="col-sm-3 col-form-label-sm mt-3" for="status">활성상태</label>
-          <div class="col-sm-9 mt-sm-3">
-            <label class="switch" for="status">
-              <input type="checkbox" id="status" v-model="landing.status">
-              <span class="slider round"></span>
-            </label>
-            &lt;!&ndash;<input type="text" class="form-control" id="status" v-model="landing.status">&ndash;&gt;
-          </div>
+                <h5>옵션</h5>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label-sm mt-3" for="status">활성상태</label>
+                  <div class="col-sm-9 mt-sm-3">
+                    <label class="switch" for="status">
+                      <input type="checkbox" id="status" v-model="landing.status">
+                      <span class="slider round"></span>
+                    </label>
+                    &lt;!&ndash;<input type="text" class="form-control" id="status" v-model="landing.status">&ndash;&gt;
+                  </div>
 
-          <label class="col-sm-3 col-form-label-sm mt-3" for="mobile">모바일 전용</label>
-          <div class="col-sm-9 mt-sm-3">
-            <label class="switch" for="mobile">
-              <input type="checkbox" id="mobile" v-model="landing.mobile_only">
-              <span class="slider round"></span>
-            </label>
-            &lt;!&ndash;<input type="text" class="form-control" id="mobile" v-model="landing.mobile_only">&ndash;&gt;
-          </div>
+                  <label class="col-sm-3 col-form-label-sm mt-3" for="mobile">모바일 전용</label>
+                  <div class="col-sm-9 mt-sm-3">
+                    <label class="switch" for="mobile">
+                      <input type="checkbox" id="mobile" v-model="landing.mobile_only">
+                      <span class="slider round"></span>
+                    </label>
+                    &lt;!&ndash;<input type="text" class="form-control" id="mobile" v-model="landing.mobile_only">&ndash;&gt;
+                  </div>
 
-        </div>
+                </div>
 
--->
+        -->
         <hr>
 
         <div class="form-group row">
@@ -259,52 +334,63 @@
       landing_obj: {},
       landing_company: [],
       landing_manager: [],
-      // layout: [],
       term_image: false,
       term_text: [],
       url_obj: {},
       clicked: -1,
       layout: [
-        {"x":0,"y":0,"w":1,"h":5,"i":"0"},
-        {"x":0,"y":1,"w":1,"h":5,"i":"1"},
-        {"x":0,"y":2,"w":1,"h":5,"i":"2"},
-        {"x":0,"y":3,"w":1,"h":5,"i":"3"},
-        {"x":0,"y":4,"w":1,"h":5,"i":"4"},
-      ]
+        {"x": 0, "y": 0, "w": 1, "h": 5, "i": "0"},
+        {"x": 0, "y": 1, "w": 1, "h": 5, "i": "1"},
+        {"x": 0, "y": 2, "w": 1, "h": 5, "i": "2"},
+        {"x": 0, "y": 3, "w": 1, "h": 5, "i": "3"},
+        {"x": 0, "y": 4, "w": 1, "h": 5, "i": "4"},
+      ],
+      len: 0,
+      is_banner: false,
+      is_group: 1,
+      colors: '#194d33',
     }),
     methods: {
       back_to_list() {
         this.$router.push({name: 'landing_list'})
       },
-      check() {
-        console.log('Checked!!', this.layout)
-        let tmp = this.layout
+      check(num) {
+        this.clicked = num
+        let sort = this.layout
+        console.log('max test', sort.i)
+        sort.sort((a, b) => (a.y > b.y) ? 1 : ((b.y > a.y) ? -1 : 0))
+        console.log('sorted tmp', sort)
       },
       layout_post() {
-        let len = this.layout.length
-        this.layout.push({"x":0,"y":0,"w":1,"h":5,"i":len})
+        let len = this.len
+        this.layout.push({"x": 0, "y": 0, "w": 1, "h": 5, "i": len + 1})
+        this.len += 1
         this.check()
       },
       layout_delete() {
-        if(this.clicked !== -1) {
-          if (this.clicked === 0) {
-            this.layout.shift()
-            this.clicked = -1
-          } else {
-            this.layout.splice(this.clicked, 1)
-            this.clicked = -1
+        for (let i = 0; i < this.layout.length; i++) {
+          if (this.layout[i].i === this.clicked) {
+            console.log('get i obj?', this.layout[i])
+            if (i === 0) {
+              this.layout.shift()
+              this.clicked = -1
+            } else {
+              this.layout.splice(i, 1)
+              this.clicked = -1
+            }
           }
         }
         this.check()
       },
-      get_item(num) {
-        this.clicked = num
-      },
+      // get_item(num) {
+      //   this.clicked = num
+      // },
       delete_url() {
         console.log('del function!')
       },
     },
     mounted() {
+      this.len = this.layout.length
       // Get company, manager
       let axios = this.$axios
       axios.get(this.$store.state.endpoints.baseUrl + 'company/')
@@ -315,6 +401,11 @@
           console.log(error)
         })
     },
+    watch: {
+      // is_group() {
+      //   console.log('Checked!!', this.layout)
+      // }
+    }
   }
 </script>
 
@@ -373,7 +464,6 @@
     transform: translateX(26px);
   }
 
-  /* Rounded sliders */
   .slider.round {
     border-radius: 34px;
   }
@@ -382,21 +472,35 @@
     border-radius: 50%;
   }
 
-  /* ios Switch */
-
   .term_label {
     display: inline-block;
   }
+  /*====*/
 
+  /* margin dummy div */
   .margin_div {
     display: inline-block;
     width: 4%;
   }
-
   @media (max-width: 768px) {
     .margin_div {
       display: none;
     }
+  }
+  /*==*/
+
+  .input_one_btn {
+    max-width: 720px;
+    margin-right: auto;
+  }
+
+  .layout_control {
+    width: 60px;
+    height: 30px;
+    padding: 0;
+    margin: 5px 0 5px 5px;
+    font-size: 19px;
+    font-weight: bold;
   }
 
   .landing_layout {
@@ -414,5 +518,6 @@
   .item_area {
     width: 100%;
     height: 100%;
+    transition: all 250ms ease-out;
   }
 </style>

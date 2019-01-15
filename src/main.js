@@ -8,6 +8,7 @@ import Decoder from 'jwt-decode'
 import Paginate from 'vuejs-paginate'
 import VueDragDrop from 'vue-drag-drop'
 import VueGrid from 'vue-grid-layout'
+import VueColor from 'vue-color'
 
 // Routers
 import Header from './Header'
@@ -17,6 +18,7 @@ Vue.component('app-header', Header)
 Vue.component('paginate', Paginate)
 Vue.component('vue-grid', VueGrid)
 Vue.component('vue-drag-drop', VueDragDrop)
+Vue.component('vue-color', VueColor)
 
 Vue.config.productionTip = false
 
@@ -25,6 +27,7 @@ Vue.use(VeeValidate)
 Vue.use(axios)
 Vue.use(VueDragDrop)
 Vue.use(VueGrid)
+Vue.use(VueColor)
 
 Vue.prototype.$jwt_decode = Decoder
 Vue.prototype.$axios = axios
