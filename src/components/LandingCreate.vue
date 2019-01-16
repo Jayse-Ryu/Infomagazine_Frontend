@@ -18,6 +18,7 @@
           <label class="col-sm-3 col-form-label-sm mt-3" for="company_id">업체</label>
           <div class="col-sm-9 mt-sm-3">
             <select class="form-control" name="company" id="company_id">
+              <option value="-1">선택하세요</option>
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -28,7 +29,9 @@
           <label class="col-sm-3 col-form-label-sm mt-3" for="manager">관리자</label>
           <div class="col-sm-9 mt-sm-3">
             <select class="form-control" name="sel" id="manager">
-              <option value="1">1</option>
+              <option value="-1">선택하세요</option>
+              <option value="1">2</option>
+              <option value="2">3</option>
             </select>
           </div>
 
@@ -131,7 +134,7 @@
 
               <label v-if="is_banner" class="col-sm-3 col-form-label-sm mt-3" for="url_title">띠배너 옵션</label>
               <div v-if="is_banner" class="col-sm-9 mt-sm-3 row ml-0">
-                <input type="file" class="form-control col-sm-5 col-md-5" id="in_banner_img" placeholder="이미지">
+                <input type="file" class="form-control col-sm-5 col-md-5 pt-1" id="in_banner_img" placeholder="이미지">
                 <div class="margin_div"></div>
                 <input type="text" class="form-control col-sm-7 col-md-5" id="in_banner_desc" placeholder="띠배너 주소">
                 <div class="margin_div"></div>
@@ -165,25 +168,45 @@
           <!-- Somehow !== is not responsible -->
           <label v-if="is_group != -1" class="col-sm-3 col-form-label-sm mt-3" for="form_group_bg">폼 배경색</label>
           <div v-if="is_group != -1" class="col-sm-9 mt-sm-3 row ml-0">
-            <div class="form-control col-1" id="form_group_bg" ></div>
+            <div class="color_wrap form-control col-1" id="form_group_bg">
+              <input type="color" v-model="bg_color" class="color_picker">
+            </div>
+            <div class="margin_div"></div>
+            <input type="text" v-model="bg_color" class="form-control col-2" maxlength="7">
           </div>
 
           <label v-if="is_group != -1" class="col-sm-3 col-form-label-sm mt-3" for="form_group_col">폼 폰트색</label>
           <div v-if="is_group != -1" class="col-sm-9 mt-sm-3 row ml-0">
-            <div class="form-control col-1" id="form_group_col" v-model="colors"></div>
-
-            <div class="color-picker form-group col-5">
-              <div></div>
+            <div class="color_wrap form-control col-1" id="form_group_col">
+              <input type="color" v-model="tx_color" class="color_picker">
             </div>
-
+            <div class="margin_div"></div>
+            <input type="text" v-model="tx_color" class="form-control col-2" maxlength="7">
           </div>
-
-
-
 
         </div>
 
-        <hr style="width: 100%;">
+        <hr>
+
+        <div class="form-group row mb-0">
+          <label class="col-sm-3 col-form-label-sm mt-3" for="db_field">DB 필드</label>
+          <div class="col-sm-2 mt-sm-3">
+            <select class="form-control" name="company" id="db_field">
+              <option value="-1">선택하세요</option>
+              <option value="1">Text</option>
+              <option value="2">Number</option>
+              <option value="3">Select</option>
+              <option value="4">Radio</option>
+              <option value="5">Check</option>
+              <option value="6">Date</option>
+              <option value="7">Url</option>
+              <option value="8">Tel</option>
+            </select>
+            <input type="text">
+          </div>
+        </div>
+
+        <hr>
 
         <h5>추가내용</h5>
         <div class="form-group row mb-0">
@@ -214,7 +237,7 @@
             </ul>
           </div>
 
-          <hr style="width: 100%;">
+          <hr>
 
           <!--
                     <label class="col-sm-3 col-form-label-sm mt-3" for="db_list">DB</label>
@@ -314,7 +337,7 @@
 
         <div class="form-group row">
           <div class="col-12">
-            <button type="submit" class="btn btn-primary col-12">저장</button>
+            <button type="submit" class="btn btn-primary col-12">생성</button>
             <router-link to="/landing">
               <button type="button" class="btn btn-dark col-12 mt-2">취소</button>
             </router-link>
@@ -348,7 +371,8 @@
       len: 0,
       is_banner: false,
       is_group: 1,
-      colors: '#194d33',
+      bg_color: '#c3c83a',
+      tx_color: '#414141'
     }),
     methods: {
       back_to_list() {
@@ -410,6 +434,10 @@
 </script>
 
 <style scoped>
+  hr {
+    width: 100%;
+  }
+
   /* ios switch */
   .switch {
     position: relative;
@@ -519,5 +547,18 @@
     width: 100%;
     height: 100%;
     transition: all 250ms ease-out;
+  }
+
+  .color_wrap {
+    overflow: hidden;
+  }
+
+  .color_picker {
+    position: relative;
+    width: 200%;
+    height: 200%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 </style>
