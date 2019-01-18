@@ -91,6 +91,7 @@
             </div>
           </div>
 
+<!--
           <div class="form-group block">
             <label for="organization" class="col-sm-3 control-label">소속</label>
             <div class="col-sm-12">
@@ -103,6 +104,7 @@
                      id="organization">
             </div>
           </div>
+-->
 
           <div class="form-group block">
             <label for="phone" class="col-sm-12 control-label">전화번호<div class="error_label" v-if="errors.has('phone')">{{errors.first('phone')}}</div></label>
@@ -116,6 +118,36 @@
                      v-validate="'numeric|max:16'"
                      name="phone"
                      id="phone">
+            </div>
+          </div>
+
+          <div class="form-group block">
+            <label for="access" class="col-sm-12 control-label">소속*</label>
+            <div class="col-sm-12 pt-2 pb-2" id="access">
+              <div class="form-check-inline">
+                <input type="radio" id="access_marketer" name="access" v-model="access" value="0" class="form-check-input">
+                <label for="access_marketer" class="form-check-label">마케터</label>
+              </div>
+              <div class="form-check-inline">
+                <input type="radio" id="access_client" name="access" v-model="access" value="1" class="form-check-input">
+                <label for="access_client" class="form-check-label">고객(클라이언트)</label>
+              </div>
+            </div>
+            <div v-if="access == 0" class="col-sm-12">
+              <select name="select_org" id="select_org" class="form-control" v-model="organization">
+                <option value="-1">조직을 선택하세요..</option>
+                <option value="-2">조직을 생성하겠습니다.</option>
+                <option value="1">마케팅업체1</option>
+                <option value="2">마케팅업체2</option>
+              </select>
+            </div>
+            <div v-else-if="access == 1" class="col-sm-12">
+              <select name="select_company" id="select_company" class="form-control" v-model="company">
+                <option value="-1">업체를 선택하세요..</option>
+                <!--<option value="1">고객업체1</option>-->
+                <!--<option value="2">고객업체2</option>-->
+                <!--<option v-for="option in select_options" value=""></option>-->
+              </select>
             </div>
           </div>
 
@@ -141,15 +173,20 @@ export default {
     re_pass: '',
     full_name: '',
     email: '',
-    organization: '',
-    phone: ''
+    phone: '',
+    access: -1,
+    organization: -1,
+    company: -1,
+    select_options: [],
   }),
   methods: {
     sign_up () {
       this.$validator.validateAll()
       if (this.password !== this.re_pass) {
-        alert('check the password')
+        alert('비밀번호를 확인해주세요.')
         document.getElementById('re_password').focus()
+      } else if (this.access === -1 || this.organization === -1 && this.company === -1) {
+        alert('소속을 확인해주세요.')
       } else {
         let axios = this.$axios
         ///////
@@ -158,7 +195,6 @@ export default {
         formData.append('password', this.password)
         formData.append('full_name', this.full_name)
         formData.append('email', this.email)
-        formData.append('organization', this.organization)
         formData.append('phone', this.phone)
         const baseURI = 'http://127.0.0.1:8000'  //'http://13.209.67.94/'
         const config = {
@@ -171,7 +207,18 @@ export default {
         /* Do axios post */
         axios.post(`${baseURI}/user/`, formData, config)
           .then((response) => {
-            /*console.log(response)*/
+            let formData = new FormData()
+            formData.append('user', response.data.id)
+            formData.append('access', this.access)
+            if (this.organization !== -1 || this.organization !== -2) {
+              formData.append('organization', this.organization)
+            }
+            if (this.company !== -1) {
+              formData.append('company', this.company)
+            }
+            return axios.post(`${baseURI}/user_access/`, formData, config)
+          })
+          .then((response) => {
             alert('회원가입 되었습니다.')
             this.$router.push({
               name: 'sign_in'
@@ -185,6 +232,31 @@ export default {
 
       }
     }
+  },
+  watch: {
+    access() {
+      this.organization = -1
+      this.company = -1
+      if (this.access == 0) {
+        let axios = this.$axios
+        let this_url = 'organization/'
+        axios.get(this.$store.state.endpoints.baseUrl + this_url)
+          .then((response) => {
+            console.log('get organizations = ', response.data)
+            this.select_options = response.data
+            console.log(this.select_options)
+          })
+      } else if (this.access == 1) {
+        let axios = this.$axios
+        let this_url = 'company/'
+        axios.get(this.$store.state.endpoints.baseUrl + this_url)
+          .then((response) => {
+            console.log('get companies = ', response.data)
+            this.select_options = response.data
+            console.log(this.select_options)
+          })
+      }
+    }
   }
 }
 </script>
@@ -196,6 +268,7 @@ export default {
     width: 100%;
     min-height: 100%;
     overflow: auto;
+    top: 0;
     z-index: -1;
     background: linear-gradient(217deg, rgba(2,0,36,.8), rgba(255,0,0,0) 70.71%),
     linear-gradient(127deg, rgba(141,168,185,.8), rgba(0,255,0,0) 70.71%),
