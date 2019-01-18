@@ -1,5 +1,7 @@
 <template>
-  <div class="main" id="main_signin">
+  <div>
+    <div class="main" id="main_signin">
+    </div>
     <!-- Login fields login button signup button logo -->
     <div class="login_box container">
       <div class="login_border">
@@ -43,88 +45,94 @@
         </form>
       </div>
 
-      <div class="warn_wrap">
-        <div class="warn_1">•경고</div>
+    </div>
+
+    <div class="warn_wrap">
+      <div class="warn_content">
         <ol>
-          <li>본 사이트는 인포맥 디비시스템 사이트로써 관련자가 아닌 사람은 사용하실 수 없습니다.</li>
-          <li>관계자가 아닌 사람이 부정 사용 시 법적 제제 및 민형사 상의 처벌을 받을 수 있음을 알립니다.</li>
+          <li>• 본 사이트는 인포맥 디비시스템 사이트로써 관련자가 아닌 사람은 사용하실 수 없습니다.</li>
+          <li>• 관계자가 아닌 사람이 부정 사용 시 법적 제제 및 민형사 상의 처벌을 받을 수 있음을 알립니다.</li>
         </ol>
         <div class="copy_right">Copyright© infomag DB system Inc. All Rights Reserved</div>
       </div>
-
     </div>
 
-  </div>
 
+  </div>
 </template>
 
 <script>
-export default {
-  name: 'sign_in',
-  data: () => ({
-    account: '',
-    password: '',
-  }),
-  mounted() {
-    this.$parent.$data.header_flag = 0
-  },
-  destroyed() {
-    this.$parent.$data.header_flag = 1
-  },
-  methods: {
-    login () {
-      let axios = this.$axios
-      let decode = this.$jwt_decode
-      const payload = {
-        account: this.account,
-        password: this.password
+  export default {
+    name: 'sign_in',
+    data: () => ({
+      account: '',
+      password: '',
+    }),
+    mounted() {
+      this.$parent.$data.header_flag = 0
+    },
+    destroyed() {
+      this.$parent.$data.header_flag = 1
+    },
+    methods: {
+      login() {
+        let axios = this.$axios
+        let decode = this.$jwt_decode
+        const payload = {
+          account: this.account,
+          password: this.password
+        }
+        this.$store.dispatch('obtainToken', payload)
       }
-      this.$store.dispatch('obtainToken', payload)
     }
   }
-}
 </script>
 
 <style scoped lang="scss">
   .main {
     position: fixed;
     width: 100%;
-    min-height: 100%;
+    height: 100%;
+    top: 0;
+    z-index: -1;
     overflow: auto;
-    background: linear-gradient(217deg, rgba(2,0,36,.8), rgba(255,0,0,0) 70.71%),
-    linear-gradient(127deg, rgba(141,168,185,.8), rgba(0,255,0,0) 70.71%),
-    linear-gradient(336deg, rgba(0,212,255,.8), rgba(0,0,255,0) 70.71%);
+    background: linear-gradient(217deg, rgba(2, 0, 36, .8), rgba(255, 0, 0, 0) 70.71%),
+    linear-gradient(127deg, rgba(141, 168, 185, .8), rgba(0, 255, 0, 0) 70.71%),
+    linear-gradient(336deg, rgba(0, 212, 255, .8), rgba(0, 0, 255, 0) 70.71%);
   }
 
   .login_box {
-    position: absolute;
-    top: 45%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    // position: absolute;
+    // top: 45%;
+    // left: 50%;
+    // transform: translate(-50%, -50%);
     width: 100%;
     font-family: 'Nanum Gothic', 'sans-serif';
     max-width: 500px;
-    margin: auto;
+    margin: 10vh auto 10px;
   }
 
   .login_border {
-    background-color: rgba(255,255,255,0.4);
+    background-color: rgba(255, 255, 255, 0.4);
     padding: 30px 30px 10vh;
     border-radius: 10px;
   }
+
   @media (max-height: 400px) {
     .login_box {
-      top: 2px;
-      transform: translate(-50%, 0%);
+      // top: 2px;
+      // transform: translate(-50%, 0%);
     }
   }
 
   .logo_wrap {
     width: 100%;
+
     .logo {
       width: 250px;
       margin: calc(10vh - 28px) auto;
       text-align: center;
+
       img {
         width: 100%;
       }
@@ -141,24 +149,31 @@ export default {
   }
 
   .warn_wrap {
-    position: absolute;
-    /*width: 40%;*/
+    // position: absolute;
+    // width: 40%;
     width: 100%;
-    left: 0;
+    // left: 0;
     margin: 10px auto;
+    text-align: center;
     font-family: 'Nanum Gothic', 'sans-serif';
     font-size: 15px;
-    .warn_1 {
-      color: firebrick;
-      font-weight: bold;
-      padding: 10px 0;
-    }
-    ol {
-      padding: 0;
-      font-weight: bold;
-      color: #616161;
-      li {
-        padding: 5px 0;
+
+    .warn_content {
+      max-width: 630px;
+      margin:0 auto 40px;
+      text-align: left;
+
+      ol {
+        font-weight: bold;
+        color: #616161;
+        padding: 10px;
+        word-break: keep-all;
+
+        li {
+          color: #d22323;
+          padding: 5px 0;
+          text-align: center;
+        }
       }
     }
   }

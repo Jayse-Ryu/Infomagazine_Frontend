@@ -1,5 +1,6 @@
 <template>
-  <div class="main">
+  <div>
+    <div class="main"></div>
       <div class="text_navigation">
         <router-link to="/">로그인</router-link>
         <span>></span>
@@ -195,19 +196,22 @@ export default {
     width: 100%;
     min-height: 100%;
     overflow: auto;
+    z-index: -1;
     background: linear-gradient(217deg, rgba(2,0,36,.8), rgba(255,0,0,0) 70.71%),
     linear-gradient(127deg, rgba(141,168,185,.8), rgba(0,255,0,0) 70.71%),
     linear-gradient(336deg, rgba(0,212,255,.8), rgba(0,0,255,0) 70.71%);
   }
 
   .login_border {
-    max-height: 100vh;
-    min-height: 100vh;
+    // max-height: 100vh;
+    // min-height: 100vh;
     overflow: auto;
     background-color: rgba(255,255,255,0.4);
-    padding: 10vh 30px 30vh;
+    padding: 10vh 30px 30px;
+    margin-bottom: 10vh;
     font-family: 'Nanum Gothic', 'sans-serif';
     // font-weight: bold;
+    border-radius: 10px;
   }
 
   .password_form {
