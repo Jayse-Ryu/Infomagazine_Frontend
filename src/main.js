@@ -38,6 +38,7 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 const store = new Vuex.Store({
   state: {
     authUser: {},
+    userAccess: {},
     isAuthenticated: false,
     jwt: localStorage.getItem('token'),
     endpoints: {
@@ -72,6 +73,11 @@ const store = new Vuex.Store({
       Vue.set(state, 'authUser', authUser)
       Vue.set(state, 'isAuthenticated', isAuthenticated)
     },
+    setAccess (state, {
+      userAccess
+    }) {
+      Vue.set(state, 'userAccess', userAccess)
+    },
     updateToken (state, newToken) {
       // TODO: For security purposes, take localStorage out of the project.
       localStorage.setItem('token', newToken)
@@ -96,7 +102,7 @@ const store = new Vuex.Store({
         .then((response) => {
           this.commit('updateToken', response.data.token)
           this.dispatch('getAuthUser')
-          router.push('/landing')
+          router.push('/gateway')
         })
         .catch((error) => {
           console.log('Obtain Token action error..', error)
@@ -190,10 +196,12 @@ const store = new Vuex.Store({
                   isAuthenticated: true
                 })
               }
-              console.log('(Auth)', this.state.authUser.full_name)
-              // this.auth_user = this.state.authUser.full_name
-              // Auto move to inner main page.
-              // this.$router.push({name: 'landing_list'})
+              return axios.get(this.state.endpoints.baseUrl + 'user_access/' + user_id + '/')
+            })
+            .then((response) => {
+              this.commit('setAccess', {
+                userAccess: response.data
+              })
             })
             .catch((error) => {
               console.log('get Auth user failed..', error)

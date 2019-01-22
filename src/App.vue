@@ -2,10 +2,15 @@
   <div id="app">
 
     <!-- Header component -->
-    <app-header v-if="header_flag === 1" key="header" />
-    <div v-else key="no_header"></div>
+    <transition name="fade">
+      <app-header v-if="header_flag === 1" key="header" />
+      <div v-else key="no_header"></div>
+    </transition>
+
     <!-- Router component -->
-    <router-view/>
+    <transition name="fade">
+      <router-view/>
+    </transition>
 
   </div>
 </template>
@@ -541,6 +546,23 @@ export default {
   .text_navigation a {
     font-size: 14px;
     color: #007aff;
+  }
+
+  .fade-enter-active {
+    transition: all 200ms ease-out;
+  }
+
+  .fade-leave-active {
+    transition: none;
+  }
+
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
+  {
+    opacity: 0;
+    // transform: translateY(10px);
+    position: absolute;
+    width: 100%;
+    margin: auto;
   }
 
 </style>

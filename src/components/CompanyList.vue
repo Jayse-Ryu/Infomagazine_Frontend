@@ -7,8 +7,10 @@
     </div>
 
 
-    <form class="container m-auto d-flex justify-content-between flex-row" v-on:submit.prevent="search(temp_option, temp_text)">
-      <router-link to="/company/create/" class="btn-sm h-75 btn-primary p-1 col-md-1 col-sm-2 col text-center">생성</router-link>
+    <form class="container m-auto d-flex justify-content-between flex-row"
+          v-on:submit.prevent="search(temp_option, temp_text)">
+      <router-link to="/company/create/" class="btn-sm h-75 btn-primary p-1 col-md-1 col-sm-2 col text-center">생성
+      </router-link>
       <div class="form-group search_group">
         <select class="search_option" id="src_gbn" v-model="temp_option">
           <option value="0" selected>검색 옵션</option>
@@ -17,7 +19,7 @@
         </select>
         <input type="text" class="search_text" v-model="temp_text" placeholder="검색">
         <button type="submit" class="search_btn">
-          <img src="../assets/common/search.png" />
+          <img src="../assets/common/search.png"/>
         </button>
       </div>
     </form>
@@ -26,7 +28,8 @@
 
       <div v-if="window_width > 1000" class="list_area">
         <div>
-          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2" style="border-radius: 0; border-bottom: 0; width:100%;">
+          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2"
+               style="border-radius: 0; border-bottom: 0; width:100%;">
             <div class="col-1">번호</div>
             <div class="col-2">업체</div>
             <div class="col-2">상호명</div>
@@ -36,13 +39,19 @@
           </div>
         </div>
         <ul class="list-group list-group-flush col-12 pr-0">
-          <li v-if="content_obj.length === 0" class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
+          <li v-if="content_obj.length === 0"
+              class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
             <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
           </li>
-          <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1" v-for="content in content_obj">
+          <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
+              v-for="content in content_obj">
             <div class="col-1 col-sm-1">{{ content.id }}</div>
-            <div class="col-2 col-sm-2"><router-link :to="'/company/detail/' + content.id">{{ content.name }}</router-link></div>
-            <div class="col-2 col-sm-2"><router-link :to="'/company/detail/' + content.id">{{ content.sub_name }}</router-link></div>
+            <div class="col-2 col-sm-2">
+              <router-link :to="'/company/detail/' + content.id">{{ content.name }}</router-link>
+            </div>
+            <div class="col-2 col-sm-2">
+              <router-link :to="'/company/detail/' + content.id">{{ content.sub_name }}</router-link>
+            </div>
             <div class="col-2">{{ content.manager_name }}</div>
             <div class="col-2">{{ content.phone }}</div>
             <div class="col-3 board_centre">{{ (content.created_date).substring(0, 10) }}</div>
@@ -52,7 +61,8 @@
 
       <div v-else class="list_area">
         <div>
-          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2" style="border-radius: 0; border-bottom: 0; width:100%;">
+          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2"
+               style="border-radius: 0; border-bottom: 0; width:100%;">
             <div class="col-1">번호</div>
             <div class="col-3">업체이름</div>
             <div class="col-4">업체 연락처</div>
@@ -60,12 +70,16 @@
           </div>
         </div>
         <ul class="list-group list-group-flush col-12 pr-0">
-          <li v-if="content_obj.length === 0" class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
+          <li v-if="content_obj.length === 0"
+              class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
             <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
           </li>
-          <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1" v-for="content in content_obj">
+          <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
+              v-for="content in content_obj">
             <div class="col-1">{{ content.id }}</div>
-            <div class="col-3"><router-link :to="'/company/detail/' + content.id">{{ content.name }}</router-link></div>
+            <div class="col-3">
+              <router-link :to="'/company/detail/' + content.id">{{ content.name }}</router-link>
+            </div>
             <div class="col-4">{{ content.phone }}</div>
             <div class="col-4 board_centre">{{ (content.created_date).substring(0, 10) }}</div>
           </li>
@@ -96,6 +110,20 @@
 <script>
   export default {
     name: "company_list",
+    created() {
+      if (this.$store.state.authUser) {
+        if (this.$store.state.userAccess.access !== 1) {
+          this.$router.push({
+            name: 'gateway'
+          })
+        }
+      } else {
+        alert('로그인이 필요합니다.')
+        this.$router.push({
+          name: 'gateway'
+        })
+      }
+    },
     data: () => ({
       window_width: window.innerWidth,
       // Page = options, contents
@@ -109,14 +137,14 @@
       search_text: '',
     }),
     methods: {
-      pagination: function(pageNum) {
+      pagination: function (pageNum) {
         // when page is first, max ~ max-(chunk*current)+1
         // when page is max, max-(chunk*(current-1)) ~ 1
         // when page is middle, max-(chunk*(current-1)) ~ max-(chunk*current)+1
-        let offset = (pageNum - 1)*this.page_chunk
+        let offset = (pageNum - 1) * this.page_chunk
         this.calling_all_unit(offset)
       },
-      search: function(option, text) {
+      search: function (option, text) {
         if (option !== 0 || text !== '') {
           let option_val
           this.page_current = 1
@@ -132,7 +160,7 @@
           this.calling_all_unit()
         }
       },
-      calling_all_unit: function(page) {
+      calling_all_unit: function (page) {
         // Calling landings with new values
         let axios = this.$axios
         let this_url = 'company/'
@@ -140,10 +168,10 @@
         axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
           .then((response) => {
             // Calculation for page_max
-            if(response.data.count % this.page_chunk === 0) {
-              this.page_max = Math.floor(response.data.count/this.page_chunk)
+            if (response.data.count % this.page_chunk === 0) {
+              this.page_max = Math.floor(response.data.count / this.page_chunk)
             } else {
-              this.page_max = Math.floor(response.data.count/this.page_chunk) + 1
+              this.page_max = Math.floor(response.data.count / this.page_chunk) + 1
             }
             this.content_obj = response.data.results
             console.log(this.content_obj)
@@ -175,15 +203,15 @@
       this.search_option = this.$store.state.pageOptions.company.option
       this.temp_text = this.$store.state.pageOptions.company.text
       this.search_text = this.$store.state.pageOptions.company.text
-      let offset = (this.$store.state.pageOptions.company.page - 1)*(3)
+      let offset = (this.$store.state.pageOptions.company.page - 1) * (3)
       // Axios get landings
       axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
         .then((response) => {
           // Calculation for page_max
-          if(response.data.count % this.page_chunk === 0) {
-            this.page_max = Math.floor(response.data.count/this.page_chunk)
+          if (response.data.count % this.page_chunk === 0) {
+            this.page_max = Math.floor(response.data.count / this.page_chunk)
           } else {
-            this.page_max = Math.floor(response.data.count/this.page_chunk) + 1
+            this.page_max = Math.floor(response.data.count / this.page_chunk) + 1
           }
           this.content_obj = response.data.results
         })
@@ -245,11 +273,13 @@
     border: 1px solid #c1c1c1;
     border-radius: 0 5px 5px 0;
     margin-left: -6px;
+
     img {
       width: 55%;
       height: 60%;
     }
   }
+
   /* Search box ended */
 
   /* Pagination */
@@ -260,14 +290,17 @@
     font-size: 0;
     padding: 10px 0;
   }
+
   .page-item {
     font-size: 14px;
     border-radius: 0;
   }
+
   .page-link {
     display: inline-block;
     border-radius: 0 !important;
     padding: 0 !important;
+
     a {
       display: block;
       width: 35px;
@@ -276,20 +309,25 @@
       line-height: 35px;
     }
   }
+
   .page-link.active {
     background-color: #007bcc;
+
     a {
       color: #efefef;
     }
   }
+
   .page-link.disabled {
     a {
       color: #c1c1c1;
     }
   }
+
   .page-link.prev, .page-link.next {
     border: none;
   }
+
   /*Pagination End*/
 
   .board_container {
@@ -320,9 +358,11 @@
     padding: 5px 0;
     border-bottom: 1px solid #eaeaea;
   }
+
   .board_li:last-child {
     border: none;
   }
+
   .board_centre {
     text-align: center;
   }

@@ -69,17 +69,51 @@
                    maxlength="16"/>
           </div>
 
-          <label for="my_comp" class="col-form-label-sm col-sm-3 mt-3">소속</label>
+          <!--
+                    <label for="my_comp" class="col-form-label-sm col-sm-3 mt-3">소속</label>
+                    <div class="col-sm-9 mt-sm-3">
+                      <input type="text" id="my_comp" class="form-control" v-model="content_obj.organization"
+                             autofocus="autofocus"
+                             maxlength="50"
+                             name="organization"/>
+                    </div>
+          -->
+
+          <label class="col-form-label-sm col-sm-3 mt-3" for="select_org">소속</label>
+          <!--<div class="col-sm-9 pt-2 pb-2" id="access">
+            <div class="form-check-inline">
+              <input type="radio" id="access_marketer" name="access" v-model="access_obj.access" value="0"
+                     class="form-check-input">
+              <label for="access_marketer" class="form-check-label">마케터</label>
+            </div>
+            <div class="form-check-inline">
+              <input type="radio" id="access_client" name="access" v-model="access_obj.access" value="1"
+                     class="form-check-input">
+              <label for="access_client" class="form-check-label">고객(클라이언트)</label>
+            </div>
+          </div>-->
           <div class="col-sm-9 mt-sm-3">
-            <input type="text" id="my_comp" class="form-control" v-model="content_obj.organization"
-                   autofocus="autofocus"
-                   maxlength="50"
-                   name="organization"/>
+            <select v-if="access_obj.access == 1 || access_obj.access == -1" name="select_org" id="select_org"
+                    class="form-control"
+                    v-model="access_obj.organization">
+              <option value="-1">조직을 선택하세요..</option>
+              <!--<option value="-2">조직을 생성하겠습니다.</option>-->
+              <option v-for="item in select_options" :value="item.id">{{ item.name }}</option>
+            </select>
+            <select v-else-if="access_obj.access == 2 || access_obj.access == -2" name="select_company"
+                    id="select_company" class="form-control"
+                    v-model="access_obj.company">
+              <option value="-1">업체를 선택하세요..</option>
+              <option v-for="item in select_options" :value="item.id">{{ item.name }}</option>
+            </select>
           </div>
+
 
           <label for="my_join" class="col-form-label-sm col-sm-3 mt-3">가입일</label>
           <div class="col-sm-9 mt-sm-3">
-            <div v-if="content_obj.created_date" type="text" id="my_join" class="form-control border-0">{{ (content_obj.created_date).substring(0, 10) }}</div>
+            <div v-if="content_obj.created_date" type="text" id="my_join" class="form-control border-0">{{
+              (content_obj.created_date).substring(0, 10) }}
+            </div>
             <div v-else type="text" class="form-control border-0">{{ content_obj.created_date }}</div>
           </div>
 
@@ -96,110 +130,154 @@
 </template>
 
 <script>
-export default {
-  name: "my_info",
-  data: () => ({
-    content_obj: [],
-    password: '',
-    re_password: '',
-    pass_error: false,
-  }),
-  mounted () {
-    let axios = this.$axios
-    let this_url = 'user/'
-    let decode = this.$jwt_decode
-    let decoder = decode(this.$store.state.jwt)
+  export default {
+    name: "my_info",
+    data: () => ({
+      content_obj: [],
+      access_obj: [],
+      original_org: 0,
+      password: '',
+      re_password: '',
+      pass_error: false,
+      select_options: [],
+    }),
+    mounted() {
+      let axios = this.$axios
+      let this_url = 'user/'
+      let decode = this.$jwt_decode
+      let decoder = decode(this.$store.state.jwt)
 
-    axios.get(this.$store.state.endpoints.baseUrl + this_url + decoder.user_id)
-      .then((response) => {
-        // Calculation for page_max
-        this.content_obj = response.data
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  },
-  methods: {
-    check() {
-      // check validate first
-      this.$validator.validateAll()
-      if (this.password !== '' || this.re_password !== '') {
-        if (this.password !== this.re_password) {
+      axios.get(this.$store.state.endpoints.baseUrl + this_url + decoder.user_id)
+        .then((response) => {
+          // Set user data
+          this.content_obj = response.data
+          // Get user access data
+          this_url = 'user_access/'
+          return axios.get(this.$store.state.endpoints.baseUrl + this_url + response.data.id + '/')
+        })
+        .then((response) => {
+          // Set access data
+          this.access_obj = response.data
+          // Get organization or company data
+          let choice = 'ready/'
+          if (response.data.access === 1 || response.data.access === -1) {
+            choice = 'organization/'
+            if (response.data.organization) {
+              this.original_org = response.data.organization
+            }
+          } else if (response.data.access === 2 || response.data.access === -2) {
+            choice = 'company/'
+            if (response.data.company) {
+              this.original_org = response.data.company
+            }
+          }
+          return axios.get(this.$store.state.endpoints.baseUrl + choice)
+        })
+        .then((response) => {
+          this.select_options = response.data.results
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    methods: {
+      check() {
+        // check validate first
+        this.$validator.validateAll()
+        if (this.password !== '' || this.re_password !== '') {
+          if (this.password !== this.re_password) {
+            this.pass_error = true
+            alert('비밀번호를 확인하세요.')
+          } else {
+            this.pass_error = false
+            this.content_obj.password = this.password
+            this.put()
+          }
+        } else if (this.password === '' && this.re_password === '') {
           this.pass_error = true
-          alert('비밀번호를 확인하세요.')
-        } else {
-          this.pass_error = false
-          this.content_obj.password = this.password
-          this.put()
+          alert('비밀번호는 필수 항목입니다.')
         }
-      } else if (this.password === '' && this.re_password === '') {
-        this.pass_error = true
-        alert('비밀번호는 필수 항목입니다.')
+      },
+      put() {
+        // Are you sure?
+        if (confirm('정보를 수정하시겠습니까?')) {
+          let decode = this.$jwt_decode
+          let decoder = decode(this.$store.state.jwt)
+          if (decoder.user_id) {
+            let axios = this.$axios
+            let this_url = 'user/'
+            axios.patch(this.$store.state.endpoints.baseUrl + this_url + decoder.user_id + '/', this.content_obj)
+              .then((response) => {
+                let formData = new FormData()
+                formData.append('access', this.access_obj.access)
+                if (this.access_obj.access === 1 || this.access_obj.access === -1) {
+                  if (this.access_obj.organization !== null && this.access_obj.organization > 0) {
+                    if (this.access_obj.organization === this.original_org) {
+                      formData.append('organization', this.access_obj.organization)
+                    } else {
+                      formData.append('access', '-1')
+                      formData.append('organization', this.access_obj.organization)
+                    }
+                  }
+                } else if (this.access_obj.access === 2 || this.access_obj.access === -2) {
+                  if (this.access_obj.company !== null && this.access_obj.company > 0) {
+                    if (this.access_obj.company === this.original_org) {
+                      formData.append('company', this.access_obj.company)
+                    } else {
+                      formData.append('access', '-2')
+                      formData.append('company', this.access_obj.company)
+                    }
+                  }
+                }
+                return axios.patch(this.$store.state.endpoints.baseUrl + 'user_access/' + decoder.user_id + '/', formData)
+              })
+              .then((response) => {
+                console.log(response)
+                alert('수정되었습니다. 다시 로그인 하세요.')
+                this.$store.commit('removeToken')
+                this.$router.push({
+                  name: 'sign_in'
+                })
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+          }
+        }
+      },
+      bye() {
+        if (confirm('정말 탈퇴하시겠습니까?')) {
+          let decode = this.$jwt_decode
+          let decoder = decode(this.$store.state.jwt)
+          if (decoder.user_id) {
+            let axios = this.$axios
+            let this_url = 'user/'
+            axios.delete(this.$store.state.endpoints.baseUrl + this_url + decoder.user_id + '/')
+              .then((response) => {
+                // Calculation for page_max
+                alert('탈퇴되었습니다.')
+                this.$store.commit('removeToken')
+                this.$router.push({
+                  name: 'sign_in'
+                })
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+          }
+        }
       }
     },
-    put() {
-      // Are you sure?
-      if(confirm('정보를 수정하시겠습니까?')) {
-        let decode = this.$jwt_decode
-        let decoder = decode(this.$store.state.jwt)
-        if (decoder.user_id) {
-          let axios = this.$axios
-          let this_url = 'user/'
-          axios.patch(this.$store.state.endpoints.baseUrl + this_url + decoder.user_id + '/', this.content_obj)
-            .then((response) => {
-              // Calculation for page_max
-              alert('수정되었습니다.')
-              this.$router.push('/')
-            })
-            .catch((error) => {
-              console.log(error)
-            })
-        }
-      }
-    },
-    // patch() {
-    //   // Are you sure?
-    //   if(confirm('정보를 수정하시겠습니까?')) {
-    //     let axios = this.$axios
-    //     let this_url = 'user/'
-    //
-    //     axios.post(this.$store.state.endpoints.baseUrl + this_url, {
-    //       data: this.content_obj,
-    //       _method: 'patch'
-    //     })
-    //       .then((response) => {
-    //         // Calculation for page_max
-    //         console.log(response)
-    //       })
-    //       .catch((error) => {
-    //         console.log(error)
-    //       })
+    // watch: {
+    //   access_obj(){
+    //     if (this.access_obj.access == 0) {
+    //       console.log('marketer')
+    //     } else if (this.access_obj.access == 1){
+    //       console.log('client')
+    //     }
     //   }
     // }
-    bye() {
-      if (confirm('정말 탈퇴하시겠습니까?')) {
-        let decode = this.$jwt_decode
-        let decoder = decode(this.$store.state.jwt)
-        if (decoder.user_id) {
-          let axios = this.$axios
-          let this_url = 'user/'
-          axios.delete(this.$store.state.endpoints.baseUrl + this_url + decoder.user_id + '/')
-            .then((response) => {
-              // Calculation for page_max
-              alert('탈퇴되었습니다.')
-              this.$store.commit('removeToken')
-              this.$router.push({
-                name: 'sign_in'
-              })
-            })
-            .catch((error) => {
-              console.log(error)
-            })
-        }
-      }
-    }
   }
-}
 </script>
 
 <style scoped>

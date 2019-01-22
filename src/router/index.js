@@ -16,6 +16,7 @@ import Signin from '@/components/Signin'
 import Signup from '@/components/Signup'
 import UserDetail from '@/components/UserDetail'
 import UserList from '@/components/UserList'
+import Gateway from '@/components/Gateway'
 
 // use like this.$xx
 Vue.use(Router)
@@ -112,8 +113,7 @@ const router = new Router({
       name: 'user_detail',
       component: UserDetail,
       meta: {
-        requiresAuth: true,
-        is_staff: true
+        requiresAuth: true
       }
     },
     {
@@ -121,8 +121,15 @@ const router = new Router({
       name: 'user_list',
       component: UserList,
       meta: {
-        requiresAuth: true,
-        is_staff: true
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/gateway',
+      name: 'gateway',
+      component: Gateway,
+      meta: {
+        requiresAuth: true
       }
     }
   ],
@@ -149,9 +156,9 @@ router.beforeEach((to, from, next) => {
   }
   // When auth user, return to landing page from sign_in
   if (window.localStorage.token && to.name === 'sign_in') {
-    next({name: 'landing_list'})
+    next({name: 'gateway'})
   } else if (window.localStorage.token && to.path === '/') {
-    next({name: 'landing_list'})
+    next({name: 'gateway'})
   }
   next()
 })

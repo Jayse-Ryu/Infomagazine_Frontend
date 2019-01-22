@@ -7,9 +7,10 @@
     </div>
 
 
-
-    <form class="container m-auto d-flex justify-content-between flex-row" v-on:submit.prevent="search(temp_option, temp_text)">
-      <router-link to="/landing/create/" class="btn-sm h-75 btn-primary p-1 col-md-1 col-sm-2 col text-center">생성</router-link>
+    <form class="container m-auto d-flex justify-content-between flex-row"
+          v-on:submit.prevent="search(temp_option, temp_text)">
+      <router-link to="/landing/create/" class="btn-sm h-75 btn-primary p-1 col-md-1 col-sm-2 col text-center">생성
+      </router-link>
       <div class="form-group search_group">
         <select class="search_option" id="src_gbn" v-model="temp_option">
           <option value="0" selected>검색 옵션</option>
@@ -19,7 +20,7 @@
         </select>
         <input type="text" class="search_text" v-model="temp_text" placeholder="검색">
         <button type="submit" class="search_btn">
-          <img src="../assets/common/search.png" />
+          <img src="../assets/common/search.png"/>
         </button>
       </div>
     </form>
@@ -28,7 +29,8 @@
 
       <div v-if="window_width > 1000" class="list_area">
         <div>
-          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2" style="border-radius: 0; border-bottom: 0; width:100%;">
+          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2"
+               style="border-radius: 0; border-bottom: 0; width:100%;">
             <div class="col-1">번호</div>
             <div class="col-2">업체</div>
             <div class="col-4">랜딩페이지</div>
@@ -38,13 +40,17 @@
           </div>
         </div>
         <ul class="list-group list-group-flush col-12 pr-0">
-          <li v-if="content_obj.length === 0" class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
+          <li v-if="content_obj.length === 0"
+              class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
             <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
           </li>
-          <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1" v-for="content in content_obj">
+          <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
+              v-for="content in content_obj">
             <div class="col-1 col-sm-1">{{ content.id }}</div>
             <div class="col-3 col-sm-2">{{ content.company_name }}</div>
-            <div class="col-3 col-sm-4"><router-link :to="'/landing/detail/' + content.id">{{ content.name }}</router-link></div>
+            <div class="col-3 col-sm-4">
+              <router-link :to="'/landing/detail/' + content.id">{{ content.name }}</router-link>
+            </div>
             <div class="col-3">{{ content.manager_name }}</div>
             <div class="col-1 board_centre">{{ content.view }}</div>
             <div class="col-1 board_centre">{{ content.hit }}</div>
@@ -54,7 +60,8 @@
 
       <div v-else class="list_area">
         <div>
-          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2" style="border-radius: 0; border-bottom: 0; width:100%;">
+          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2"
+               style="border-radius: 0; border-bottom: 0; width:100%;">
             <div class="col-1">번호</div>
             <div class="col-4">업체</div>
             <div class="col-6">랜딩페이지</div>
@@ -62,13 +69,17 @@
           </div>
         </div>
         <ul class="list-group list-group-flush col-12 pr-0">
-          <li v-if="content_obj.length === 0" class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
+          <li v-if="content_obj.length === 0"
+              class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
             <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
           </li>
-          <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1" v-for="content in content_obj">
+          <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
+              v-for="content in content_obj">
             <div class="col-1">{{ content.id }}</div>
             <div class="col-4">{{ content.company_name }}</div>
-            <div class="col-6"><router-link :to="'/landing/detail/' + content.id">{{ content.name }}</router-link></div>
+            <div class="col-6">
+              <router-link :to="'/landing/detail/' + content.id">{{ content.name }}</router-link>
+            </div>
             <div class="col-1">{{ content.hit }}</div>
           </li>
         </ul>
@@ -77,127 +88,141 @@
     </div>
 
     <paginate class="pagination"
-      v-model="page_current"
-      :page-count="page_max"
-      :page-range="5"
-      :margin-pages="1"
-      :click-handler="pagination"
-      :prev-text="'<'"
-      :next-text="'>'"
-      :container-class="'page-item'"
-      :page-class="'page-link'"
-      :prev-class="'page-link prev'"
-      :next-class="'page-link next'"
-      :active-class="'active'"
-      :disabled-class="'disabled'">
+              v-model="page_current"
+              :page-count="page_max"
+              :page-range="5"
+              :margin-pages="1"
+              :click-handler="pagination"
+              :prev-text="'<'"
+              :next-text="'>'"
+              :container-class="'page-item'"
+              :page-class="'page-link'"
+              :prev-class="'page-link prev'"
+              :next-class="'page-link next'"
+              :active-class="'active'"
+              :disabled-class="'disabled'">
     </paginate>
 
   </div>
 </template>
 
 <script>
-export default {
+  export default {
     name: "landing_list",
-  data: () => ({
-    window_width: window.innerWidth,
-    // Page = options, contents
-    page_current: 1,
-    page_max: 0,
-    page_chunk: 5,
-    content_obj: [],
-    temp_option: 0,
-    temp_text: '',
-    search_option: 0,
-    search_text: '',
-  }),
-  methods: {
-    pagination: function(pageNum) {
-      // when page is first, max ~ max-(chunk*current)+1
-      // when page is max, max-(chunk*(current-1)) ~ 1
-      // when page is middle, max-(chunk*(current-1)) ~ max-(chunk*current)+1
-      let offset = (pageNum - 1)*this.page_chunk
-      this.calling_all_unit(offset)
-    },
-    search: function(option, text) {
-      if (option !== 0 || text !== '') {
-        let option_val
-        this.page_current = 1
-        if (option === '1') {
-          option_val = 'name'
-        } else if (option === '2') {
-          option_val = 'company'
-        } else if (option === '3') {
-          option_val = 'manager'
-        } else {
-          console.log('Option not catched')
+    created() {
+      if (this.$store.state.authUser) {
+        if (this.$store.state.userAccess.access !== 1 || this.$store.state.userAccess.access !== 2) {
+          this.$router.push({
+            name: 'gateway'
+          })
         }
-        this.search_option = option_val
-        this.search_text = text
-        this.calling_all_unit()
+      } else {
+        alert('로그인이 필요합니다.')
+        this.$router.push({
+          name: 'gateway'
+        })
       }
     },
-    calling_all_unit: function(page) {
-      // Calling landings with new values
+    data: () => ({
+      window_width: window.innerWidth,
+      // Page = options, contents
+      page_current: 1,
+      page_max: 0,
+      page_chunk: 5,
+      content_obj: [],
+      temp_option: 0,
+      temp_text: '',
+      search_option: 0,
+      search_text: '',
+    }),
+    methods: {
+      pagination: function (pageNum) {
+        // when page is first, max ~ max-(chunk*current)+1
+        // when page is max, max-(chunk*(current-1)) ~ 1
+        // when page is middle, max-(chunk*(current-1)) ~ max-(chunk*current)+1
+        let offset = (pageNum - 1) * this.page_chunk
+        this.calling_all_unit(offset)
+      },
+      search: function (option, text) {
+        if (option !== 0 || text !== '') {
+          let option_val
+          this.page_current = 1
+          if (option === '1') {
+            option_val = 'name'
+          } else if (option === '2') {
+            option_val = 'company'
+          } else if (option === '3') {
+            option_val = 'manager'
+          } else {
+            console.log('Option not catched')
+          }
+          this.search_option = option_val
+          this.search_text = text
+          this.calling_all_unit()
+        }
+      },
+      calling_all_unit: function (page) {
+        // Calling landings with new values
+        let axios = this.$axios
+        let this_url = 'landing/'
+        let offset = page
+        axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
+          .then((response) => {
+            // Calculation for page_max
+            if (response.data.count % this.page_chunk === 0) {
+              this.page_max = Math.floor(response.data.count / this.page_chunk)
+            } else {
+              this.page_max = Math.floor(response.data.count / this.page_chunk) + 1
+            }
+            this.content_obj = response.data.results
+          })
+      }
+    },
+    mounted() {
+      // Init other pages options
+      this.$store.state.pageOptions.company.page = 1
+      this.$store.state.pageOptions.company.option = 0
+      this.$store.state.pageOptions.company.text = ''
+      this.$store.state.pageOptions.user.page = 1
+      this.$store.state.pageOptions.user.option = 0
+      this.$store.state.pageOptions.user.text = ''
+
+      // Window width calculator
+      let that = this
+      this.$nextTick(function () {
+        window.addEventListener('resize', function (e) {
+          that.window_width = window.innerWidth
+        })
+      })
+
+      // Calling contents at first with store
       let axios = this.$axios
       let this_url = 'landing/'
-      let offset = page
+      // Check store values
+      this.page_current = this.$store.state.pageOptions.landing.page
+      this.search_option = this.$store.state.pageOptions.landing.option
+      this.temp_text = this.$store.state.pageOptions.landing.text
+      this.search_text = this.$store.state.pageOptions.landing.text
+      let offset = (this.$store.state.pageOptions.landing.page - 1) * (3)
+      // Axios get landings
       axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
         .then((response) => {
           // Calculation for page_max
-          if(response.data.count % this.page_chunk === 0) {
-            this.page_max = Math.floor(response.data.count/this.page_chunk)
+          if (response.data.count % this.page_chunk === 0) {
+            this.page_max = Math.floor(response.data.count / this.page_chunk)
           } else {
-            this.page_max = Math.floor(response.data.count/this.page_chunk) + 1
+            this.page_max = Math.floor(response.data.count / this.page_chunk) + 1
           }
           this.content_obj = response.data.results
         })
-    }
-  },
-  mounted() {
-    // Init other pages options
-    this.$store.state.pageOptions.company.page = 1
-    this.$store.state.pageOptions.company.option = 0
-    this.$store.state.pageOptions.company.text = ''
-    this.$store.state.pageOptions.user.page = 1
-    this.$store.state.pageOptions.user.option = 0
-    this.$store.state.pageOptions.user.text = ''
-
-    // Window width calculator
-    let that = this
-    this.$nextTick(function () {
-      window.addEventListener('resize', function (e) {
-        that.window_width = window.innerWidth
-      })
-    })
-
-    // Calling contents at first with store
-    let axios = this.$axios
-    let this_url = 'landing/'
-    // Check store values
-    this.page_current = this.$store.state.pageOptions.landing.page
-    this.search_option = this.$store.state.pageOptions.landing.option
-    this.temp_text = this.$store.state.pageOptions.landing.text
-    this.search_text = this.$store.state.pageOptions.landing.text
-    let offset = (this.$store.state.pageOptions.landing.page - 1)*(3)
-    // Axios get landings
-    axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
-      .then((response) => {
-        // Calculation for page_max
-        if(response.data.count % this.page_chunk === 0) {
-          this.page_max = Math.floor(response.data.count/this.page_chunk)
-        } else {
-          this.page_max = Math.floor(response.data.count/this.page_chunk) + 1
-        }
-        this.content_obj = response.data.results
-      })
-  },
-  destroyed() {
+    },
+    destroyed() {
       // Save values in the store
       this.$store.state.pageOptions.landing.page = this.page_current
       this.$store.state.pageOptions.landing.option = this.search_option
       this.$store.state.pageOptions.landing.text = this.search_text
+    }
   }
-}
 </script>
 
 <style lang="scss">
@@ -248,11 +273,13 @@ export default {
     border: 1px solid #c1c1c1;
     border-radius: 0 5px 5px 0;
     margin-left: -6px;
+
     img {
       width: 55%;
       height: 60%;
     }
   }
+
   /* Search box ended */
 
   /* Pagination */
@@ -263,14 +290,17 @@ export default {
     font-size: 0;
     padding: 10px 0;
   }
+
   .page-item {
     font-size: 14px;
     border-radius: 0;
   }
+
   .page-link {
     display: inline-block;
     border-radius: 0 !important;
     padding: 0 !important;
+
     a {
       display: block;
       width: 35px;
@@ -279,20 +309,25 @@ export default {
       line-height: 35px;
     }
   }
+
   .page-link.active {
     background-color: #007bcc;
+
     a {
       color: #efefef;
     }
   }
+
   .page-link.disabled {
     a {
       color: #c1c1c1;
     }
   }
+
   .page-link.prev, .page-link.next {
     border: none;
   }
+
   /*Pagination End*/
 
   .board_container {
@@ -323,9 +358,11 @@ export default {
     padding: 5px 0;
     border-bottom: 1px solid #eaeaea;
   }
+
   .board_li:last-child {
     border: none;
   }
+
   .board_centre {
     text-align: center;
   }

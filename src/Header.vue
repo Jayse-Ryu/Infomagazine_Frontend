@@ -3,7 +3,7 @@
     <!-- Logo and nav, buttons. -->
     <!--<nav class="header_section">-->
 
-      <router-link to="/landing" class="navbar-brand">
+      <router-link to="/landing" class="logo_wrap navbar-brand">
         <span class="logo">
           <img src="./assets/logo3.png" alt="Infomag logo">
         </span>
@@ -70,7 +70,6 @@ export default {
   name: 'app-header',
   data: () => ({
     name: '',
-    temp: '',
   }),
   methods: {
     logout () {
@@ -84,7 +83,15 @@ export default {
     if (this.$store.state.jwt !== null) {
       this.$store.dispatch('getAuthUser')
     } else {
-      // alert('로그인 후 이용 가능합니다.')
+      // alert('Where is JWT?')
+      // this.$router.push('/')
+    }
+  },
+  update() {
+    if (this.$store.state.jwt !== null) {
+      this.$store.dispatch('getAuthUser')
+    } else {
+      // alert('Where is JWT?')
       // this.$router.push('/')
     }
   },
@@ -108,5 +115,16 @@ export default {
 
   .current_user {
     color: cadetblue !important;
+  }
+
+  @media (max-width: 350px) {
+    .logo_wrap {
+      max-width: 210px !important;
+      .logo {
+        img {
+          width: 80%;
+        }
+      }
+    }
   }
 </style>
