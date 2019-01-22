@@ -70,7 +70,6 @@ export default {
   name: 'app-header',
   data: () => ({
     name: '',
-    temp: '',
   }),
   methods: {
     logout () {
@@ -84,7 +83,15 @@ export default {
     if (this.$store.state.jwt !== null) {
       this.$store.dispatch('getAuthUser')
     } else {
-      // alert('로그인 후 이용 가능합니다.')
+      // alert('Where is JWT?')
+      // this.$router.push('/')
+    }
+  },
+  update() {
+    if (this.$store.state.jwt !== null) {
+      this.$store.dispatch('getAuthUser')
+    } else {
+      // alert('Where is JWT?')
       // this.$router.push('/')
     }
   },

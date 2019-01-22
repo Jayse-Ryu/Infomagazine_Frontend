@@ -16,6 +16,7 @@ import Signin from '@/components/Signin'
 import Signup from '@/components/Signup'
 import UserDetail from '@/components/UserDetail'
 import UserList from '@/components/UserList'
+import Gateway from '@/components/Gateway'
 
 // use like this.$xx
 Vue.use(Router)
@@ -123,6 +124,14 @@ const router = new Router({
       meta: {
         requiresAuth: true,
         is_staff: true
+      }
+    },
+    {
+      path: '/gateway',
+      name: 'gateway',
+      component: Gateway,
+      meta: {
+        requiresAuth: true
       }
     }
   ],

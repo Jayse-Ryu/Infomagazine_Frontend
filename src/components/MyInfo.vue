@@ -69,6 +69,7 @@
                    maxlength="16"/>
           </div>
 
+<!--
           <label for="my_comp" class="col-form-label-sm col-sm-3 mt-3">소속</label>
           <div class="col-sm-9 mt-sm-3">
             <input type="text" id="my_comp" class="form-control" v-model="content_obj.organization"
@@ -76,6 +77,34 @@
                    maxlength="50"
                    name="organization"/>
           </div>
+-->
+
+          <label class="col-form-label-sm col-sm-3 mt-3" for="access">소속</label>
+          <!--<div class="col-sm-9 pt-2 pb-2" id="access">
+            <div class="form-check-inline">
+              <input type="radio" id="access_marketer" name="access" v-model="access_obj.access" value="0"
+                     class="form-check-input">
+              <label for="access_marketer" class="form-check-label">마케터</label>
+            </div>
+            <div class="form-check-inline">
+              <input type="radio" id="access_client" name="access" v-model="access_obj.access" value="1"
+                     class="form-check-input">
+              <label for="access_client" class="form-check-label">고객(클라이언트)</label>
+            </div>
+          </div>-->
+          <div class="col-sm-9 mt-sm-3">
+            <select v-if="access_obj.access == 0" name="select_org" id="select_org" class="form-control" v-model="access_obj.organization">
+              <option value="-1">조직을 선택하세요..</option>
+              <option value="-2">조직을 생성하겠습니다.</option>
+              <option v-for="item in select_options" :value="item.id">{{ item.name }}</option>
+            </select>
+            <select v-else-if="access_obj.access == 1" name="select_company" id="select_company" class="form-control"
+                    v-model="access_obj.company">
+              <option value="-1">업체를 선택하세요..</option>
+              <option v-for="item in select_options" :value="item.id">{{ item.name }}</option>
+            </select>
+          </div>
+
 
           <label for="my_join" class="col-form-label-sm col-sm-3 mt-3">가입일</label>
           <div class="col-sm-9 mt-sm-3">
@@ -100,9 +129,11 @@ export default {
   name: "my_info",
   data: () => ({
     content_obj: [],
+    access_obj: [],
     password: '',
     re_password: '',
     pass_error: false,
+    select_options: [],
   }),
   mounted () {
     let axios = this.$axios
@@ -112,8 +143,26 @@ export default {
 
     axios.get(this.$store.state.endpoints.baseUrl + this_url + decoder.user_id)
       .then((response) => {
-        // Calculation for page_max
+        // Set user data
         this.content_obj = response.data
+        // Get user access data
+        this_url = 'user_access/'
+        return axios.get(this.$store.state.endpoints.baseUrl + this_url + response.data.id + '/')
+      })
+      .then((response) => {
+        // Set access data
+        this.access_obj = response.data
+        // Get organization or company data
+        let choice = 'ready/'
+        if (response.data.access === 0) {
+          choice = 'organization/'
+        } else if (response.data.access === 1) {
+          choice = 'company/'
+        }
+        return axios.get(this.$store.state.endpoints.baseUrl + choice)
+      })
+      .then((response) => {
+        console.log(response.data)
       })
       .catch((error) => {
         console.log(error)
@@ -147,9 +196,26 @@ export default {
           let this_url = 'user/'
           axios.patch(this.$store.state.endpoints.baseUrl + this_url + decoder.user_id + '/', this.content_obj)
             .then((response) => {
-              // Calculation for page_max
-              alert('수정되었습니다.')
-              this.$router.push('/')
+              let formData = new FormData()
+              formData.append('access', this.access_obj.access)
+              if(this.access_obj.access === 0) {
+                if(this.access_obj.organization > 0 && !this.access_obj.organization) {
+                  formData.append('organization', this.access_obj.organization)
+                }
+              } else if (this.access_obj.access === 1) {
+                if(this.access_obj.company > 0 && !this.access_obj.company) {
+                  formData.append('company', this.access_obj.company)
+                }
+              }
+              return axios.patch(this.$store.state.endpoints.baseUrl + 'user_access/' + decoder.user_id + '/', formData)
+            })
+            .then((response) => {
+              console.log(response)
+              alert('수정되었습니다. 다시 로그인 하세요.')
+              this.$store.commit('removeToken')
+              this.$router.push({
+                name: 'sign_in'
+              })
             })
             .catch((error) => {
               console.log(error)
@@ -157,25 +223,6 @@ export default {
         }
       }
     },
-    // patch() {
-    //   // Are you sure?
-    //   if(confirm('정보를 수정하시겠습니까?')) {
-    //     let axios = this.$axios
-    //     let this_url = 'user/'
-    //
-    //     axios.post(this.$store.state.endpoints.baseUrl + this_url, {
-    //       data: this.content_obj,
-    //       _method: 'patch'
-    //     })
-    //       .then((response) => {
-    //         // Calculation for page_max
-    //         console.log(response)
-    //       })
-    //       .catch((error) => {
-    //         console.log(error)
-    //       })
-    //   }
-    // }
     bye() {
       if (confirm('정말 탈퇴하시겠습니까?')) {
         let decode = this.$jwt_decode
@@ -198,7 +245,16 @@ export default {
         }
       }
     }
-  }
+  },
+  // watch: {
+  //   access_obj(){
+  //     if (this.access_obj.access == 0) {
+  //       console.log('marketer')
+  //     } else if (this.access_obj.access == 1){
+  //       console.log('client')
+  //     }
+  //   }
+  // }
 }
 </script>
 
