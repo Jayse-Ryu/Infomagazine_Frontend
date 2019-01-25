@@ -111,10 +111,13 @@
     name: "landing_list",
     created() {
       if (this.$store.state.authUser) {
-        if (this.$store.state.userAccess.access !== 1 || this.$store.state.userAccess.access !== 2) {
+        if (this.$store.state.userAccess.access == -1 || this.$store.state.userAccess.access == -2) {
+          console.log('access is not -1 or -2?', this.$store.state.userAccess.access)
           this.$router.push({
             name: 'gateway'
           })
+        } else {
+          console.log('Access is 1 or 2?', this.$store.state.userAccess.access)
         }
       } else {
         alert('로그인이 필요합니다.')

@@ -69,29 +69,8 @@
                    maxlength="16"/>
           </div>
 
-          <!--
-                    <label for="my_comp" class="col-form-label-sm col-sm-3 mt-3">소속</label>
-                    <div class="col-sm-9 mt-sm-3">
-                      <input type="text" id="my_comp" class="form-control" v-model="content_obj.organization"
-                             autofocus="autofocus"
-                             maxlength="50"
-                             name="organization"/>
-                    </div>
-          -->
 
           <label class="col-form-label-sm col-sm-3 mt-3" for="select_org">소속</label>
-          <!--<div class="col-sm-9 pt-2 pb-2" id="access">
-            <div class="form-check-inline">
-              <input type="radio" id="access_marketer" name="access" v-model="access_obj.access" value="0"
-                     class="form-check-input">
-              <label for="access_marketer" class="form-check-label">마케터</label>
-            </div>
-            <div class="form-check-inline">
-              <input type="radio" id="access_client" name="access" v-model="access_obj.access" value="1"
-                     class="form-check-input">
-              <label for="access_client" class="form-check-label">고객(클라이언트)</label>
-            </div>
-          </div>-->
           <div class="col-sm-9 mt-sm-3">
             <select v-if="access_obj.access == 1 || access_obj.access == -1" name="select_org" id="select_org"
                     class="form-control"
@@ -123,7 +102,7 @@
       </form>
       <button type="button" class="btn btn-danger mt-2 col-12" @click="bye">탈퇴</button>
       <router-link to="/landing">
-        <button type="button" class="btn btn-dark col-12 mt-2">취소</button>
+        <button type="button" class="btn btn-dark col-12 mt-2 mb-3">취소</button>
       </router-link>
     </div>
   </div>

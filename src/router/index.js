@@ -131,14 +131,6 @@ const router = new Router({
       meta: {
         requiresAuth: true
       }
-    },
-    {
-      path: '/gateway',
-      name: 'gateway',
-      component: Gateway,
-      meta: {
-        requiresAuth: true
-      }
     }
   ],
   mode: 'history',

@@ -88,6 +88,7 @@ const store = new Vuex.Store({
       localStorage.removeItem('token')
       state.jwt = null
       state.authUser = {}
+      state.userAccess = {}
       state.isAuthenticated = false
     }
   },
