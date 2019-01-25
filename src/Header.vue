@@ -69,10 +69,7 @@
   export default {
     name: 'app-header',
     created(){
-      // console.log('header created!')
-      // if (this.$store.state.userAccess) {
-      //   console.log(this.$store.state.userAccess)
-      // }
+      //
     },
     data: () => ({
       //
