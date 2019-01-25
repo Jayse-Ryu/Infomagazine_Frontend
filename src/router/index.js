@@ -1,22 +1,40 @@
+// Main imports
 import Vue from 'vue'
 import Router from 'vue-router'
 import Axios from 'axios'
 import Vuex from 'vuex'
 
-import CompanyCreate from '@/components/CompanyCreate'
-import CompanyDetail from '@/components/CompanyDetail'
-import CompanyList from '@/components/CompanyList'
-import DBDetail from '@/components/DBDetail'
-import DBList from '@/components/DBList'
-import LandingCreate from '@/components/LandingCreate'
-import LandingDetail from '@/components/LandingDetail'
-import LandingList from '@/components/LandingList'
-import MyInfo from '@/components/MyInfo'
+// User Login SignUp
 import Signin from '@/components/Signin'
 import Signup from '@/components/Signup'
+
+// Browser Access filter page
+import Gateway from '@/components/Gateway'
+
+// About landing pages
+import LandingList from '@/components/LandingList'
+import LandingCreate from '@/components/LandingCreate'
+import LandingDetail from '@/components/LandingDetail'
+
+// About Organization for staff or superuser
+import Organization from '@/components/OrganizationList'
+import OrganizationDetail from '@/components/OrganizationDetail'
+
+// About Company for marketer
+import CompanyList from '@/components/CompanyList'
+import CompanyCreate from '@/components/CompanyCreate'
+import CompanyDetail from '@/components/CompanyDetail'
+
+// DBs in langings
+import DBList from '@/components/DBList'
+import DBDetail from '@/components/DBDetail'
+
+// Manage users for marketer
 import UserDetail from '@/components/UserDetail'
 import UserList from '@/components/UserList'
-import Gateway from '@/components/Gateway'
+
+// Update my information
+import MyInfo from '@/components/MyInfo'
 
 // use like this.$xx
 Vue.use(Router)
@@ -27,41 +45,27 @@ Vue.use(Vuex)
 const router = new Router({
   routes: [
     {
-      path: '/company/create',
-      name: 'conpany_create',
-      component: CompanyCreate,
+      path: '/',
+      name: 'sign_in',
+      component: Signin
+    },
+    {
+      path: '/signup',
+      name: 'sign_up',
+      component: Signup
+    },
+    {
+      path: '/gateway',
+      name: 'gateway',
+      component: Gateway,
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: '/company/detail',
-      name: 'company_detail',
-      component: CompanyDetail,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/company',
-      name: 'company_list',
-      component: CompanyList,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/db/detail',
-      name: 'db_detail',
-      component: DBDetail,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/db',
-      name: 'db_list',
-      component: DBList,
+      path: '/landing',
+      name: 'landing_list',
+      component: LandingList,
       meta: {
         requiresAuth: true
       }
@@ -83,30 +87,60 @@ const router = new Router({
       }
     },
     {
-      path: '/landing',
-      name: 'landing_list',
-      component: LandingList,
+      path: '/organization',
+      name: 'organization_list',
+      component: Organization,
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: '/myinfo',
-      name: 'my_info',
-      component: MyInfo,
+      path: '/organization/detail/:organization_id',
+      name: 'organization_detail',
+      component: OrganizationDetail,
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: '/',
-      name: 'sign_in',
-      component: Signin
+      path: '/company',
+      name: 'company_list',
+      component: CompanyList,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
-      path: '/signup',
-      name: 'sign_up',
-      component: Signup
+      path: '/company/create',
+      name: 'conpany_create',
+      component: CompanyCreate,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/company/detail',
+      name: 'company_detail',
+      component: CompanyDetail,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/db',
+      name: 'db_list',
+      component: DBList,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/db/detail',
+      name: 'db_detail',
+      component: DBDetail,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/users/detail',
@@ -125,9 +159,9 @@ const router = new Router({
       }
     },
     {
-      path: '/gateway',
-      name: 'gateway',
-      component: Gateway,
+      path: '/myinfo',
+      name: 'my_info',
+      component: MyInfo,
       meta: {
         requiresAuth: true
       }
