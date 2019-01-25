@@ -112,12 +112,9 @@
     created() {
       if (this.$store.state.authUser) {
         if (this.$store.state.userAccess.access == -1 || this.$store.state.userAccess.access == -2) {
-          console.log('access is not -1 or -2?', this.$store.state.userAccess.access)
           this.$router.push({
             name: 'gateway'
           })
-        } else {
-          console.log('Access is 1 or 2?', this.$store.state.userAccess.access)
         }
       } else {
         alert('로그인이 필요합니다.')
@@ -157,7 +154,8 @@
           } else if (option === '3') {
             option_val = 'manager'
           } else {
-            console.log('Option not catched')
+            // console.log('Option not catched')
+            alert('검색 옵션을 선택하세요.')
           }
           this.search_option = option_val
           this.search_text = text

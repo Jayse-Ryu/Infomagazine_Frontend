@@ -22,14 +22,6 @@ export default {
     // Header options
     header_flag: 1,
     auth_user: '',
-    // Save pagination current
-    global_landing_page: 1,
-    global_company_page: 1,
-    global_db_page: 1,
-    global_user_page: 1,
-    // Save search options
-    global_search_option: -1,
-    global_search_text: '',
   })
 }
 </script>

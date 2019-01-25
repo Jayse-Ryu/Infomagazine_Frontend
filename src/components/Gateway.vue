@@ -377,9 +377,9 @@
         }
       },
       check_organization() {
-        // Validate for make organization
+        // Validate for make an organization
         this.$validator.validateAll()
-        console.log(this.create_obj)
+        // console.log(this.create_obj)
         if (this.access_obj.organization) {
           // If the user have organization request
           if (confirm('이미 가입신청한 업체가 있습니다. 취소하고 업체를 생성할까요?')) {
@@ -394,7 +394,7 @@
 
       },
       create_organization() {
-        // Create organization myself
+        // Create an organization myself
         let axios = this.$axios
         let this_url = 'organization/'
         let formData = new FormData()
@@ -406,18 +406,18 @@
         formData.append('corp_num', this.create_obj.corp_num)
         formData.append('phone', this.create_obj.phone)
         formData.append('email', this.create_obj.email)
-        console.log(this.create_obj.corp_num)
-        console.log('create formdata is? ', formData)
+        // console.log(this.create_obj.corp_num)
+        // console.log('create formdata is? ', formData)
         axios.post(this.$store.state.endpoints.baseUrl + this_url, formData)
           .then((response) => {
-            // console.log('post response?', response)
+            // If post success, change my organization number and access type
             formData = new FormData()
             formData.append('organization', response.data.id)
             formData.append('access', '1')
             return axios.patch(this.$store.state.endpoints.baseUrl + 'user_access/' + this.user_obj.id + '/', formData)
           })
           .then((response) => {
-            // console.log('patch response? ', response)
+            // Done! Go to langind list.
             alert('업체가 생성되었습니다!')
             this.$router.push({
               name: 'landing_list'
@@ -439,7 +439,7 @@
         // Get access information the user
         let access = this.$store.state.userAccess
         if (access.access === 1 || access.access === 2) {
-          console.log('If user have actual auth')
+          // console.log('If user have actual auth')
           this.$router.push({
             name: 'landing_list'
           })
