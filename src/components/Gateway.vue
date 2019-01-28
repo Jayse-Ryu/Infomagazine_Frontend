@@ -113,7 +113,7 @@
                 </label>
                 <div class="col-sm-9 mt-sm-3">
                   <div class="error_label" v-if="errors.has('org_phone')">{{errors.first('org_phone')}}</div>
-                  <input class="form-control" id="org_phone" name="org_phone" type="text" v-model="create_obj.phone"
+                  <input class="form-control" id="org_phone" name="org_phone" type="number" v-model="create_obj.phone"
                          placeholder="연락처를 입력하세요"
                          autofocus="autofocus"
                          maxlength="16"
@@ -125,7 +125,7 @@
                 </label>
                 <div class="col-sm-9 mt-sm-3">
                   <div class="error_label" v-if="errors.has('org_email')">{{errors.first('org_email')}}</div>
-                  <input class="form-control" id="org_email" name="org_email" type="text" v-model="create_obj.email"
+                  <input class="form-control" id="org_email" name="org_email" type="email" v-model="create_obj.email"
                          placeholder="이메일을 입력하세요"
                          maxlength="50"
                          autofocus="autofocus"
@@ -400,12 +400,24 @@
         let formData = new FormData()
         formData.append('manager', this.user_obj.id)
         formData.append('name', this.create_obj.name)
-        formData.append('sub_name', this.create_obj.sub_name)
-        formData.append('header', this.create_obj.header)
-        formData.append('address', this.create_obj.address)
-        formData.append('corp_num', this.create_obj.corp_num)
-        formData.append('phone', this.create_obj.phone)
-        formData.append('email', this.create_obj.email)
+        if (this.create_obj.sub_name) {
+          formData.append('sub_name', this.create_obj.sub_name)
+        }
+        if (this.create_obj.header) {
+          formData.append('header', this.create_obj.header)
+        }
+        if (this.create_obj.address) {
+          formData.append('address', this.create_obj.address)
+        }
+        if (this.create_obj.corp_num) {
+          formData.append('corp_num', this.create_obj.corp_num)
+        }
+        if (this.create_obj.phone) {
+          formData.append('phone', this.create_obj.phone)
+        }
+        if (this.create_obj.email) {
+          formData.append('email', this.create_obj.email)
+        }
         // console.log(this.create_obj.corp_num)
         // console.log('create formdata is? ', formData)
         axios.post(this.$store.state.endpoints.baseUrl + this_url, formData)

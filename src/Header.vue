@@ -26,6 +26,11 @@
             <div class="nav-link">Organizations</div>
           </router-link>
         </li>
+        <li v-if="user_obj.is_staff == false && access_obj.access == 1">
+          <router-link :to="'/organization/detail/' + access_obj.organization">
+            <div class="nav-link">Organization</div>
+          </router-link>
+        </li>
         <li v-if="access_obj.access == 1" class="navbar-item">
           <router-link to="/company">
             <div class="nav-link">Companies</div>

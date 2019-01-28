@@ -6,14 +6,13 @@
       <router-link to="/organization">소속 리스트</router-link>
     </div>
 
-    <form class="container m-auto d-flex justify-content-between flex-row"
+    <form class="container m-auto d-flex flex-row"
           v-on:submit.prevent="search(temp_option, temp_text)">
       <!--
       <router-link to="/organization/create/" class="btn-sm h-75 btn-primary p-1 col-md-1 col-sm-2 col text-center">생성
       </router-link>
       -->
-
-      <div class="form-group search_group">
+      <div class="form-group search_group ml-auto">
         <select class="search_option" id="src_gbn" v-model="temp_option">
           <option value="0" selected>검색 옵션</option>
           <option value="1">업체</option>
@@ -30,7 +29,7 @@
 
       <div v-if="window_width > 1000" class="list_area">
         <div>
-          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2"
+          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2 text-center"
                style="border-radius: 0; border-bottom: 0; width:100%;">
             <div class="col-1">번호</div>
             <div class="col-2">업체</div>
@@ -40,7 +39,7 @@
             <div class="col-3 board_centre">생성일</div>
           </div>
         </div>
-        <ul class="list-group list-group-flush col-12 pr-0">
+        <ul class="list-group list-group-flush col-12 pr-0 text-center">
           <li v-if="content_obj.length === 0"
               class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
             <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
@@ -49,10 +48,10 @@
               v-for="content in content_obj">
             <div class="col-1 col-sm-1">{{ content.id }}</div>
             <div class="col-2 col-sm-2">
-              <router-link :to="'/company/detail/' + content.id">{{ content.name }}</router-link>
+              <router-link :to="'/organization/detail/' + content.id">{{ content.name }}</router-link>
             </div>
             <div class="col-2 col-sm-2">
-              <router-link :to="'/company/detail/' + content.id">{{ content.sub_name }}</router-link>
+              <router-link :to="'/organization/detail/' + content.id">{{ content.sub_name }}</router-link>
             </div>
             <div class="col-2">{{ content.manager_name }}</div>
             <div class="col-2">{{ content.phone }}</div>
@@ -80,7 +79,7 @@
               v-for="content in content_obj">
             <div class="col-1">{{ content.id }}</div>
             <div class="col-3">
-              <router-link :to="'/company/detail/' + content.id">{{ content.name }}</router-link>
+              <router-link :to="'/organization/detail/' + content.id">{{ content.name }}</router-link>
             </div>
             <div class="col-4">{{ content.phone }}</div>
             <div class="col-4 board_centre">{{ (content.created_date).substring(0, 10) }}</div>
@@ -111,12 +110,18 @@
 
 <script>
   export default {
-    name: "OrganizationList",
+    name: "Organization_list",
     created() {
       if (this.$store.state.authUser) {
-        if (this.$store.state.userAccess.access !== 1) {
+        if (this.$store.state.authUser.is_staff == false && this.$store.state.userAccess.access !== 1) {
+          console.log('this user is staff')
           this.$router.push({
             name: 'gateway'
+          })
+        } else if (this.$store.state.authUser.is_staff == false && this.$store.state.userAccess.access == 1) {
+          console.log('this user is just manager.')
+          this.$router.push({
+            path: '/organization/detail/' + this.$store.state.userAccess.organization
           })
         }
       } else {
@@ -131,7 +136,7 @@
       // Page = options, contents
       page_current: 1,
       page_max: 0,
-      page_chunk: 5,
+      page_chunk: 10,
       content_obj: [],
       temp_option: 0,
       temp_text: '',
@@ -208,7 +213,7 @@
       this.search_option = this.$store.state.pageOptions.organization.option
       this.temp_text = this.$store.state.pageOptions.organization.text
       this.search_text = this.$store.state.pageOptions.organization.text
-      let offset = (this.$store.state.pageOptions.organization.page - 1) * (3)
+      let offset = (this.$store.state.pageOptions.organization.page - 1) * this.page_chunk
       // Axios get landings
       axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
         .then((response) => {

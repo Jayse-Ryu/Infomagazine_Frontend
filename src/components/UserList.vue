@@ -24,7 +24,7 @@
 
       <div v-if="window_width > 1000" class="list_area">
         <div>
-          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2" style="border-radius: 0; border-bottom: 0; width:100%;">
+          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2 text-center" style="border-radius: 0; border-bottom: 0; width:100%;">
             <div class="col-1">번호</div>
             <div class="col-2 text-center">계정</div>
             <div class="col-2 text-center">이름</div>
@@ -35,7 +35,7 @@
             <div class="col-2 board_centre">생성일</div>
           </div>
         </div>
-        <ul class="list-group list-group-flush col-12 pr-0">
+        <ul class="list-group list-group-flush col-12 pr-0 text-center">
           <li v-if="content_obj.length === 0" class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
             <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
           </li>

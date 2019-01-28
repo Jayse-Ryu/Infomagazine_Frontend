@@ -13,6 +13,20 @@
 <script>
   export default {
     name: "company_detail",
+    data: () => ({
+      page_id: 0
+    }),
+    mounted() {
+      // get id from url
+      this.page_id = this.$route.params.landing_id * 1
+
+      // if page int is default, push to list page
+      if (this.page_id === 0) {
+        this.$router.push({
+          name: 'company_list'
+        })
+      }
+    },
     update() {
       if (this.$store.state.jwt !== null) {
         this.$store.dispatch('getAuthUser')
