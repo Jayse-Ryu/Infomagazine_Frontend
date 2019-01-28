@@ -53,6 +53,11 @@ const store = new Vuex.Store({
         option: 0,
         text: ''
       },
+      organization: {
+        page: 1,
+        option: 0,
+        text: ''
+      },
       company: {
         page: 1,
         option: 0,

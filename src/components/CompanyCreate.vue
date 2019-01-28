@@ -11,9 +11,14 @@
 </template>
 
 <script>
-    export default {
-        name: "company_create"
+  export default {
+    name: "company_create",
+    update() {
+      if (this.$store.state.jwt !== null) {
+        this.$store.dispatch('getAuthUser')
+      }
     }
+  }
 </script>
 
 <style scoped>

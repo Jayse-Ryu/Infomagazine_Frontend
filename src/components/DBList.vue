@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="text_navigation">
-      <router-link to="/">로그인</router-link>
+      <router-link to="/">홈</router-link>
       <span>></span>
       <router-link to="/db">DB 리스트</router-link>
     </div>

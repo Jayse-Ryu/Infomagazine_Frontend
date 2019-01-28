@@ -429,6 +429,11 @@
           })
       }
     },
+    update() {
+      if (this.$store.state.jwt !== null) {
+        this.$store.dispatch('getAuthUser')
+      }
+    },
     computed: {
       user_obj() {
         // Get user information

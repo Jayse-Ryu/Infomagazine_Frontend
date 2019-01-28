@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="text_navigation">
-      <router-link to="/">로그인</router-link>
+      <router-link to="/">홈</router-link>
       <span>></span>
       <router-link to="/users">유저 리스트</router-link>
     </div>
@@ -160,6 +160,9 @@
       this.$store.state.pageOptions.landing.page = 1
       this.$store.state.pageOptions.landing.option = 0
       this.$store.state.pageOptions.landing.text = ''
+      this.$store.state.pageOptions.organization.page = 1
+      this.$store.state.pageOptions.organization.option = 0
+      this.$store.state.pageOptions.organization.text = ''
 
       // Window width calculator
       let that = this
@@ -189,6 +192,11 @@
           }
           this.content_obj = response.data.results
         })
+    },
+    update() {
+      if (this.$store.state.jwt !== null) {
+        this.$store.dispatch('getAuthUser')
+      }
     },
     destroyed() {
       // Save values in the store

@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="text_navigation">
-      <router-link to="/">로그인</router-link>
+      <router-link to="/">홈</router-link>
       <span>></span>
       <router-link to="/landing">랜딩 리스트</router-link>
       <span>></span>
@@ -424,6 +424,11 @@
         .catch((error) => {
           console.log(error)
         })
+    },
+    update() {
+      if (this.$store.state.jwt !== null) {
+        this.$store.dispatch('getAuthUser')
+      }
     },
     watch: {
       // is_group() {
