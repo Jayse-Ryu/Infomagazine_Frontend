@@ -70,6 +70,20 @@
     }),
     mounted() {
       this.$parent.$data.header_flag = 0
+
+      // get id from url
+      console.log(new Date(Date.now()))
+
+      let time = new Date(Date.now())
+      time.toString()
+      console.log(time)
+      let date = new Date().toLocaleDateString('en-US', {
+        'year': 'numeric',
+        'month': 'numeric',
+        'day': 'numeric',
+        'hour': '2-digit',
+      })
+      console.log(date)
     },
     destroyed() {
       this.$parent.$data.header_flag = 1

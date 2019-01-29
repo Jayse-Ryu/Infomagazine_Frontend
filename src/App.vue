@@ -26,7 +26,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
   /* Import Nanum square font here. */
   /*@import url(https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css);*/
 
@@ -521,6 +521,148 @@ export default {
     -webkit-text-stroke: 0.15px rgba(0,0,0,0.3);
     /*overflow-x: hidden;*/
   } /* body normalize more */
+
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  .search_group {
+    text-align: right;
+  }
+
+  .search_option {
+    display: inline-block;
+    width: 75px;
+    height: 30px;
+    text-align: center;
+    font-size: 0.8em;
+    line-height: 1em;
+    outline: 0;
+    border: 1px solid #c1c1c1;
+    border-radius: 5px 0 0 5px;
+    background-color: #ffffff;
+    vertical-align: top;
+    padding: 0 0 0 10px;
+  }
+
+  .search_text {
+    display: inline-block;
+    width: 160px;
+    height: 30px;
+    font-size: 0.8em;
+    line-height: 0.8em;
+    vertical-align: top;
+    border: 1px solid #c1c1c1;
+    padding: 10px;
+    margin-left: -6px;
+  }
+
+  .search_btn {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    text-align: center;
+    border: 1px solid #c1c1c1;
+    border-radius: 0 5px 5px 0;
+    margin-left: -6px;
+
+    img {
+      width: 55%;
+      height: 60%;
+    }
+  }
+
+  /* Search box ended */
+
+  /* Pagination */
+  .pagination {
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    font-size: 0;
+    padding: 10px 0;
+  }
+
+  .page-item {
+    font-size: 14px;
+    border-radius: 0;
+  }
+
+  .page-link {
+    display: inline-block;
+    border-radius: 0 !important;
+    padding: 0 !important;
+
+    a {
+      display: block;
+      width: 35px;
+      height: 35px;
+      text-align: center;
+      line-height: 35px;
+    }
+  }
+
+  .page-link.active {
+    background-color: #007bcc;
+
+    a {
+      color: #efefef;
+    }
+  }
+
+  .page-link.disabled {
+    a {
+      color: #c1c1c1;
+    }
+  }
+
+  .page-link.prev, .page-link.next {
+    border: none;
+  }
+
+  /*Pagination End*/
+
+  .board_container {
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  .board_wrap {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    border-top: 2px solid #eaeaea;
+    border-bottom: 2px solid #eaeaea;
+    padding: 10px 15px 0 15px;
+    transition: all 200ms ease-in-out;
+  }
+
+  .board_header {
+    border-bottom: 2px solid #eaeaea;
+    padding-bottom: 10px;
+  }
+
+  .board_ul {
+
+  }
+
+  .board_li {
+    padding: 5px 0;
+    border-bottom: 1px solid #eaeaea;
+  }
+
+  .board_li:last-child {
+    border: none;
+  }
+
+  .board_centre {
+    text-align: center;
+  }
+
+
 
   .text_navigation {
     display: inline-block;

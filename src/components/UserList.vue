@@ -209,7 +209,8 @@
 
 <style lang="scss">
   /* Search bar */
-  select {
+
+/*  select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -260,9 +261,9 @@
       height: 60%;
     }
   }
-  /* Search box ended */
+  !* Search box ended *!
 
-  /* Pagination */
+  !* Pagination *!
   .pagination {
     display: block;
     text-align: center;
@@ -300,7 +301,7 @@
   .page-link.prev, .page-link.next {
     border: none;
   }
-  /*Pagination End*/
+  !*Pagination End*!
 
   .board_container {
     width: 100%;
@@ -335,6 +336,6 @@
   }
   .board_centre {
     text-align: center;
-  }
+  }*/
 
 </style>

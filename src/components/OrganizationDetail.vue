@@ -8,8 +8,9 @@
       <router-link :to="'/organization/detail/' + $route.params.organization_id">소속 정보</router-link>
     </div>
 
-    <div v-if="original_manager == user_obj.id" class="container">
-      <form class="m-auto" v-on:submit.prevent="check_organization">
+    <!--<div v-if="original_manager == user_obj.id" class="container">-->
+    <div class="container">
+      <form v-if="original_manager == user_obj.id" class="m-auto" v-on:submit.prevent="check_organization">
         <div class="form-group row">
 
           <label for="org_id" class="col-form-label-sm col-sm-3 mt-3">소속 번호</label>
@@ -100,7 +101,9 @@
 
           <label for="org_create" class="col-form-label-sm col-sm-3 mt-3">생성일</label>
           <div v-if="content_obj.created_date" class="col-sm-9 mt-sm-3">
-            <div type="text" class="form-control border-0" id="org_create">{{ (content_obj.created_date).substring(0, 10) }}</div>
+            <div type="text" class="form-control border-0" id="org_create">{{ (content_obj.created_date).substring(0,
+              10) }}
+            </div>
           </div>
           <div v-else class="col-sm-9 mt-sm-3">
             <div type="text" class="form-control border-0">none</div>
@@ -108,7 +111,9 @@
 
           <label for="org_update" class="col-form-label-sm col-sm-3 mt-3">수정일</label>
           <div v-if="content_obj.updated_date" class="col-sm-9 mt-sm-3">
-            <div type="text" class="form-control border-0" id="org_update">{{ (content_obj.updated_date).substring(0, 10) }}</div>
+            <div type="text" class="form-control border-0" id="org_update">{{ (content_obj.updated_date).substring(0,
+              10) }}
+            </div>
           </div>
           <div v-else class="col-sm-9 mt-sm-3">
             <div type="text" class="form-control border-0">none</div>
@@ -116,19 +121,336 @@
 
         </div>
 
+
+        <!---->
+        <div v-if="window_width > 1000" class="list_area">
+          <div>
+            <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2 text-center"
+                 style="border-radius: 0; border-bottom: 0; width:100%;">
+              <div class="col-2 col-sm-1">번호</div>
+              <div class="col-3 col-sm-4">아이디</div>
+              <div class="col-3 col-sm-4">이름</div>
+              <div class="col-2">연락처</div>
+              <div class="col-2 col-sm-1">상태</div>
+            </div>
+          </div>
+          <ul class="list-group list-group-flush col-12 pr-0 text-center">
+            <li v-if="marketer.length === 0"
+                class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
+              <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
+            </li>
+            <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
+                v-for="content in marketer">
+              <div class="col-2 col-sm-1">{{ content.user }}</div>
+              <div class="col-3 col-sm-4">
+                <router-link :to="'/users/detail/' + content.id">{{ content.account }}</router-link>
+              </div>
+              <div class="col-3 col-sm-4">
+                <router-link :to="'/users/detail/' + content.id">{{ content.user_name }}</router-link>
+              </div>
+              <div class="col-2">{{ content.phone }}</div>
+              <div class="col-2 col-sm-1">{{ content.access }}</div>
+            </li>
+          </ul>
+        </div>
+
+        <div v-else class="list_area text-center">
+          <div>
+            <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2"
+                 style="border-radius: 0; border-bottom: 0; width:100%;">
+              <div class="col-4">아이디</div>
+              <div class="col-5">이름</div>
+              <div class="col-3">상태</div>
+            </div>
+          </div>
+          <ul class="list-group list-group-flush col-12 pr-0">
+            <li v-if="marketer.length === 0"
+                class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
+              <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
+            </li>
+            <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
+                v-for="content in marketer">
+              <div class="col-4">{{ content.account }}</div>
+              <div class="col-5">
+                <router-link :to="'/users/detail/' + content.id">{{ content.user_name }}</router-link>
+              </div>
+              <div class="col-3">{{ content.access }}</div>
+            </li>
+          </ul>
+        </div>
+
+
+        <paginate class="pagination"
+                  v-model="page_current"
+                  :page-count="page_max"
+                  :page-range="5"
+                  :margin-pages="1"
+                  :click-handler="pagination"
+                  :prev-text="'<'"
+                  :next-text="'>'"
+                  :container-class="'page-item'"
+                  :page-class="'page-link'"
+                  :prev-class="'page-link prev'"
+                  :next-class="'page-link next'"
+                  :active-class="'active'"
+                  :disabled-class="'disabled'">
+        </paginate>
+        <!---->
+
+
         <div class="mt-1 mb-2">
           <button type="submit" class="btn btn-primary col">수정</button>
           <router-link to="/organization">
             <button class="btn btn-dark col mt-2">취소</button>
           </router-link>
         </div>
-
       </form>
+
+
+      <div v-else class="m-auto">
+        <!---->
+        <div class="form-group row">
+
+          <label for="org_id2" class="col-form-label-sm col-sm-3 mt-3">소속 번호</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div class="form-control border-0" id="org_id2">{{ content_obj.id }}</div>
+          </div>
+
+          <label for="org_manager2" class="col-form-label-sm col-sm-3 mt-3">관리자</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div class="form-control" id="org_manager2">{{ content_obj.manager_name }}</div>
+          </div>
+
+          <label for="org_name2" class="col-form-label-sm col-sm-3 mt-3">소속 이름*</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div type="text" class="form-control" id="org_name2">{{ content_obj.name }}</div>
+          </div>
+
+          <label for="org_sub2" class="col-form-label-sm col-sm-3 mt-3">소속 상호명</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div v-if="content_obj.sub_name == null" type="text" class="form-control">비어있음</div>
+            <div v-else type="text" class="form-control" id="org_sub2">{{ content_obj.sub_name }}</div>
+          </div>
+
+          <label for="org_header2" class="col-form-label-sm col-sm-3 mt-3">대표자</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div v-if="content_obj.header == null" type="text" class="form-control">비어있음</div>
+            <div v-else type="text" class="form-control" id="org_header2">{{ content_obj.header }}</div>
+          </div>
+
+          <label for="org_address2" class="col-form-label-sm col-sm-3 mt-3">주소</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div v-if="content_obj.address == null" type="text" class="form-control">비어있음</div>
+            <div v-else type="text" class="form-control" id="org_address2">{{ content_obj.address }}</div>
+          </div>
+
+          <label for="org_corp2" class="col-form-label-sm col-sm-3 mt-3">사업자번호</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div v-if="content_obj.corp_num == null" type="text" class="form-control">비어있음</div>
+            <div v-else type="text" class="form-control" id="org_corp2">{{ content_obj.corp_num }}</div>
+          </div>
+
+          <label for="org_phone2" class="col-form-label-sm col-sm-3 mt-3">연락처</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div v-if="content_obj.phone == null" type="number" class="form-control">비어있음</div>
+            <div v-else type="number" class="form-control" id="org_phone2">{{ content_obj.phone }}</div>
+          </div>
+
+          <label for="org_email2" class="col-form-label-sm col-sm-3 mt-3">이메일</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div v-if="content_obj.email == null" type="email" class="form-control">비어있음</div>
+            <div v-else type="email" class="form-control" id="org_email2">{{ content_obj.email }}</div>
+          </div>
+
+          <label for="org_desc2" class="col-form-label-sm col-sm-3 mt-3">설명</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div v-if="content_obj.desc == null" type="text" class="form-control">비어있음</div>
+            <div v-else type="text" class="form-control" id="org_desc2">{{ content_obj.desc }}</div>
+          </div>
+
+          <label for="org_create2" class="col-form-label-sm col-sm-3 mt-3">생성일</label>
+          <div v-if="content_obj.created_date" class="col-sm-9 mt-sm-3">
+            <div type="text" class="form-control border-0" id="org_create2">{{ (content_obj.created_date).substring(0,
+              10) }}
+            </div>
+          </div>
+          <div v-else class="col-sm-9 mt-sm-3">
+            <div type="text" class="form-control border-0">none</div>
+          </div>
+
+          <label for="org_update2" class="col-form-label-sm col-sm-3 mt-3">수정일</label>
+          <div v-if="content_obj.updated_date" class="col-sm-9 mt-sm-3">
+            <div type="text" class="form-control border-0" id="org_update2">{{ (content_obj.updated_date).substring(0,
+              10) }}
+            </div>
+          </div>
+          <div v-else class="col-sm-9 mt-sm-3">
+            <div type="text" class="form-control border-0">none</div>
+          </div>
+        </div>
+        <!---->
+
+
+        <!---->
+        <div v-if="window_width > 1000" class="list_area">
+          <div>
+            <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2 text-center"
+                 style="border-radius: 0; border-bottom: 0; width:100%;">
+              <div class="col-2 col-sm-1">번호</div>
+              <div class="col-3 col-sm-4">아이디</div>
+              <div class="col-3 col-sm-4">이름</div>
+              <div class="col-2">연락처</div>
+              <div class="col-2 col-sm-1">상태</div>
+            </div>
+          </div>
+          <ul class="list-group list-group-flush col-12 pr-0 text-center">
+            <li v-if="marketer.length === 0"
+                class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
+              <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
+            </li>
+            <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
+                v-for="content in marketer">
+              <div class="col-2 col-sm-1">{{ content.user }}</div>
+              <div class="col-3 col-sm-4">
+                <router-link :to="'/users/detail/' + content.id">{{ content.account }}</router-link>
+              </div>
+              <div class="col-3 col-sm-4">
+                <router-link :to="'/users/detail/' + content.id">{{ content.user_name }}</router-link>
+              </div>
+              <div class="col-2">{{ content.phone }}</div>
+              <div class="col-2 col-sm-1">{{ content.access }}</div>
+            </li>
+          </ul>
+        </div>
+
+        <div v-else class="list_area text-center">
+          <div>
+            <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2"
+                 style="border-radius: 0; border-bottom: 0; width:100%;">
+              <div class="col-4">아이디</div>
+              <div class="col-5">이름</div>
+              <div class="col-3">상태</div>
+            </div>
+          </div>
+          <ul class="list-group list-group-flush col-12 pr-0">
+            <li v-if="marketer.length === 0"
+                class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
+              <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
+            </li>
+            <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
+                v-for="content in marketer">
+              <div class="col-4">{{ content.account }}</div>
+              <div class="col-5">
+                <router-link :to="'/users/detail/' + content.id">{{ content.user_name }}</router-link>
+              </div>
+              <div class="col-3">{{ content.access }}</div>
+            </li>
+          </ul>
+        </div>
+
+
+        <paginate class="pagination"
+                  v-model="page_current"
+                  :page-count="page_max"
+                  :page-range="5"
+                  :margin-pages="1"
+                  :click-handler="pagination"
+                  :prev-text="'<'"
+                  :next-text="'>'"
+                  :container-class="'page-item'"
+                  :page-class="'page-link'"
+                  :prev-class="'page-link prev'"
+                  :next-class="'page-link next'"
+                  :active-class="'active'"
+                  :disabled-class="'disabled'">
+        </paginate>
+        <!---->
+      </div>
+
+
     </div>
 
-    <div v-else>
-      nonono
-    </div>
+    <!--<div v-else class="container">
+      <div class="m-auto" v-on:submit.prevent="check_organization">
+        <div class="form-group row">
+
+          <label for="org_id2" class="col-form-label-sm col-sm-3 mt-3">소속 번호</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div class="form-control border-0" id="org_id2">{{ content_obj.id }}</div>
+          </div>
+
+          <label for="org_manager2" class="col-form-label-sm col-sm-3 mt-3">관리자</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div class="form-control" id="org_manager2">{{ content_obj.manager_name }}</div>
+          </div>
+
+          <label for="org_name2" class="col-form-label-sm col-sm-3 mt-3">소속 이름*</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div type="text" class="form-control" id="org_name2">{{ content_obj.name }}</div>
+          </div>
+
+          <label for="org_sub2" class="col-form-label-sm col-sm-3 mt-3">소속 상호명</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div v-if="content_obj.sub_name == null" type="text" class="form-control">비어있음</div>
+            <div v-else type="text" class="form-control" id="org_sub2">{{ content_obj.sub_name }}</div>
+          </div>
+
+          <label for="org_header2" class="col-form-label-sm col-sm-3 mt-3">대표자</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div v-if="content_obj.header == null" type="text" class="form-control">비어있음</div>
+            <div v-else type="text" class="form-control" id="org_header2">{{ content_obj.header }}</div>
+          </div>
+
+          <label for="org_address2" class="col-form-label-sm col-sm-3 mt-3">주소</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div v-if="content_obj.address == null" type="text" class="form-control">비어있음</div>
+            <div v-else type="text" class="form-control" id="org_address2">{{ content_obj.address }}</div>
+          </div>
+
+          <label for="org_corp2" class="col-form-label-sm col-sm-3 mt-3">사업자번호</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div v-if="content_obj.corp_num == null" type="text" class="form-control">비어있음</div>
+            <div v-else type="text" class="form-control" id="org_corp2">{{ content_obj.corp_num }}</div>
+          </div>
+
+          <label for="org_phone2" class="col-form-label-sm col-sm-3 mt-3">연락처</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div v-if="content_obj.phone == null" type="number" class="form-control">비어있음</div>
+            <div v-else type="number" class="form-control" id="org_phone2">{{ content_obj.phone }}</div>
+          </div>
+
+          <label for="org_email2" class="col-form-label-sm col-sm-3 mt-3">이메일</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div v-if="content_obj.email == null" type="email" class="form-control">비어있음</div>
+            <div v-else type="email" class="form-control" id="org_email2">{{ content_obj.email }}</div>
+          </div>
+
+          <label for="org_desc2" class="col-form-label-sm col-sm-3 mt-3">설명</label>
+          <div class="col-sm-9 mt-sm-3">
+            <div v-if="content_obj.desc == null" type="text" class="form-control">비어있음</div>
+            <div v-else type="text" class="form-control" id="org_desc2">{{ content_obj.desc }}</div>
+          </div>
+
+          <label for="org_create2" class="col-form-label-sm col-sm-3 mt-3">생성일</label>
+          <div v-if="content_obj.created_date" class="col-sm-9 mt-sm-3">
+            <div type="text" class="form-control border-0" id="org_create2">{{ (content_obj.created_date).substring(0, 10) }}</div>
+          </div>
+          <div v-else class="col-sm-9 mt-sm-3">
+            <div type="text" class="form-control border-0">none</div>
+          </div>
+
+          <label for="org_update2" class="col-form-label-sm col-sm-3 mt-3">수정일</label>
+          <div v-if="content_obj.updated_date" class="col-sm-9 mt-sm-3">
+            <div type="text" class="form-control border-0" id="org_update2">{{ (content_obj.updated_date).substring(0, 10) }}</div>
+          </div>
+          <div v-else class="col-sm-9 mt-sm-3">
+            <div type="text" class="form-control border-0">none</div>
+          </div>
+
+        </div>
+      </div>
+    </div>-->
+
 
   </div>
 </template>
@@ -137,13 +459,25 @@
   export default {
     name: "OrganizationDetail",
     data: () => ({
+      window_width: window.innerWidth,
       page_id: 0,
       content_obj: [],
       marketer: [],
-      original_manager: 0
+      original_manager: 0,
+      user_list: [],
+      page_current: 1,
+      page_max: 0,
+      page_chunk: 10,
     }),
     mounted() {
-      // get id from url
+      // Window width calculator
+      let that = this
+      this.$nextTick(function () {
+        window.addEventListener('resize', function (e) {
+          that.window_width = window.innerWidth
+        })
+      })
+
       this.page_id = this.$route.params.organization_id * 1
 
       // if page int is default, push to list page
@@ -160,11 +494,27 @@
         .then((response) => {
           this.content_obj = response.data
           this.original_manager = response.data.manager
-          return axios.get(this.$store.state.endpoints.baseUrl + 'user_access/' + '?organization=' + response.data.id )
+          return axios.get(this.$store.state.endpoints.baseUrl + 'user_access/' + '?organization=' + response.data.id)
         })
         .then((response) => {
           this.marketer = response.data.results
+          // this.user_list = response.data.results
+          // console.log(this.user_list)
+          //return axios.get(this.$store.state.endpoints.baseUrl + 'user/')
         })
+        // .then((response) => {
+        //   console.log(response.data.results)
+        //   for(let i = 0; i < this.marketer.length; i++) {
+        //     for(let j = 0; j < response.data.results.length; j++) {
+        //       if (this.marketer[i].user === response.data.results[j].id) {
+        //         console.log(this.marketer[i])
+        //         console.log(response.data.results[j])
+        //         this.marketer[i].user_info = response.data.results[j].account
+        //         console.log(this.marketer[i].user_info)
+        //       }
+        //     }
+        //   }
+        // })
         .catch((error) => {
           console.log(error)
         })
@@ -174,9 +524,9 @@
         // Validate for make an organization
         this.$validator.validateAll()
         // or
-        if(confirm('수정하시겠습니까?')) {
-          if(this.content_obj.manager !== this.original_manager){
-            if(confirm('관리자를 교체하시겠습니까?')) {
+        if (confirm('수정하시겠습니까?')) {
+          if (this.content_obj.manager !== this.original_manager) {
+            if (confirm('관리자를 교체하시겠습니까?')) {
               this.patch_organization()
             } else {
               alert('수정이 취소되었습니다.')
@@ -220,6 +570,48 @@
           .catch((error) => {
             console.log(error)
           })
+      },
+      pagination: function (pageNum) {
+        // when page is first, max ~ max-(chunk*current)+1
+        // when page is max, max-(chunk*(current-1)) ~ 1
+        // when page is middle, max-(chunk*(current-1)) ~ max-(chunk*current)+1
+        let offset = (pageNum - 1) * this.page_chunk
+        this.calling_all_unit(offset)
+      },
+      search: function (option, text) {
+        if (option !== 0 || text !== '') {
+          let option_val
+          this.page_current = 1
+          if (option === '1') {
+            option_val = 'name'
+          } else if (option === '2') {
+            option_val = 'company'
+          } else if (option === '3') {
+            option_val = 'manager'
+          } else {
+            // console.log('Option not catched')
+            alert('검색 옵션을 선택하세요.')
+          }
+          this.search_option = option_val
+          this.search_text = text
+          this.calling_all_unit()
+        }
+      },
+      calling_all_unit: function (page) {
+        // Calling landings with new values
+        let axios = this.$axios
+        let this_url = 'landing/'
+        let offset = page
+        axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
+          .then((response) => {
+            // Calculation for page_max
+            if (response.data.count % this.page_chunk === 0) {
+              this.page_max = Math.floor(response.data.count / this.page_chunk)
+            } else {
+              this.page_max = Math.floor(response.data.count / this.page_chunk) + 1
+            }
+            this.content_obj = response.data.results
+          })
       }
     },
     update() {
@@ -243,7 +635,10 @@
         //   })
         // }
         return access
-      }
+      },
+      // user_list() {
+      //   ///
+      // }
     }
   }
 </script>
