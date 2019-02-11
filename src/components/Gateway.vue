@@ -295,7 +295,7 @@
       // When user is client, get button value
       client_signal(request) {
         // If same request, the method turned to cancel method
-        if (this.client_switch === request) {
+        if (this.client_switch === request && this.client_switch !== 1) {
           this.client_switch = 0
         } else {
           this.client_switch = request

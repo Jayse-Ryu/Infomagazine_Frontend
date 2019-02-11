@@ -211,7 +211,6 @@
                 return axios.patch(this.$store.state.endpoints.baseUrl + 'user_access/' + decoder.user_id + '/', formData)
               })
               .then((response) => {
-                console.log(response)
                 alert('수정되었습니다. 다시 로그인 하세요.')
                 this.$store.commit('removeToken')
                 this.$router.push({
