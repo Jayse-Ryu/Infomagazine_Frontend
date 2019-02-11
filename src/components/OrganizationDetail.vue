@@ -8,8 +8,8 @@
       <router-link :to="'/organization/detail/' + $route.params.organization_id">소속 정보</router-link>
     </div>
 
-    <!--<div v-if="original_manager == user_obj.id" class="container">-->
     <div class="container">
+      <!-- 1. If user is creator -->
       <form v-if="original_manager == user_obj.id" class="m-auto" v-on:submit.prevent="check_organization">
         <div class="form-group row">
 
@@ -121,60 +121,102 @@
 
         </div>
 
-
-        <!---->
+        <!-- 2. If width is big -->
         <div v-if="window_width > 1000" class="list_area">
           <div>
             <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2 text-center"
                  style="border-radius: 0; border-bottom: 0; width:100%;">
               <div class="col-2 col-sm-1">번호</div>
-              <div class="col-3 col-sm-4">아이디</div>
-              <div class="col-3 col-sm-4">이름</div>
+              <div class="col-3 col-sm-3">아이디</div>
+              <div class="col-3 col-sm-3">이름</div>
               <div class="col-2">연락처</div>
-              <div class="col-2 col-sm-1">상태</div>
+              <div class="col-2 col-sm-3">관리</div>
             </div>
           </div>
           <ul class="list-group list-group-flush col-12 pr-0 text-center">
-            <li v-if="marketer.length === 0"
+            <li v-if="user_list.length === 0"
                 class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
               <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
             </li>
             <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
-                v-for="content in marketer">
+                v-for="content in user_list">
               <div class="col-2 col-sm-1">{{ content.user }}</div>
-              <div class="col-3 col-sm-4">
+              <div class="col-3 col-sm-3">
                 <router-link :to="'/users/detail/' + content.id">{{ content.account }}</router-link>
               </div>
-              <div class="col-3 col-sm-4">
+              <div class="col-3 col-sm-3">
                 <router-link :to="'/users/detail/' + content.id">{{ content.user_name }}</router-link>
               </div>
               <div class="col-2">{{ content.phone }}</div>
-              <div class="col-2 col-sm-1">{{ content.access }}</div>
+              <div class="col-2 col-sm-3">
+                <div v-if="content.access == 1 && content.user == original_manager">
+                  <button class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
+                    <div class="promote_btn">관리자</div>
+                  </button>
+                </div>
+                <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id" >
+                  <button class="btn btn-danger p-0" @click.prevent="promote('de', content.user)">
+                    <div class="promote_btn">강등</div>
+                  </button>
+                </div>
+                <div v-else-if="content.access == 1 && content.user == user_obj.id" >
+                  <button class="btn btn-info p-0" @click.prevent="promote('me', content.user)">
+                    <div class="promote_btn">본인</div>
+                  </button>
+                </div>
+                <div v-if="content.access == -1">
+                  <button class="btn btn-success p-0" @click.prevent="promote('pr', content.user)">
+                    <div class="promote_btn">승인</div>
+                  </button>
+                </div>
+              </div>
             </li>
           </ul>
         </div>
 
+        <!-- 2. Else if width is small -->
         <div v-else class="list_area text-center">
           <div>
             <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2"
                  style="border-radius: 0; border-bottom: 0; width:100%;">
               <div class="col-4">아이디</div>
-              <div class="col-5">이름</div>
-              <div class="col-3">상태</div>
+              <div class="col-4">이름</div>
+              <div class="col-4">관리</div>
             </div>
           </div>
           <ul class="list-group list-group-flush col-12 pr-0">
-            <li v-if="marketer.length === 0"
+            <li v-if="user_list.length === 0"
                 class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
               <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
             </li>
             <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
-                v-for="content in marketer">
+                v-for="content in user_list">
               <div class="col-4">{{ content.account }}</div>
-              <div class="col-5">
+              <div class="col-4">
                 <router-link :to="'/users/detail/' + content.id">{{ content.user_name }}</router-link>
               </div>
-              <div class="col-3">{{ content.access }}</div>
+              <div class="col-4">
+                <div v-if="content.access == 1 && content.user == original_manager">
+                  <button class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
+                    <div class="promote_btn">관리자</div>
+                  </button>
+                </div>
+                <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id" >
+                  <button class="btn btn-danger p-0" @click.prevent="promote('de', content.user)">
+                    <div class="promote_btn">강등</div>
+                  </button>
+                </div>
+                <div v-else-if="content.access == 1 && content.user == user_obj.id" >
+                  <button class="btn btn-info p-0" @click.prevent="promote('me', content.user)">
+                    <div class="promote_btn">본인</div>
+                  </button>
+                </div>
+                <div v-if="content.access == -1">
+                  <button class="btn btn-success p-0" @click.prevent="promote('pr', content.user)">
+                    <div class="promote_btn">승인</div>
+                  </button>
+                </div>
+              </div>
             </li>
           </ul>
         </div>
@@ -206,9 +248,8 @@
         </div>
       </form>
 
-
+      <!-- 1. If user is just manager -->
       <div v-else class="m-auto">
-        <!---->
         <div class="form-group row">
 
           <label for="org_id2" class="col-form-label-sm col-sm-3 mt-3">소속 번호</label>
@@ -288,66 +329,106 @@
             <div type="text" class="form-control border-0">none</div>
           </div>
         </div>
-        <!---->
 
-
-        <!---->
+        <!-- 2. If width is big -->
         <div v-if="window_width > 1000" class="list_area">
           <div>
             <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2 text-center"
                  style="border-radius: 0; border-bottom: 0; width:100%;">
               <div class="col-2 col-sm-1">번호</div>
-              <div class="col-3 col-sm-4">아이디</div>
-              <div class="col-3 col-sm-4">이름</div>
+              <div class="col-3 col-sm-3">아이디</div>
+              <div class="col-3 col-sm-3">이름</div>
               <div class="col-2">연락처</div>
-              <div class="col-2 col-sm-1">상태</div>
+              <div class="col-2 col-sm-3">관리</div>
             </div>
           </div>
           <ul class="list-group list-group-flush col-12 pr-0 text-center">
-            <li v-if="marketer.length === 0"
+            <li v-if="user_list.length === 0"
                 class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
               <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
             </li>
             <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
-                v-for="content in marketer">
+                v-for="content in user_list">
               <div class="col-2 col-sm-1">{{ content.user }}</div>
-              <div class="col-3 col-sm-4">
+              <div class="col-3 col-sm-3">
                 <router-link :to="'/users/detail/' + content.id">{{ content.account }}</router-link>
               </div>
-              <div class="col-3 col-sm-4">
+              <div class="col-3 col-sm-3">
                 <router-link :to="'/users/detail/' + content.id">{{ content.user_name }}</router-link>
               </div>
               <div class="col-2">{{ content.phone }}</div>
-              <div class="col-2 col-sm-1">{{ content.access }}</div>
+              <div class="col-2 col-sm-3">
+                <div v-if="content.access == 1 && content.user == original_manager">
+                  <button class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
+                    <div class="promote_btn">관리자</div>
+                  </button>
+                </div>
+                <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id" >
+                  <button class="btn btn-danger p-0" @click.prevent="promote('de', content.user)">
+                    <div class="promote_btn">강등</div>
+                  </button>
+                </div>
+                <div v-else-if="content.access == 1 && content.user == user_obj.id" >
+                  <button class="btn btn-info p-0" @click.prevent="promote('me', content.user)">
+                    <div class="promote_btn">본인</div>
+                  </button>
+                </div>
+                <div v-if="content.access == -1">
+                  <button class="btn btn-success p-0" @click.prevent="promote('pr', content.user)">
+                    <div class="promote_btn">승인</div>
+                  </button>
+                </div>
+              </div>
             </li>
           </ul>
         </div>
 
+        <!-- 2. If width is small -->
         <div v-else class="list_area text-center">
           <div>
             <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2"
                  style="border-radius: 0; border-bottom: 0; width:100%;">
               <div class="col-4">아이디</div>
-              <div class="col-5">이름</div>
-              <div class="col-3">상태</div>
+              <div class="col-4">이름</div>
+              <div class="col-4">관리</div>
             </div>
           </div>
           <ul class="list-group list-group-flush col-12 pr-0">
-            <li v-if="marketer.length === 0"
+            <li v-if="user_list.length === 0"
                 class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
               <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
             </li>
             <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
-                v-for="content in marketer">
+                v-for="content in user_list">
               <div class="col-4">{{ content.account }}</div>
-              <div class="col-5">
+              <div class="col-4">
                 <router-link :to="'/users/detail/' + content.id">{{ content.user_name }}</router-link>
               </div>
-              <div class="col-3">{{ content.access }}</div>
+              <div class="col-4">
+                <div v-if="content.access == 1 && content.user == original_manager">
+                  <button class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
+                    <div class="promote_btn">관리자</div>
+                  </button>
+                </div>
+                <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id" >
+                  <button class="btn btn-danger p-0" @click.prevent="promote('de', content.user)">
+                    <div class="promote_btn">강등</div>
+                  </button>
+                </div>
+                <div v-else-if="content.access == 1 && content.user == user_obj.id" >
+                  <button class="btn btn-info p-0" @click.prevent="promote('me', content.user)">
+                    <div class="promote_btn">본인</div>
+                  </button>
+                </div>
+                <div v-if="content.access == -1">
+                  <button class="btn btn-success p-0" @click.prevent="promote('pr', content.user)">
+                    <div class="promote_btn">승인</div>
+                  </button>
+                </div>
+              </div>
             </li>
           </ul>
         </div>
-
 
         <paginate class="pagination"
                   v-model="page_current"
@@ -364,93 +445,8 @@
                   :active-class="'active'"
                   :disabled-class="'disabled'">
         </paginate>
-        <!---->
       </div>
-
-
     </div>
-
-    <!--<div v-else class="container">
-      <div class="m-auto" v-on:submit.prevent="check_organization">
-        <div class="form-group row">
-
-          <label for="org_id2" class="col-form-label-sm col-sm-3 mt-3">소속 번호</label>
-          <div class="col-sm-9 mt-sm-3">
-            <div class="form-control border-0" id="org_id2">{{ content_obj.id }}</div>
-          </div>
-
-          <label for="org_manager2" class="col-form-label-sm col-sm-3 mt-3">관리자</label>
-          <div class="col-sm-9 mt-sm-3">
-            <div class="form-control" id="org_manager2">{{ content_obj.manager_name }}</div>
-          </div>
-
-          <label for="org_name2" class="col-form-label-sm col-sm-3 mt-3">소속 이름*</label>
-          <div class="col-sm-9 mt-sm-3">
-            <div type="text" class="form-control" id="org_name2">{{ content_obj.name }}</div>
-          </div>
-
-          <label for="org_sub2" class="col-form-label-sm col-sm-3 mt-3">소속 상호명</label>
-          <div class="col-sm-9 mt-sm-3">
-            <div v-if="content_obj.sub_name == null" type="text" class="form-control">비어있음</div>
-            <div v-else type="text" class="form-control" id="org_sub2">{{ content_obj.sub_name }}</div>
-          </div>
-
-          <label for="org_header2" class="col-form-label-sm col-sm-3 mt-3">대표자</label>
-          <div class="col-sm-9 mt-sm-3">
-            <div v-if="content_obj.header == null" type="text" class="form-control">비어있음</div>
-            <div v-else type="text" class="form-control" id="org_header2">{{ content_obj.header }}</div>
-          </div>
-
-          <label for="org_address2" class="col-form-label-sm col-sm-3 mt-3">주소</label>
-          <div class="col-sm-9 mt-sm-3">
-            <div v-if="content_obj.address == null" type="text" class="form-control">비어있음</div>
-            <div v-else type="text" class="form-control" id="org_address2">{{ content_obj.address }}</div>
-          </div>
-
-          <label for="org_corp2" class="col-form-label-sm col-sm-3 mt-3">사업자번호</label>
-          <div class="col-sm-9 mt-sm-3">
-            <div v-if="content_obj.corp_num == null" type="text" class="form-control">비어있음</div>
-            <div v-else type="text" class="form-control" id="org_corp2">{{ content_obj.corp_num }}</div>
-          </div>
-
-          <label for="org_phone2" class="col-form-label-sm col-sm-3 mt-3">연락처</label>
-          <div class="col-sm-9 mt-sm-3">
-            <div v-if="content_obj.phone == null" type="number" class="form-control">비어있음</div>
-            <div v-else type="number" class="form-control" id="org_phone2">{{ content_obj.phone }}</div>
-          </div>
-
-          <label for="org_email2" class="col-form-label-sm col-sm-3 mt-3">이메일</label>
-          <div class="col-sm-9 mt-sm-3">
-            <div v-if="content_obj.email == null" type="email" class="form-control">비어있음</div>
-            <div v-else type="email" class="form-control" id="org_email2">{{ content_obj.email }}</div>
-          </div>
-
-          <label for="org_desc2" class="col-form-label-sm col-sm-3 mt-3">설명</label>
-          <div class="col-sm-9 mt-sm-3">
-            <div v-if="content_obj.desc == null" type="text" class="form-control">비어있음</div>
-            <div v-else type="text" class="form-control" id="org_desc2">{{ content_obj.desc }}</div>
-          </div>
-
-          <label for="org_create2" class="col-form-label-sm col-sm-3 mt-3">생성일</label>
-          <div v-if="content_obj.created_date" class="col-sm-9 mt-sm-3">
-            <div type="text" class="form-control border-0" id="org_create2">{{ (content_obj.created_date).substring(0, 10) }}</div>
-          </div>
-          <div v-else class="col-sm-9 mt-sm-3">
-            <div type="text" class="form-control border-0">none</div>
-          </div>
-
-          <label for="org_update2" class="col-form-label-sm col-sm-3 mt-3">수정일</label>
-          <div v-if="content_obj.updated_date" class="col-sm-9 mt-sm-3">
-            <div type="text" class="form-control border-0" id="org_update2">{{ (content_obj.updated_date).substring(0, 10) }}</div>
-          </div>
-          <div v-else class="col-sm-9 mt-sm-3">
-            <div type="text" class="form-control border-0">none</div>
-          </div>
-
-        </div>
-      </div>
-    </div>-->
-
 
   </div>
 </template>
@@ -490,36 +486,73 @@
       let axios = this.$axios
       let this_url = 'organization/'
 
+      // Get Organization by page_id
       axios.get(this.$store.state.endpoints.baseUrl + this_url + this.page_id)
         .then((response) => {
           this.content_obj = response.data
           this.original_manager = response.data.manager
+          // Get access users by organization id
           return axios.get(this.$store.state.endpoints.baseUrl + 'user_access/' + '?organization=' + response.data.id)
         })
         .then((response) => {
-          this.marketer = response.data.results
-          // this.user_list = response.data.results
-          // console.log(this.user_list)
-          //return axios.get(this.$store.state.endpoints.baseUrl + 'user/')
+          // Filtering allowed managers
+          for(let i = 0; i < response.data.results.length; i++) {
+            if (response.data.results[i].access === 1) {
+              this.marketer.push(response.data.results[i])
+            }
+          }
+          // this.pagination
+          let this_url = 'user_access/'
+          let offset = (this.page_current - 1) * this.page_chunk
+          // console.log('pagination')
+          axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + 'organization' + '=' + this.$route.params.organization_id * 1)
+            .then((response) => {
+              // Calculation for page_max
+              if (response.data.count % this.page_chunk === 0) {
+                this.page_max = Math.floor(response.data.count / this.page_chunk)
+              } else {
+                this.page_max = Math.floor(response.data.count / this.page_chunk) + 1
+              }
+              // Get all of users in this organization whatever allowed or not
+              this.user_list = response.data.results
+            })
         })
-        // .then((response) => {
-        //   console.log(response.data.results)
-        //   for(let i = 0; i < this.marketer.length; i++) {
-        //     for(let j = 0; j < response.data.results.length; j++) {
-        //       if (this.marketer[i].user === response.data.results[j].id) {
-        //         console.log(this.marketer[i])
-        //         console.log(response.data.results[j])
-        //         this.marketer[i].user_info = response.data.results[j].account
-        //         console.log(this.marketer[i].user_info)
-        //       }
-        //     }
-        //   }
-        // })
         .catch((error) => {
           console.log(error)
         })
     },
     methods: {
+      refresh_organization() {
+        this.page_id = this.$route.params.organization_id * 1
+
+        // if page int is default, push to list page
+        if (this.page_id === 0) {
+          this.$router.push({
+            name: 'organization_list'
+          })
+        }
+        // get object
+        let axios = this.$axios
+        let this_url = 'organization/'
+
+        // Get Organization by page_id
+        axios.get(this.$store.state.endpoints.baseUrl + this_url + this.page_id)
+          .then((response) => {
+            this.content_obj = response.data
+            this.original_manager = response.data.manager
+            // Get access users by organization id
+            return axios.get(this.$store.state.endpoints.baseUrl + 'user_access/' + '?organization=' + response.data.id)
+          })
+          .then((response) => {
+            // Filtering allowed managers
+            this.marketer = []
+            for (let i = 0; i < response.data.results.length; i++) {
+              if (response.data.results[i].access === 1) {
+                this.marketer.push(response.data.results[i])
+              }
+            }
+          })
+      },
       check_organization() {
         // Validate for make an organization
         this.$validator.validateAll()
@@ -566,6 +599,7 @@
             alert('수정되었습니다.')
             this.original_manager = this.content_obj.manager
             this.$store.dispatch('getAuthUser')
+            this.refresh_organization()
           })
           .catch((error) => {
             console.log(error)
@@ -578,31 +612,12 @@
         let offset = (pageNum - 1) * this.page_chunk
         this.calling_all_unit(offset)
       },
-      search: function (option, text) {
-        if (option !== 0 || text !== '') {
-          let option_val
-          this.page_current = 1
-          if (option === '1') {
-            option_val = 'name'
-          } else if (option === '2') {
-            option_val = 'company'
-          } else if (option === '3') {
-            option_val = 'manager'
-          } else {
-            // console.log('Option not catched')
-            alert('검색 옵션을 선택하세요.')
-          }
-          this.search_option = option_val
-          this.search_text = text
-          this.calling_all_unit()
-        }
-      },
       calling_all_unit: function (page) {
         // Calling landings with new values
         let axios = this.$axios
-        let this_url = 'landing/'
+        let this_url = 'user_access/'
         let offset = page
-        axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
+        axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + 'organization' + '=' + this.$route.params.organization_id * 1)
           .then((response) => {
             // Calculation for page_max
             if (response.data.count % this.page_chunk === 0) {
@@ -610,8 +625,51 @@
             } else {
               this.page_max = Math.floor(response.data.count / this.page_chunk) + 1
             }
-            this.content_obj = response.data.results
+            // Get all of users in this organization whatever allowed or not
+            this.user_list = response.data.results
           })
+      },
+      promote(option, user) {
+        // head:he me:me demote:de promote:pr
+        let axios = this.$axios
+        let this_url = 'user_access/'
+        if (option == 'he') {
+        } else if (option == 'me') {
+        } else if (option == 'pr') {
+          if (confirm('가입을 승인하시겠습니까?')) {
+            let formData = new FormData()
+            formData.append('access', '1')
+            axios.patch(this.$store.state.endpoints.baseUrl + this_url + user + '/', formData)
+              .then((response) => {
+                alert('유저의 가입이 승인되었습니다.')
+                this.calling_all_unit()
+                this.refresh_organization()
+              })
+              .catch((error) => {
+                console.log(error)
+                alert('처리중 문제가 발생하였습니다.')
+              })
+          } else {
+            alert('승인 취소됨.')
+          }
+        } else if (option == 'de') {
+          if(confirm('유저를 강등시킵니까?')) {
+            let formData = new FormData()
+            formData.append('access', '-1')
+            axios.patch(this.$store.state.endpoints.baseUrl + this_url + user + '/', formData)
+              .then((response) => {
+                alert('유저가 강등되었습니다.')
+                this.calling_all_unit()
+                this.refresh_organization()
+              })
+              .catch((error) => {
+                console.log(error)
+                alert('처리중 문제가 발생하였습니다.')
+              })
+          } else {
+            alert('강등 취소됨.')
+          }
+        }
       }
     },
     update() {
@@ -628,17 +686,8 @@
       access_obj() {
         // Get access information the user
         let access = this.$store.state.userAccess
-        // if (access.access === 1 || access.access === 2) {
-        //   // console.log('If user have actual auth')
-        //   this.$router.push({
-        //     name: 'landing_list'
-        //   })
-        // }
         return access
-      },
-      // user_list() {
-      //   ///
-      // }
+      }
     }
   }
 </script>
@@ -654,5 +703,11 @@
     margin: 5px 0;
     border: 1px solid #ee5151;
     box-sizing: border-box;
+  }
+
+  .promote_btn {
+    padding: 0 4px;
+    min-width: 50px;
+    font-size: 0.83em;
   }
 </style>

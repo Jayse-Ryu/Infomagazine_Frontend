@@ -303,6 +303,17 @@
         // If change company button clicked, get companies
         if (this.client_switch === 2) {
           this.get_company()
+        } else if (this.client_switch === 1) {
+          // Dummy partial update set for force date update
+          let axios = this.$axios
+          let formData = new FormData()
+          axios.patch(this.$store.state.endpoints.baseUrl + 'user_access/' + this.user_obj.id + '/', formData)
+            .then((response) => {
+              // console.log('success?', response)
+            })
+            .catch((error) => {
+              console.log(error)
+            })
         }
       },
       get_orgaznization() {
