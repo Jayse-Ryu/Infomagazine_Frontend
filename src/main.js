@@ -219,6 +219,11 @@ const store = new Vuex.Store({
       }
     }
   }
+  // getters: {
+  //   authFilter: state => {
+  //     return state.authUser.filter(is_staff => is_staff)
+  //   }
+  // }
 })
 
 export default store

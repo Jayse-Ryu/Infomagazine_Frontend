@@ -69,7 +69,7 @@
           <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1" v-for="content in content_obj">
             <div class="col-1">{{ content.id }}</div>
             <div class="col-3 text-center">{{ content.account }}</div>
-            <div class="col-3 text-center"><router-link :to="'/landing/detail/' + content.id">{{ content.full_name }}</router-link></div>
+            <div class="col-3 text-center"><router-link :to="'/user/detail/' + content.id">{{ content.full_name }}</router-link></div>
             <div class="col-5 board_centre">{{ (content.created_date).substring(0, 10) }}</div>
           </li>
         </ul>

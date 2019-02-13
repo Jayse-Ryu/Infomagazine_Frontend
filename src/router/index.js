@@ -2,7 +2,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Axios from 'axios'
-import Vuex from 'vuex'
+import Store from '@/main.js'
+// import Vuex from 'vuex'
 
 // User Login SignUp
 import Signin from '@/components/Signin'
@@ -39,7 +40,7 @@ import MyInfo from '@/components/MyInfo'
 // use like this.$xx
 Vue.use(Router)
 Vue.use(Axios)
-Vue.use(Vuex)
+// Vue.use(Vuex)
 
 // export default new Router({
 const router = new Router({
@@ -59,7 +60,7 @@ const router = new Router({
       name: 'gateway',
       component: Gateway,
       meta: {
-        requiresAuth: true
+        signed: true
       }
     },
     {
@@ -67,7 +68,8 @@ const router = new Router({
       name: 'landing_list',
       component: LandingList,
       meta: {
-        requiresAuth: true
+        signed: true,
+        auth_grade: 'customer'
       }
     },
     {
@@ -75,7 +77,8 @@ const router = new Router({
       name: 'landing_create',
       component: LandingCreate,
       meta: {
-        requiresAuth: true
+        signed: true,
+        auth_grade: 'manager'
       }
     },
     {
@@ -83,7 +86,8 @@ const router = new Router({
       name: 'landing_detail',
       component: LandingDetail,
       meta: {
-        requiresAuth: true
+        signed: true,
+        auth_grade: 'customer'
       }
     },
     {
@@ -91,7 +95,8 @@ const router = new Router({
       name: 'organization_list',
       component: Organization,
       meta: {
-        requiresAuth: true
+        signed: true,
+        auth_grade: 'manager'
       }
     },
     {
@@ -99,7 +104,8 @@ const router = new Router({
       name: 'organization_detail',
       component: OrganizationDetail,
       meta: {
-        requiresAuth: true
+        signed: true,
+        auth_grade: 'manager'
       }
     },
     {
@@ -107,23 +113,26 @@ const router = new Router({
       name: 'company_list',
       component: CompanyList,
       meta: {
-        requiresAuth: true
+        signed: true,
+        auth_grade: 'customer'
       }
     },
     {
       path: '/company/create',
-      name: 'conpany_create',
+      name: 'company_create',
       component: CompanyCreate,
       meta: {
-        requiresAuth: true
+        signed: true,
+        auth_grade: 'manager'
       }
     },
     {
-      path: '/company/detail',
+      path: '/company/detail/:company_id',
       name: 'company_detail',
       component: CompanyDetail,
       meta: {
-        requiresAuth: true
+        signed: true,
+        auth_grade: 'customer'
       }
     },
     {
@@ -131,7 +140,8 @@ const router = new Router({
       name: 'db_list',
       component: DBList,
       meta: {
-        requiresAuth: true
+        signed: true,
+        auth_grade: 'manager'
       }
     },
     {
@@ -139,7 +149,8 @@ const router = new Router({
       name: 'db_detail',
       component: DBDetail,
       meta: {
-        requiresAuth: true
+        signed: true,
+        auth_grade: 'manager'
       }
     },
     {
@@ -147,7 +158,8 @@ const router = new Router({
       name: 'user_detail',
       component: UserDetail,
       meta: {
-        requiresAuth: true
+        signed: true,
+        auth_grade: 'manager'
       }
     },
     {
@@ -155,7 +167,8 @@ const router = new Router({
       name: 'user_list',
       component: UserList,
       meta: {
-        requiresAuth: true
+        signed: true,
+        auth_grade: 'manager'
       }
     },
     {
@@ -163,7 +176,7 @@ const router = new Router({
       name: 'my_info',
       component: MyInfo,
       meta: {
-        requiresAuth: true
+        signed: true
       }
     }
   ],
@@ -179,13 +192,48 @@ const router = new Router({
 // adding differnt authentication for user list or something.
 router.beforeEach((to, from, next) => {
   // Block not applied users
-  if (to.meta.requiresAuth) {
+  if (to.meta.signed) {
     if (window.localStorage.token) {
-    // if (this.$store.state.isAuthenticated) {
       next()
     } else {
       alert('로그인 후 이용 가능합니다.')
       next({name: 'sign_in'})
+    }
+  }
+  if (to.meta.auth_grade) {
+    let auth = to.meta.auth_grade
+    if (auth === 'superuser') {
+      if (Store.state.authUser.is_superuser) {
+        next()
+      } else {
+        next({name: 'gateway'})
+      }
+    } else if (auth === 'staff') {
+      if (Store.state.authUser.is_staff) {
+        next()
+      } else {
+        next({name: 'gateway'})
+      }
+    } else if (auth === 'manager') {
+      if (Store.state.userAccess.access === 1) {
+        // eslint-disable-next-line
+        if (to.name == 'organization_detail' && Store.state.userAccess.organization == to.params.organization_id) {
+          next()
+          // eslint-disable-next-line
+        } else if (to.name == 'organization_detail' && Store.state.userAccess.organization !== to.params.organization_id) {
+          next({name: 'organization_list'})
+        } else {
+          next()
+        }
+      } else {
+        next({name: 'gateway'})
+      }
+    } else if (auth === 'customer') {
+      if (Store.state.userAccess.access >= 1) {
+        next()
+      } else {
+        next({name: 'gateway'})
+      }
     }
   }
   // When auth user, return to landing page from sign_in

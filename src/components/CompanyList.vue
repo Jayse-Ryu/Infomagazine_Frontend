@@ -6,103 +6,109 @@
       <router-link to="/company">업체 리스트</router-link>
     </div>
 
-
-    <form class="container m-auto d-flex justify-content-between flex-row"
-          v-on:submit.prevent="search(temp_option, temp_text)">
-      <router-link to="/company/create/" class="btn-sm h-75 btn-primary p-1 col-md-1 col-sm-2 col text-center">생성
-      </router-link>
-      <div class="form-group search_group">
-        <select class="search_option" id="src_gbn" v-model="temp_option">
-          <option value="0" selected>검색 옵션</option>
-          <option value="1">업체</option>
-          <option value="2">관리자</option>
-        </select>
-        <input type="text" class="search_text" v-model="temp_text" placeholder="검색">
-        <button type="submit" class="search_btn">
-          <img src="../assets/common/search.png"/>
-        </button>
-      </div>
-    </form>
-
-    <div class="container">
-
-      <div v-if="window_width > 1000" class="list_area">
-        <div>
-          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2 text-center"
-               style="border-radius: 0; border-bottom: 0; width:100%;">
-            <div class="col-1">번호</div>
-            <div class="col-2">업체</div>
-            <div class="col-2">상호명</div>
-            <div class="col-2">담당자</div>
-            <div class="col-2">연락처</div>
-            <div class="col-3 board_centre">생성일</div>
-          </div>
+    <div v-if="user_obj.is_staff == true || access_obj.access == 1">
+      <form class="container m-auto d-flex justify-content-between flex-row"
+            v-on:submit.prevent="search(temp_option, temp_text)">
+        <router-link to="/company/create/" class="btn-sm h-75 btn-primary p-1 col-md-1 col-sm-2 col text-center">생성
+        </router-link>
+        <div class="form-group search_group">
+          <select class="search_option" id="src_gbn" v-model="temp_option">
+            <option value="0" selected>검색 옵션</option>
+            <option value="1">업체</option>
+            <option value="2">관리자</option>
+          </select>
+          <input type="text" class="search_text" v-model="temp_text" placeholder="검색">
+          <button type="submit" class="search_btn">
+            <img src="../assets/common/search.png"/>
+          </button>
         </div>
-        <ul class="list-group list-group-flush col-12 pr-0 text-center">
-          <li v-if="content_obj.length === 0"
-              class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
-            <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
-          </li>
-          <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
-              v-for="content in content_obj">
-            <div class="col-1 col-sm-1">{{ content.id }}</div>
-            <div class="col-2 col-sm-2">
-              <router-link :to="'/company/detail/' + content.id">{{ content.name }}</router-link>
-            </div>
-            <div class="col-2 col-sm-2">
-              <router-link :to="'/company/detail/' + content.id">{{ content.sub_name }}</router-link>
-            </div>
-            <div class="col-2">{{ content.manager_name }}</div>
-            <div class="col-2">{{ content.phone }}</div>
-            <div class="col-3 board_centre">{{ (content.created_date).substring(0, 10) }}</div>
-          </li>
-        </ul>
-      </div>
+      </form>
 
-      <div v-else class="list_area">
-        <div>
-          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2"
-               style="border-radius: 0; border-bottom: 0; width:100%;">
-            <div class="col-1">번호</div>
-            <div class="col-3">업체이름</div>
-            <div class="col-4">업체 연락처</div>
-            <div class="col-4 board_centre">생성일</div>
+      <div class="container">
+
+        <div v-if="window_width > 1000" class="list_area">
+          <div>
+            <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2 text-center"
+                 style="border-radius: 0; border-bottom: 0; width:100%;">
+              <div class="col-1">번호</div>
+              <div class="col-2">업체</div>
+              <div class="col-2">상호명</div>
+              <div class="col-2">담당자</div>
+              <div class="col-2">연락처</div>
+              <div class="col-3 board_centre">생성일</div>
+            </div>
           </div>
+          <ul class="list-group list-group-flush col-12 pr-0 text-center">
+            <li v-if="content_obj.length === 0"
+                class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
+              <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
+            </li>
+            <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
+                v-for="content in content_obj">
+              <div class="col-1 col-sm-1">{{ content.id }}</div>
+              <div class="col-2 col-sm-2">
+                <router-link :to="'/company/detail/' + content.id">{{ content.name }}</router-link>
+              </div>
+              <div class="col-2 col-sm-2">
+                <router-link :to="'/company/detail/' + content.id">{{ content.sub_name }}</router-link>
+              </div>
+              <div class="col-2">{{ content.manager_name }}</div>
+              <div class="col-2">{{ content.phone }}</div>
+              <div class="col-3 board_centre">{{ (content.created_date).substring(0, 10) }}</div>
+            </li>
+          </ul>
         </div>
-        <ul class="list-group list-group-flush col-12 pr-0">
-          <li v-if="content_obj.length === 0"
-              class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
-            <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
-          </li>
-          <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
-              v-for="content in content_obj">
-            <div class="col-1">{{ content.id }}</div>
-            <div class="col-3">
-              <router-link :to="'/company/detail/' + content.id">{{ content.name }}</router-link>
+
+        <div v-else class="list_area">
+          <div>
+            <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2"
+                 style="border-radius: 0; border-bottom: 0; width:100%;">
+              <div class="col-1">번호</div>
+              <div class="col-3">업체이름</div>
+              <div class="col-4">업체 연락처</div>
+              <div class="col-4 board_centre">생성일</div>
             </div>
-            <div class="col-4">{{ content.phone }}</div>
-            <div class="col-4 board_centre">{{ (content.created_date).substring(0, 10) }}</div>
-          </li>
-        </ul>
+          </div>
+          <ul class="list-group list-group-flush col-12 pr-0">
+            <li v-if="content_obj.length === 0"
+                class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
+              <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
+            </li>
+            <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
+                v-for="content in content_obj">
+              <div class="col-1">{{ content.id }}</div>
+              <div class="col-3">
+                <router-link :to="'/company/detail/' + content.id">{{ content.name }}</router-link>
+              </div>
+              <div class="col-4">{{ content.phone }}</div>
+              <div class="col-4 board_centre">{{ (content.created_date).substring(0, 10) }}</div>
+            </li>
+          </ul>
+        </div>
+
       </div>
 
+      <paginate class="pagination"
+                v-model="page_current"
+                :page-count="page_max"
+                :page-range="5"
+                :margin-pages="1"
+                :click-handler="pagination"
+                :prev-text="'<'"
+                :next-text="'>'"
+                :container-class="'page-item'"
+                :page-class="'page-link'"
+                :prev-class="'page-link prev'"
+                :next-class="'page-link next'"
+                :active-class="'active'"
+                :disabled-class="'disabled'">
+      </paginate>
     </div>
 
-    <paginate class="pagination"
-              v-model="page_current"
-              :page-count="page_max"
-              :page-range="5"
-              :margin-pages="1"
-              :click-handler="pagination"
-              :prev-text="'<'"
-              :next-text="'>'"
-              :container-class="'page-item'"
-              :page-class="'page-link'"
-              :prev-class="'page-link prev'"
-              :next-class="'page-link next'"
-              :active-class="'active'"
-              :disabled-class="'disabled'">
-    </paginate>
+    <!-- If no one try to access to this list -->
+    <div v-else>
+      <div class="m-auto text-center pt-3">권한이 없습니다.</div>
+    </div>
 
   </div>
 </template>
@@ -112,9 +118,13 @@
     name: "company_list",
     created() {
       if (this.$store.state.authUser) {
-        if (this.$store.state.userAccess.access !== 1) {
+        if (this.$store.state.userAccess.access !== 1 && this.$store.state.userAccess.access === -2) {
           this.$router.push({
             name: 'gateway'
+          })
+        } else if (this.$store.state.userAccess.access == 2) {
+          this.$router.push({
+            path: '/company/detail/' + this.$store.state.userAccess.company
           })
         }
       } else {
@@ -229,6 +239,18 @@
       this.$store.state.pageOptions.company.page = this.page_current
       this.$store.state.pageOptions.company.option = this.search_option
       this.$store.state.pageOptions.company.text = this.search_text
+    },
+    computed: {
+      user_obj() {
+        // Get user information
+        let user = this.$store.state.authUser
+        return user
+      },
+      access_obj() {
+        // Get access information the user
+        let access = this.$store.state.userAccess
+        return access
+      }
     }
   }
 </script>
@@ -236,146 +258,146 @@
 <style lang="scss">
   /* Search bar */
 
-/*
-  select {
-     -webkit-appearance: none;
-     -moz-appearance: none;
-    appearance: none;
-  }
-
-  .search_group {
-    text-align: right;
-  }
-
-  .search_option {
-    display: inline-block;
-    width: 75px;
-    height: 30px;
-    text-align: center;
-    font-size: 0.8em;
-    line-height: 1em;
-    outline: 0;
-    border: 1px solid #c1c1c1;
-    border-radius: 5px 0 0 5px;
-    background-color: #ffffff;
-    vertical-align: top;
-    padding: 0 0 0 10px;
-  }
-
-  .search_text {
-    display: inline-block;
-    width: 160px;
-    height: 30px;
-    font-size: 0.8em;
-    line-height: 0.8em;
-    vertical-align: top;
-    border: 1px solid #c1c1c1;
-    padding: 10px;
-    margin-left: -6px;
-  }
-
-  .search_btn {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    text-align: center;
-    border: 1px solid #c1c1c1;
-    border-radius: 0 5px 5px 0;
-    margin-left: -6px;
-
-    img {
-      width: 55%;
-      height: 60%;
+  /*
+    select {
+       -webkit-appearance: none;
+       -moz-appearance: none;
+      appearance: none;
     }
-  }
 
-  !* Search box ended *!
+    .search_group {
+      text-align: right;
+    }
 
-  !* Pagination *!
-  .pagination {
-    display: block;
-    text-align: center;
-    margin: 0 auto;
-    font-size: 0;
-    padding: 10px 0;
-  }
-
-  .page-item {
-    font-size: 14px;
-    border-radius: 0;
-  }
-
-  .page-link {
-    display: inline-block;
-    border-radius: 0 !important;
-    padding: 0 !important;
-
-    a {
-      display: block;
-      width: 35px;
-      height: 35px;
+    .search_option {
+      display: inline-block;
+      width: 75px;
+      height: 30px;
       text-align: center;
-      line-height: 35px;
+      font-size: 0.8em;
+      line-height: 1em;
+      outline: 0;
+      border: 1px solid #c1c1c1;
+      border-radius: 5px 0 0 5px;
+      background-color: #ffffff;
+      vertical-align: top;
+      padding: 0 0 0 10px;
     }
-  }
 
-  .page-link.active {
-    background-color: #007bcc;
-
-    a {
-      color: #efefef;
+    .search_text {
+      display: inline-block;
+      width: 160px;
+      height: 30px;
+      font-size: 0.8em;
+      line-height: 0.8em;
+      vertical-align: top;
+      border: 1px solid #c1c1c1;
+      padding: 10px;
+      margin-left: -6px;
     }
-  }
 
-  .page-link.disabled {
-    a {
-      color: #c1c1c1;
+    .search_btn {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      text-align: center;
+      border: 1px solid #c1c1c1;
+      border-radius: 0 5px 5px 0;
+      margin-left: -6px;
+
+      img {
+        width: 55%;
+        height: 60%;
+      }
     }
-  }
 
-  .page-link.prev, .page-link.next {
-    border: none;
-  }
+    !* Search box ended *!
 
-  !*Pagination End*!
+    !* Pagination *!
+    .pagination {
+      display: block;
+      text-align: center;
+      margin: 0 auto;
+      font-size: 0;
+      padding: 10px 0;
+    }
 
-  .board_container {
-    width: 100%;
-    padding: 10px 0;
-  }
+    .page-item {
+      font-size: 14px;
+      border-radius: 0;
+    }
 
-  .board_wrap {
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    border-top: 2px solid #eaeaea;
-    border-bottom: 2px solid #eaeaea;
-    padding: 10px 15px 0 15px;
-    transition: all 200ms ease-in-out;
-  }
+    .page-link {
+      display: inline-block;
+      border-radius: 0 !important;
+      padding: 0 !important;
 
-  .board_header {
-    border-bottom: 2px solid #eaeaea;
-    padding-bottom: 10px;
-  }
+      a {
+        display: block;
+        width: 35px;
+        height: 35px;
+        text-align: center;
+        line-height: 35px;
+      }
+    }
 
-  .board_ul {
+    .page-link.active {
+      background-color: #007bcc;
 
-  }
+      a {
+        color: #efefef;
+      }
+    }
 
-  .board_li {
-    padding: 5px 0;
-    border-bottom: 1px solid #eaeaea;
-  }
+    .page-link.disabled {
+      a {
+        color: #c1c1c1;
+      }
+    }
 
-  .board_li:last-child {
-    border: none;
-  }
+    .page-link.prev, .page-link.next {
+      border: none;
+    }
 
-  .board_centre {
-    text-align: center;
-  }
-*/
+    !*Pagination End*!
+
+    .board_container {
+      width: 100%;
+      padding: 10px 0;
+    }
+
+    .board_wrap {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      border-top: 2px solid #eaeaea;
+      border-bottom: 2px solid #eaeaea;
+      padding: 10px 15px 0 15px;
+      transition: all 200ms ease-in-out;
+    }
+
+    .board_header {
+      border-bottom: 2px solid #eaeaea;
+      padding-bottom: 10px;
+    }
+
+    .board_ul {
+
+    }
+
+    .board_li {
+      padding: 5px 0;
+      border-bottom: 1px solid #eaeaea;
+    }
+
+    .board_li:last-child {
+      border: none;
+    }
+
+    .board_centre {
+      text-align: center;
+    }
+  */
 
 </style>

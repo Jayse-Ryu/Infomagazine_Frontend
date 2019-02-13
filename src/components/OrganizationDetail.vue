@@ -10,7 +10,8 @@
 
     <div class="container">
       <!-- 1. If user is creator -->
-      <form v-if="original_manager == user_obj.id" class="m-auto" v-on:submit.prevent="check_organization">
+      <form v-if="original_manager == user_obj.id || user_obj.is_staff == true" class="m-auto"
+            v-on:submit.prevent="check_organization">
         <div class="form-group row">
 
           <label for="org_id" class="col-form-label-sm col-sm-3 mt-3">소속 번호</label>
@@ -150,22 +151,22 @@
               <div class="col-2">{{ content.phone }}</div>
               <div class="col-2 col-sm-3">
                 <div v-if="content.access == 1 && content.user == original_manager">
-                  <button class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
+                  <button type="button" class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
                     <div class="promote_btn">관리자</div>
                   </button>
                 </div>
-                <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id" >
-                  <button class="btn btn-danger p-0" @click.prevent="promote('de', content.user)">
+                <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id">
+                  <button type="button" class="btn btn-danger p-0" @click.prevent="promote('de', content.user)">
                     <div class="promote_btn">강등</div>
                   </button>
                 </div>
-                <div v-else-if="content.access == 1 && content.user == user_obj.id" >
-                  <button class="btn btn-info p-0" @click.prevent="promote('me', content.user)">
+                <div v-else-if="content.access == 1 && content.user == user_obj.id">
+                  <button type="button" class="btn btn-info p-0" @click.prevent="promote('me', content.user)">
                     <div class="promote_btn">본인</div>
                   </button>
                 </div>
                 <div v-if="content.access == -1">
-                  <button class="btn btn-success p-0" @click.prevent="promote('pr', content.user)">
+                  <button type="button" class="btn btn-success p-0" @click.prevent="promote('pr', content.user)">
                     <div class="promote_btn">승인</div>
                   </button>
                 </div>
@@ -197,22 +198,22 @@
               </div>
               <div class="col-4">
                 <div v-if="content.access == 1 && content.user == original_manager">
-                  <button class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
+                  <button type="button" class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
                     <div class="promote_btn">관리자</div>
                   </button>
                 </div>
-                <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id" >
-                  <button class="btn btn-danger p-0" @click.prevent="promote('de', content.user)">
+                <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id">
+                  <button type="button" class="btn btn-danger p-0" @click.prevent="promote('de', content.user)">
                     <div class="promote_btn">강등</div>
                   </button>
                 </div>
-                <div v-else-if="content.access == 1 && content.user == user_obj.id" >
-                  <button class="btn btn-info p-0" @click.prevent="promote('me', content.user)">
+                <div v-else-if="content.access == 1 && content.user == user_obj.id">
+                  <button type="button" class="btn btn-info p-0" @click.prevent="promote('me', content.user)">
                     <div class="promote_btn">본인</div>
                   </button>
                 </div>
                 <div v-if="content.access == -1">
-                  <button class="btn btn-success p-0" @click.prevent="promote('pr', content.user)">
+                  <button type="button" class="btn btn-success p-0" @click.prevent="promote('pr', content.user)">
                     <div class="promote_btn">승인</div>
                   </button>
                 </div>
@@ -249,7 +250,7 @@
       </form>
 
       <!-- 1. If user is just manager -->
-      <div v-else class="m-auto">
+      <div v-else-if="user_obj.id != original_manager && access_obj.organization == page_id" class="m-auto">
         <div class="form-group row">
 
           <label for="org_id2" class="col-form-label-sm col-sm-3 mt-3">소속 번호</label>
@@ -359,22 +360,22 @@
               <div class="col-2">{{ content.phone }}</div>
               <div class="col-2 col-sm-3">
                 <div v-if="content.access == 1 && content.user == original_manager">
-                  <button class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
+                  <button type="button" class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
                     <div class="promote_btn">관리자</div>
                   </button>
                 </div>
-                <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id" >
-                  <button class="btn btn-danger p-0" @click.prevent="promote('de', content.user)">
+                <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id">
+                  <button type="button" class="btn btn-danger p-0" @click.prevent="promote('de', content.user)">
                     <div class="promote_btn">강등</div>
                   </button>
                 </div>
-                <div v-else-if="content.access == 1 && content.user == user_obj.id" >
-                  <button class="btn btn-info p-0" @click.prevent="promote('me', content.user)">
+                <div v-else-if="content.access == 1 && content.user == user_obj.id">
+                  <button type="button" class="btn btn-info p-0" @click.prevent="promote('me', content.user)">
                     <div class="promote_btn">본인</div>
                   </button>
                 </div>
                 <div v-if="content.access == -1">
-                  <button class="btn btn-success p-0" @click.prevent="promote('pr', content.user)">
+                  <button type="button" class="btn btn-success p-0" @click.prevent="promote('pr', content.user)">
                     <div class="promote_btn">승인</div>
                   </button>
                 </div>
@@ -406,22 +407,22 @@
               </div>
               <div class="col-4">
                 <div v-if="content.access == 1 && content.user == original_manager">
-                  <button class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
+                  <button type="button" class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
                     <div class="promote_btn">관리자</div>
                   </button>
                 </div>
-                <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id" >
-                  <button class="btn btn-danger p-0" @click.prevent="promote('de', content.user)">
+                <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id">
+                  <button type="button" class="btn btn-danger p-0" @click.prevent="promote('de', content.user)">
                     <div class="promote_btn">강등</div>
                   </button>
                 </div>
-                <div v-else-if="content.access == 1 && content.user == user_obj.id" >
-                  <button class="btn btn-info p-0" @click.prevent="promote('me', content.user)">
+                <div v-else-if="content.access == 1 && content.user == user_obj.id">
+                  <button type="button" class="btn btn-info p-0" @click.prevent="promote('me', content.user)">
                     <div class="promote_btn">본인</div>
                   </button>
                 </div>
                 <div v-if="content.access == -1">
-                  <button class="btn btn-success p-0" @click.prevent="promote('pr', content.user)">
+                  <button type="button" class="btn btn-success p-0" @click.prevent="promote('pr', content.user)">
                     <div class="promote_btn">승인</div>
                   </button>
                 </div>
@@ -446,6 +447,10 @@
                   :disabled-class="'disabled'">
         </paginate>
       </div>
+
+      <div v-else>
+        <div class="m-auto text-center pt-3">권한이 없습니다.</div>
+      </div>
     </div>
 
   </div>
@@ -453,7 +458,7 @@
 
 <script>
   export default {
-    name: "OrganizationDetail",
+    name: "organization_detail",
     data: () => ({
       window_width: window.innerWidth,
       page_id: 0,
@@ -485,7 +490,6 @@
       // get object
       let axios = this.$axios
       let this_url = 'organization/'
-
       // Get Organization by page_id
       axios.get(this.$store.state.endpoints.baseUrl + this_url + this.page_id)
         .then((response) => {
@@ -496,7 +500,7 @@
         })
         .then((response) => {
           // Filtering allowed managers
-          for(let i = 0; i < response.data.results.length; i++) {
+          for (let i = 0; i < response.data.results.length; i++) {
             if (response.data.results[i].access === 1) {
               this.marketer.push(response.data.results[i])
             }
@@ -653,7 +657,7 @@
             alert('승인 취소됨.')
           }
         } else if (option == 'de') {
-          if(confirm('유저를 강등시킵니까?')) {
+          if (confirm('유저를 강등시킵니까?')) {
             let formData = new FormData()
             formData.append('access', '-1')
             axios.patch(this.$store.state.endpoints.baseUrl + this_url + user + '/', formData)
@@ -673,6 +677,7 @@
       }
     },
     update() {
+      console.log('Updated?')
       if (this.$store.state.jwt !== null) {
         this.$store.dispatch('getAuthUser')
       }
