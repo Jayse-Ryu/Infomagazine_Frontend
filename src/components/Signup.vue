@@ -231,8 +231,9 @@
             })
             .then((response) => {
               alert('회원가입 되었습니다.')
+              this.$router.currentRoute.meta.protect_leave = 'no'
               this.$router.push({
-                name: 'sign_in'
+                name: 'sign_in',
               })
             })
             .catch((error) => {
@@ -248,11 +249,11 @@
         }
       },
       go_back() {
-        if (confirm('취소하시겠습니까?')) {
-          this.$router.push({
-            name: 'sign_in'
+        // if (confirm('취소하시겠습니까?')) {
+        this.$router.push({
+            name: 'sign_in',
           })
-        }
+        // }
       }
     },
     watch: {

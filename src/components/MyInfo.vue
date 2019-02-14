@@ -213,6 +213,7 @@
               .then((response) => {
                 alert('수정되었습니다. 다시 로그인 하세요.')
                 this.$store.commit('removeToken')
+                this.$router.currentRoute.meta.protect_leave = 'no'
                 this.$router.push({
                   name: 'sign_in'
                 })

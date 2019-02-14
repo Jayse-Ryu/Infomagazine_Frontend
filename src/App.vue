@@ -528,13 +528,19 @@ export default {
     appearance: none;
   }
 
+  .create_btn_text {
+    font-size: 0.9em;
+    line-height: 1.9em;
+  }
+
   .search_group {
     text-align: right;
   }
 
   .search_option {
     display: inline-block;
-    width: 75px;
+    // width: 75px;
+    width: calc(75px);
     height: 30px;
     text-align: center;
     font-size: 0.8em;
@@ -549,7 +555,8 @@ export default {
 
   .search_text {
     display: inline-block;
-    width: 160px;
+    // width: 160px;
+    width: calc(100% - 102px);
     height: 30px;
     font-size: 0.8em;
     line-height: 0.8em;
@@ -562,6 +569,7 @@ export default {
   .search_btn {
     display: inline-block;
     width: 30px;
+    // width: 15%;
     height: 30px;
     padding: 0;
     text-align: center;

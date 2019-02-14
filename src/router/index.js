@@ -5,6 +5,9 @@ import Axios from 'axios'
 import Store from '@/main.js'
 // import Vuex from 'vuex'
 
+// 404 Page
+import A404 from '@/components/A404'
+
 // User Login SignUp
 import Signin from '@/components/Signin'
 import Signup from '@/components/Signup'
@@ -46,6 +49,11 @@ Vue.use(Axios)
 const router = new Router({
   routes: [
     {
+      path: 'error',
+      name: 'A404',
+      component: A404
+    },
+    {
       path: '/',
       name: 'sign_in',
       component: Signin
@@ -53,7 +61,10 @@ const router = new Router({
     {
       path: '/signup',
       name: 'sign_up',
-      component: Signup
+      component: Signup,
+      meta: {
+        protect_leave: 'yes'
+      }
     },
     {
       path: '/gateway',
@@ -78,7 +89,8 @@ const router = new Router({
       component: LandingCreate,
       meta: {
         signed: true,
-        auth_grade: 'manager'
+        auth_grade: 'manager',
+        protect_leave: 'yes'
       }
     },
     {
@@ -87,7 +99,8 @@ const router = new Router({
       component: LandingDetail,
       meta: {
         signed: true,
-        auth_grade: 'customer'
+        auth_grade: 'customer',
+        protect_leave: 'yes'
       }
     },
     {
@@ -105,7 +118,8 @@ const router = new Router({
       component: OrganizationDetail,
       meta: {
         signed: true,
-        auth_grade: 'manager'
+        auth_grade: 'manager',
+        protect_leave: 'yes'
       }
     },
     {
@@ -123,7 +137,8 @@ const router = new Router({
       component: CompanyCreate,
       meta: {
         signed: true,
-        auth_grade: 'manager'
+        auth_grade: 'manager',
+        protect_leave: 'yes'
       }
     },
     {
@@ -132,7 +147,8 @@ const router = new Router({
       component: CompanyDetail,
       meta: {
         signed: true,
-        auth_grade: 'customer'
+        auth_grade: 'customer',
+        protect_leave: 'yes'
       }
     },
     {
@@ -150,16 +166,8 @@ const router = new Router({
       component: DBDetail,
       meta: {
         signed: true,
-        auth_grade: 'manager'
-      }
-    },
-    {
-      path: '/users/detail',
-      name: 'user_detail',
-      component: UserDetail,
-      meta: {
-        signed: true,
-        auth_grade: 'manager'
+        auth_grade: 'manager',
+        protect_leave: 'yes'
       }
     },
     {
@@ -172,11 +180,22 @@ const router = new Router({
       }
     },
     {
+      path: '/users/detail',
+      name: 'user_detail',
+      component: UserDetail,
+      meta: {
+        signed: true,
+        auth_grade: 'manager',
+        protect_leave: 'yes'
+      }
+    },
+    {
       path: '/myinfo',
       name: 'my_info',
       component: MyInfo,
       meta: {
-        signed: true
+        signed: true,
+        protect_leave: 'yes'
       }
     }
   ],
@@ -191,15 +210,35 @@ const router = new Router({
 
 // adding differnt authentication for user list or something.
 router.beforeEach((to, from, next) => {
+  // Catch what is not allowed router
+  if (!to.name) {
+    next({name: 'A404'})
+  }
+  // Protect leave functions
+  if (from.meta.protect_leave) {
+    if (from.meta.protect_leave === 'yes') {
+      if (confirm('정말 떠나시겠습니까?')) {
+        next()
+      } else {
+        return true
+      }
+    } else if (from.meta.protect_leave === 'no') {
+      from.meta.protect_leave = 'yes'
+      next()
+      return true
+    }
+  }
   // Block not applied users
   if (to.meta.signed) {
-    if (window.localStorage.token) {
+    if (window.localStorage.token || Store.state.authUser.id) {
       next()
     } else {
       alert('로그인 후 이용 가능합니다.')
       next({name: 'sign_in'})
+      return true
     }
   }
+  // If permission exist in this router
   if (to.meta.auth_grade) {
     let auth = to.meta.auth_grade
     if (auth === 'superuser') {
@@ -236,11 +275,19 @@ router.beforeEach((to, from, next) => {
       }
     }
   }
-  // When auth user, return to landing page from sign_in
+  // When logged user, return to gateway page from sign_in
   if (window.localStorage.token && to.name === 'sign_in') {
-    next({name: 'gateway'})
+    if (Store.state.authUser.id) {
+      next({name: 'gateway'})
+    } else {
+      next({name: 'sign_in'})
+    }
   } else if (window.localStorage.token && to.path === '/') {
-    next({name: 'gateway'})
+    if (Store.state.authUser.id) {
+      next({name: 'gateway'})
+    } else {
+      next({name: 'sign_in'})
+    }
   }
   next()
 })

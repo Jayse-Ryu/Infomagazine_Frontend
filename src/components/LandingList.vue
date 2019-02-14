@@ -7,11 +7,12 @@
     </div>
 
 
-    <form class="container m-auto d-flex justify-content-between flex-row"
+    <form class="container m-auto justify-content-between row"
           v-on:submit.prevent="search(temp_option, temp_text)">
-      <router-link to="/landing/create/" class="btn-sm h-75 btn-primary p-1 col-md-1 col-sm-2 col text-center">생성
+      <router-link to="/landing/create/" v-if="access_obj.access == 1" class="form-group btn btn-primary p-0 col-sm-12 col-md-1">
+        <div class="create_btn_text">생성</div>
       </router-link>
-      <div class="form-group search_group">
+      <div class="form-group search_group ml-auto text-center p-0 col-sm-12 col-md-4">
         <select class="search_option" id="src_gbn" v-model="temp_option">
           <option value="0" selected>검색 옵션</option>
           <option value="1">랜딩 이름</option>
@@ -109,20 +110,20 @@
 <script>
   export default {
     name: "landing_list",
-    created() {
-      if (this.$store.state.authUser) {
-        if (this.$store.state.userAccess.access == -1 || this.$store.state.userAccess.access == -2) {
-          this.$router.push({
-            name: 'gateway'
-          })
-        }
-      } else {
-        alert('로그인이 필요합니다.')
-        this.$router.push({
-          name: 'sign_in'
-        })
-      }
-    },
+    // created() {
+    //   if (this.$store.state.authUser) {
+    //     if (this.$store.state.userAccess.access == -1 || this.$store.state.userAccess.access == -2) {
+    //       this.$router.push({
+    //         name: 'gateway'
+    //       })
+    //     }
+    //   } else {
+    //     alert('로그인이 필요합니다.')
+    //     this.$router.push({
+    //       name: 'sign_in'
+    //     })
+    //   }
+    // },
     data: () => ({
       window_width: window.innerWidth,
       // Page = options, contents
@@ -220,161 +221,27 @@
           this.content_obj = response.data.results
         })
     },
-    update() {
-      if (this.$store.state.jwt !== null) {
-        this.$store.dispatch('getAuthUser')
-      }
-    },
     destroyed() {
       // Save values in the store
       this.$store.state.pageOptions.landing.page = this.page_current
       this.$store.state.pageOptions.landing.option = this.search_option
       this.$store.state.pageOptions.landing.text = this.search_text
+    },
+    computed: {
+      user_obj() {
+        // Get user information
+        let user = this.$store.state.authUser
+        return user
+      },
+      access_obj() {
+        // Get access information the user
+        let access = this.$store.state.userAccess
+        return access
+      }
     }
   }
 </script>
 
-<style lang="scss">
-  /* Search bar */
-
-/*  select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-  }
-
-  .search_group {
-    text-align: right;
-  }
-
-  .search_option {
-    display: inline-block;
-    width: 75px;
-    height: 30px;
-    text-align: center;
-    font-size: 0.8em;
-    line-height: 1em;
-    outline: 0;
-    border: 1px solid #c1c1c1;
-    border-radius: 5px 0 0 5px;
-    background-color: #ffffff;
-    vertical-align: top;
-    padding: 0 0 0 10px;
-  }
-
-  .search_text {
-    display: inline-block;
-    width: 160px;
-    height: 30px;
-    font-size: 0.8em;
-    line-height: 0.8em;
-    vertical-align: top;
-    border: 1px solid #c1c1c1;
-    padding: 10px;
-    margin-left: -6px;
-  }
-
-  .search_btn {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    text-align: center;
-    border: 1px solid #c1c1c1;
-    border-radius: 0 5px 5px 0;
-    margin-left: -6px;
-
-    img {
-      width: 55%;
-      height: 60%;
-    }
-  }
-
-  !* Search box ended *!
-
-  !* Pagination *!
-  .pagination {
-    display: block;
-    text-align: center;
-    margin: 0 auto;
-    font-size: 0;
-    padding: 10px 0;
-  }
-
-  .page-item {
-    font-size: 14px;
-    border-radius: 0;
-  }
-
-  .page-link {
-    display: inline-block;
-    border-radius: 0 !important;
-    padding: 0 !important;
-
-    a {
-      display: block;
-      width: 35px;
-      height: 35px;
-      text-align: center;
-      line-height: 35px;
-    }
-  }
-
-  .page-link.active {
-    background-color: #007bcc;
-
-    a {
-      color: #efefef;
-    }
-  }
-
-  .page-link.disabled {
-    a {
-      color: #c1c1c1;
-    }
-  }
-
-  .page-link.prev, .page-link.next {
-    border: none;
-  }
-
-  !*Pagination End*!
-
-  .board_container {
-    width: 100%;
-    padding: 10px 0;
-  }
-
-  .board_wrap {
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    border-top: 2px solid #eaeaea;
-    border-bottom: 2px solid #eaeaea;
-    padding: 10px 15px 0 15px;
-    transition: all 200ms ease-in-out;
-  }
-
-  .board_header {
-    border-bottom: 2px solid #eaeaea;
-    padding-bottom: 10px;
-  }
-
-  .board_ul {
-
-  }
-
-  .board_li {
-    padding: 5px 0;
-    border-bottom: 1px solid #eaeaea;
-  }
-
-  .board_li:last-child {
-    border: none;
-  }
-
-  .board_centre {
-    text-align: center;
-  }*/
+<style scoped>
 
 </style>

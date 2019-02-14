@@ -7,13 +7,13 @@
     </div>
 
     <div v-if="user_obj.is_staff == true">
-      <form class="container m-auto d-flex flex-row"
+      <form class="container m-auto row"
             v-on:submit.prevent="search(temp_option, temp_text)">
         <!--
         <router-link to="/organization/create/" class="btn-sm h-75 btn-primary p-1 col-md-1 col-sm-2 col text-center">생성
         </router-link>
         -->
-        <div class="form-group search_group ml-auto">
+        <div class="form-group search_group ml-auto text-center p-0 col-sm-12 col-md-4">
           <select class="search_option" id="src_gbn" v-model="temp_option">
             <option value="0" selected>검색 옵션</option>
             <option value="1">업체</option>
@@ -231,11 +231,6 @@
           }
           this.content_obj = response.data.results
         })
-    },
-    update() {
-      if (this.$store.state.jwt !== null) {
-        this.$store.dispatch('getAuthUser')
-      }
     },
     destroyed() {
       // Save values in the store

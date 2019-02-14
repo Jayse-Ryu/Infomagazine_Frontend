@@ -6,9 +6,9 @@
       <router-link to="/users">유저 리스트</router-link>
     </div>
 
-    <form class="container m-auto d-flex justify-content-between flex-row" v-on:submit.prevent="search(temp_option, temp_text)">
-      <router-link to="/users/create" class="btn-sm h-75 btn-primary p-1 col-md-1 col-sm-2 col text-center">생성</router-link>
-      <div class="form-group search_group">
+    <form class="container m-auto justify-content-between row" v-on:submit.prevent="search(temp_option, temp_text)">
+      <!--<router-link to="/users/create" class="btn-sm h-75 btn-primary p-1 col-md-1 col-sm-2 col text-center">생성</router-link>-->
+      <div class="form-group search_group text-center ml-auto p-0 col-sm-12 col-md-4">
         <select class="search_option" id="src_gbn" v-model="temp_option">
           <option value="0" selected>검색 옵션</option>
           <option value="1">이름</option>
@@ -28,10 +28,9 @@
             <div class="col-1">번호</div>
             <div class="col-2 text-center">계정</div>
             <div class="col-2 text-center">이름</div>
-            <div class="col-1 text-center">관리자</div>
-            <div class="col-1 text-center">방문자</div>
+            <div class="col-2 text-center">등급</div>
             <div class="col-1 text-center">활성상태</div>
-            <div class="col-2 board_centre">마지막 로그인</div>
+            <div class="col-2 board_centre">연락처</div>
             <div class="col-2 board_centre">생성일</div>
           </div>
         </div>
@@ -43,10 +42,9 @@
             <div class="col-1">{{ content.id }}</div>
             <div class="col-2 text-center">{{ content.account }}</div>
             <div class="col-2 text-center"><router-link :to="'/landing/detail/' + content.id">{{ content.full_name }}</router-link></div>
-            <div class="col-1 text-center">{{ content.is_staff }}</div>
-            <div class="col-1 text-center">{{ content.is_guest }}</div>
+            <div class="col-2 text-center">{{ content.is_staff }}</div>
             <div class="col-1 text-center">{{ content.is_active }}</div>
-            <div v-if="content.last_login" class="col-2 board_centre">{{ (content.last_login).substring(0, 10) }}</div>
+            <div v-if="content.phone" class="col-2 board_centre">{{ content.phone }}</div>
             <div v-else class="col-2 board_centre">없음</div>
             <div class="col-2 board_centre">{{ (content.created_date).substring(0, 10) }}</div>
           </li>
@@ -59,7 +57,7 @@
             <div class="col-1">번호</div>
             <div class="col-3 text-center">계정</div>
             <div class="col-3 text-center">이름</div>
-            <div class="col-5 board_centre">생성일</div>
+            <div class="col-5 board_centre">연락처</div>
           </div>
         </div>
         <ul class="list-group list-group-flush col-12 pr-0">
@@ -70,7 +68,8 @@
             <div class="col-1">{{ content.id }}</div>
             <div class="col-3 text-center">{{ content.account }}</div>
             <div class="col-3 text-center"><router-link :to="'/user/detail/' + content.id">{{ content.full_name }}</router-link></div>
-            <div class="col-5 board_centre">{{ (content.created_date).substring(0, 10) }}</div>
+            <div v-if="content.phone" class="col-5 board_centre">{{ content.phone }}</div>
+            <div v-else class="col-5 board_centre">없음</div>
           </li>
         </ul>
       </div>
@@ -106,7 +105,7 @@
       // Page = options, contents
       page_current: 1,
       page_max: 0,
-      page_chunk: 5,
+      page_chunk: 10,
       content_obj: [],
       temp_option: 0,
       temp_text: '',
@@ -140,7 +139,11 @@
         let axios = this.$axios
         let this_url = 'user/'
         let offset = page
-        axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
+        let def = ''
+        // if (!this.user_obj.is_staff && this.access_obj.access == 1) {
+        //   def = '&organization=' + this.access_obj.organization
+        // }
+        axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text + def)
           .then((response) => {
             // Calculation for page_max
             if(response.data.count % this.page_chunk === 0) {
@@ -175,14 +178,18 @@
       // Calling contents at first with store
       let axios = this.$axios
       let this_url = 'user/'
+      let def = ''
       // Check store values
       this.page_current = this.$store.state.pageOptions.user.page
       this.search_option = this.$store.state.pageOptions.user.option
       this.temp_text = this.$store.state.pageOptions.user.text
       this.search_text = this.$store.state.pageOptions.user.text
       let offset = (this.$store.state.pageOptions.user.page - 1)*(3)
+      // if (!this.user_obj.is_staff && this.access_obj.access == 1) {
+      //   def = '&organization=' + this.access_obj.organization
+      // }
       // Axios get landings
-      axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
+      axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text + def)
         .then((response) => {
           // Calculation for page_max
           if(response.data.count % this.page_chunk === 0) {
@@ -191,6 +198,29 @@
             this.page_max = Math.floor(response.data.count/this.page_chunk) + 1
           }
           this.content_obj = response.data.results
+        })
+      //
+      // test firstㅑㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ
+      //
+      if(this.user_obj.is_staff) {
+        // collect all
+      } else if (this.access_obj.access == 1) {
+        // organization == access
+        def = '&organization=' + this.access_obj.organization
+      } else if (this.access_obj.access == 2) {
+        // company === company
+        def = '&company=' + this.access_obj.company
+      }
+      axios.get(this.$store.state.endpoints.baseUrl + 'user_access/' + '?offset=' + offset + '&sort=1' + def)
+        .then((response) => {
+          // console.log('access response = ', response)
+          return axios.get(this.$store.state.endpoints.baseUrl + 'user/')
+        })
+        .then((response) => {
+          // console.log('user response = ', response)
+        })
+        .catch((error) => {
+          console.log(error)
         })
     },
     update() {
@@ -203,6 +233,18 @@
       this.$store.state.pageOptions.user.page = this.page_current
       this.$store.state.pageOptions.user.option = this.search_option
       this.$store.state.pageOptions.user.text = this.search_text
+    },
+    computed: {
+      user_obj() {
+        // Get user information
+        let user = this.$store.state.authUser
+        return user
+      },
+      access_obj() {
+        // Get access information the user
+        let access = this.$store.state.userAccess
+        return access
+      }
     }
   }
 </script>

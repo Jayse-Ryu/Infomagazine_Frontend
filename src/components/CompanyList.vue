@@ -7,11 +7,14 @@
     </div>
 
     <div v-if="user_obj.is_staff == true || access_obj.access == 1">
-      <form class="container m-auto d-flex justify-content-between flex-row"
+      <form class="container m-auto justify-content-between row"
             v-on:submit.prevent="search(temp_option, temp_text)">
-        <router-link to="/company/create/" class="btn-sm h-75 btn-primary p-1 col-md-1 col-sm-2 col text-center">생성
+
+        <router-link to="/landing/create/" v-if="access_obj.access == 1" class="form-group btn btn-primary p-0 col-sm-12 col-md-1">
+          <div class="create_btn_text">생성</div>
         </router-link>
-        <div class="form-group search_group">
+
+        <div class="form-group search_group ml-auto text-center p-0 col-sm-12 col-md-4">
           <select class="search_option" id="src_gbn" v-model="temp_option">
             <option value="0" selected>검색 옵션</option>
             <option value="1">업체</option>
@@ -139,7 +142,7 @@
       // Page = options, contents
       page_current: 1,
       page_max: 0,
-      page_chunk: 5,
+      page_chunk: 10,
       content_obj: [],
       temp_option: 0,
       temp_text: '',
@@ -175,7 +178,11 @@
         let axios = this.$axios
         let this_url = 'company/'
         let offset = page
-        axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
+        let def = ''
+        if (!this.user_obj.is_staff && this.access_obj.access == 1) {
+          def = '&organization=' + this.access_obj.organization
+        }
+        axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text + def)
           .then((response) => {
             // Calculation for page_max
             if (response.data.count % this.page_chunk === 0) {
@@ -211,6 +218,7 @@
       // Calling contents at first with store
       let axios = this.$axios
       let this_url = 'company/'
+      let def = ''
       // Check store values
       this.page_current = this.$store.state.pageOptions.company.page
       this.search_option = this.$store.state.pageOptions.company.option
@@ -218,7 +226,10 @@
       this.search_text = this.$store.state.pageOptions.company.text
       let offset = (this.$store.state.pageOptions.company.page - 1) * this.page_chunk
       // Axios get landings
-      axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
+      if (!this.user_obj.is_staff && this.access_obj.access == 1) {
+        def = '&organization=' + this.access_obj.organization
+      }
+      axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text + def)
         .then((response) => {
           // Calculation for page_max
           if (response.data.count % this.page_chunk === 0) {
@@ -228,11 +239,6 @@
           }
           this.content_obj = response.data.results
         })
-    },
-    update() {
-      if (this.$store.state.jwt !== null) {
-        this.$store.dispatch('getAuthUser')
-      }
     },
     destroyed() {
       // Save values in the store

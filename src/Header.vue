@@ -82,6 +82,9 @@
     methods: {
       logout() {
         this.$store.commit('removeToken')
+        if(this.$router.currentRoute.meta.protect_leave === 'yes') {
+          this.$router.currentRoute.meta.protect_leave = 'no'
+        }
         this.$router.push({
           name: 'sign_in'
         })

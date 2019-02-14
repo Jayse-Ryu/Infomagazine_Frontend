@@ -107,11 +107,14 @@ const store = new Vuex.Store({
       axios.post(this.state.endpoints.obtainJWT, payload)
         .then((response) => {
           this.commit('updateToken', response.data.token)
-          this.dispatch('getAuthUser')
+          return this.dispatch('getAuthUser')
+        })
+        .then(() => {
           router.push('/gateway')
         })
+        // eslint-disable-next-line
         .catch((error) => {
-          console.log('Obtain Token action error..', error)
+          // console.log('Obtain Token action error..', error)
           alert('아이디와 비밀번호를 확인해주세요.')
         })
     },
@@ -122,7 +125,7 @@ const store = new Vuex.Store({
       axios.post(this.state.endpoints.refreshJWT, payload)
         .then((response) => {
           this.commit('updateToken', response.data.token)
-          this.dispatch('getAuthUser')
+          return this.dispatch('getAuthUser')
         })
         .catch((error) => {
           console.log('Refresh Token action error..', error)
@@ -140,15 +143,20 @@ const store = new Vuex.Store({
           if ((Date.now() / 1000) > exp) {
             // If token expired then send to login page
             this.commit('removeToken')
-            alert('토큰이 만료되었습니다. 다시 로그인 해 주세요.')
+            alert('로그인 시간이 만료되었습니다. 다시 로그인 해 주세요.')
             router.push('/')
             return false
           } else if ((Date.now() / 1000) > exp - thirty_minutes && (Date.now() / 1000) < orig_iat + a_day) {
             // If token expire in less than 30 minutes but still in refresh period then refresh
-            alert('토큰이 자동 업데이트 되었습니다.')
+            // alert('토큰이 자동 업데이트 되었습니다.')
             this.dispatch('refreshToken')
-            router.push('/')
-            return true
+              .then(() => {
+                router.push('/')
+                return true
+              })
+              .catch((error) => {
+                console.log('refresh Error - ', error)
+              })
           }
           // Nor Nothing
         } else {
@@ -166,64 +174,118 @@ const store = new Vuex.Store({
       }
     },
     getAuthUser () {
-      if (this.dispatch('inspectToken')) {
-        // If token is alive
-        if (this.state.jwt !== null) {
-          // If jwt object is really exist in local store
-          const token = this.state.jwt
-          const decoded = Decoder(token)
-          const user_id = decoded.user_id
-          const base = {
-            baseURL: this.state.endpoints.baseUrl,
-            headers: {
-              // Set your Authorization to 'JWT', not Bearer!!!
-              Authorization: `JWT ${this.state.jwt}`,
-              'Content-Type': 'application/json'
-            },
-            xhrFields: {
-              withCredentials: true
-            }
-          }
-          // Even though the authentication returned a user object that can be
-          // decoded, we fetch it again. This way we aren't super dependant on
-          // JWT and can plug in something else.
-          const axiosInstance = axios.create(base)
-          axiosInstance({
-            url: '/user/' + user_id + '/',
-            method: 'get',
-            params: {}
-          })
-            .then((response) => {
-              if (response.data) {
-                let user_obj = response.data
-                delete user_obj['password']
-                this.commit('setAuthUser', {
-                  authUser: user_obj,
-                  isAuthenticated: true
-                })
+      this.dispatch('inspectToken')
+        .then((response) => {
+          // console.log('getauth t', response)
+          // console.log(this.dispatch('inspectToken'))
+          if (this.dispatch('inspectToken')) {
+            // If token is alive
+            if (this.state.jwt !== null) {
+              // If jwt object is really exist in local store
+              const token = this.state.jwt
+              const decoded = Decoder(token)
+              const user_id = decoded.user_id
+              const base = {
+                baseURL: this.state.endpoints.baseUrl,
+                headers: {
+                  // Set your Authorization to 'JWT', not Bearer!!!
+                  Authorization: `JWT ${this.state.jwt}`,
+                  'Content-Type': 'application/json'
+                },
+                xhrFields: {
+                  withCredentials: true
+                }
               }
-              return axios.get(this.state.endpoints.baseUrl + 'user_access/' + user_id + '/')
-            })
-            .then((response) => {
-              this.commit('setAccess', {
-                userAccess: response.data
+              // Even though the authentication returned a user object that can be
+              // decoded, we fetch it again. This way we aren't super dependant on
+              // JWT and can plug in something else.
+              const axiosInstance = axios.create(base)
+              axiosInstance({
+                url: '/user/' + user_id + '/',
+                method: 'get',
+                params: {}
               })
-            })
-            .catch((error) => {
-              console.log('get Auth user failed..', error)
-            })
-        }
-      } else {
-        // If token is didn't survived, activate inspect token
-        this.dispatch('inspectToken')
-      }
+                .then((response) => {
+                  if (response.data) {
+                    let user_obj = response.data
+                    delete user_obj['password']
+                    this.commit('setAuthUser', {
+                      authUser: user_obj,
+                      isAuthenticated: true
+                    })
+                  }
+                  return axios.get(this.state.endpoints.baseUrl + 'user_access/' + user_id + '/')
+                })
+                .then((response) => {
+                  this.commit('setAccess', {
+                    userAccess: response.data
+                  })
+                })
+                .catch((error) => {
+                  console.log('get Auth user failed..', error)
+                })
+            }
+          } else {
+            // If token is didn't survived, activate inspect token
+            this.dispatch('inspectToken')
+          }
+        })
+        .catch((error) => {
+          console.log('getauth e', error)
+        })
+      // if (this.dispatch('inspectToken')) {
+      //   // If token is alive
+      //   if (this.state.jwt !== null) {
+      //     // If jwt object is really exist in local store
+      //     const token = this.state.jwt
+      //     const decoded = Decoder(token)
+      //     const user_id = decoded.user_id
+      //     const base = {
+      //       baseURL: this.state.endpoints.baseUrl,
+      //       headers: {
+      //         // Set your Authorization to 'JWT', not Bearer!!!
+      //         Authorization: `JWT ${this.state.jwt}`,
+      //         'Content-Type': 'application/json'
+      //       },
+      //       xhrFields: {
+      //         withCredentials: true
+      //       }
+      //     }
+      //     // Even though the authentication returned a user object that can be
+      //     // decoded, we fetch it again. This way we aren't super dependant on
+      //     // JWT and can plug in something else.
+      //     const axiosInstance = axios.create(base)
+      //     axiosInstance({
+      //       url: '/user/' + user_id + '/',
+      //       method: 'get',
+      //       params: {}
+      //     })
+      //       .then((response) => {
+      //         if (response.data) {
+      //           let user_obj = response.data
+      //           delete user_obj['password']
+      //           this.commit('setAuthUser', {
+      //             authUser: user_obj,
+      //             isAuthenticated: true
+      //           })
+      //         }
+      //         return axios.get(this.state.endpoints.baseUrl + 'user_access/' + user_id + '/')
+      //       })
+      //       .then((response) => {
+      //         this.commit('setAccess', {
+      //           userAccess: response.data
+      //         })
+      //       })
+      //       .catch((error) => {
+      //         console.log('get Auth user failed..', error)
+      //       })
+      //   }
+      // } else {
+      //   // If token is didn't survived, activate inspect token
+      //   this.dispatch('inspectToken')
+      // }
     }
   }
-  // getters: {
-  //   authFilter: state => {
-  //     return state.authUser.filter(is_staff => is_staff)
-  //   }
-  // }
 })
 
 export default store
