@@ -111,6 +111,20 @@
 <script>
   export default {
     name: "my_info",
+    created() {
+      this.$store.state.pageOptions.landing.page = 1
+      this.$store.state.pageOptions.landing.option = 0
+      this.$store.state.pageOptions.landing.text = ''
+      this.$store.state.pageOptions.user.page = 1
+      this.$store.state.pageOptions.user.option = 0
+      this.$store.state.pageOptions.user.text = ''
+      this.$store.state.pageOptions.organization.page = 1
+      this.$store.state.pageOptions.organization.option = 0
+      this.$store.state.pageOptions.organization.text = ''
+      this.$store.state.pageOptions.company.page = 1
+      this.$store.state.pageOptions.company.option = 0
+      this.$store.state.pageOptions.company.text = ''
+    },
     data: () => ({
       content_obj: [],
       access_obj: [],

@@ -180,13 +180,12 @@ const router = new Router({
       }
     },
     {
-      path: '/users/detail',
+      path: '/users/detail/:user_id',
       name: 'user_detail',
       component: UserDetail,
       meta: {
         signed: true,
-        auth_grade: 'manager',
-        protect_leave: 'yes'
+        auth_grade: 'manager'
       }
     },
     {
@@ -256,10 +255,10 @@ router.beforeEach((to, from, next) => {
     } else if (auth === 'manager') {
       if (Store.state.userAccess.access === 1) {
         // eslint-disable-next-line
-        if (to.name == 'organization_detail' && Store.state.userAccess.organization == to.params.organization_id) {
+        if (to.name == 'organization_detail' && Store.state.userAccess.organization == to.params.organization_id || Store.state.authUser.is_staff) {
           next()
           // eslint-disable-next-line
-        } else if (to.name == 'organization_detail' && Store.state.userAccess.organization !== to.params.organization_id) {
+        } else if (to.name == 'organization_detail' && Store.state.userAccess.organization !== to.params.organization_id && !Store.state.authUser.is_staff) {
           next({name: 'organization_list'})
         } else {
           next()

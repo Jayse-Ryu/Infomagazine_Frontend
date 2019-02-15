@@ -18,48 +18,48 @@
       <ul v-if="this.$store.state.jwt" class="navbar-nav ml-auto">
         <li v-if="access_obj.access != -2" class="navbar-item">
           <router-link to="/landing">
-            <div class="nav-link">랜딩페이지</div>
+            <div class="nav-link text-center">랜딩페이지</div>
           </router-link>
         </li>
         <li v-if="user_obj.is_staff == true" class="navbar-item">
           <router-link to="/organization">
-            <div class="nav-link">관리조직</div>
+            <div class="nav-link text-center">관리소속</div>
           </router-link>
         </li>
         <li v-if="user_obj.is_staff == false && access_obj.access == 1">
           <router-link :to="'/organization/detail/' + access_obj.organization">
-            <div class="nav-link">관리조직</div>
+            <div class="nav-link text-center">관리소속</div>
           </router-link>
         </li>
         <li v-if="access_obj.access == 1 || access_obj.access == 2" class="navbar-item">
           <router-link to="/company">
-            <div class="nav-link">고객업체</div>
+            <div class="nav-link text-center">고객업체</div>
           </router-link>
         </li>
         <li v-if="access_obj.access == 1" class="navbar-item">
           <router-link to="/users">
-            <div class="nav-link">회원관리</div>
+            <div class="nav-link text-center">회원관리</div>
           </router-link>
         </li>
         <li class="navbar-item">
           <router-link to="/myinfo">
-            <div class="nav-link current_user font" v-model="header_name">{{ header_name }}</div>
+            <div class="nav-link current_user font text-center" v-model="header_name">{{ header_name }}</div>
           </router-link>
         </li>
         <li class="navbar-item">
-          <input type="button" class="btn btn-dark pb-1 pt-1" @click="logout" value="로그아웃">
+          <input type="button" class="btn btn-dark w-100 pb-1 pt-1 text-center" @click="logout" value="로그아웃">
         </li>
       </ul>
 
       <ul v-else class="navbar-nav ml-auto">
         <li class="navbar-item">
           <router-link to="/">
-            <div class="nav-link">로그인</div>
+            <div class="nav-link text-center">로그인</div>
           </router-link>
         </li>
         <li class="navbar-item">
           <router-link to="/signup">
-            <div class="nav-link">회원가입</div>
+            <div class="nav-link text-center">회원가입</div>
           </router-link>
         </li>
       </ul>

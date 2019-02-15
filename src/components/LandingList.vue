@@ -29,59 +29,59 @@
     <div class="container">
 
       <div v-if="window_width > 1000" class="list_area">
-        <div>
-          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2 text-center"
+        <div class="list_header">
+          <div class="list-group-item text-center d-inline-flex justify-content-between p-1 pt-2 pb-2 text-center"
                style="border-radius: 0; border-bottom: 0; width:100%;">
-            <div class="col-1">번호</div>
-            <div class="col-2">업체</div>
-            <div class="col-4">랜딩페이지</div>
-            <div class="col-3">담당자</div>
-            <div class="col-1 board_centre">조회수</div>
-            <div class="col-1 board_centre">DB</div>
+            <div class="col-1 p-0">번호</div>
+            <div class="col-2 p-0">업체</div>
+            <div class="col-4 p-0">페이지</div>
+            <div class="col-3 p-0">담당자</div>
+            <div class="col-1 p-0 board_centre">조회수</div>
+            <div class="col-1 p-0 board_centre">DB</div>
           </div>
         </div>
-        <ul class="list-group list-group-flush col-12 pr-0 text-center">
+        <ul class="list_body text-center list-group list-group-flush col-12 pr-0 text-center">
           <li v-if="content_obj.length === 0"
               class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
             <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
           </li>
           <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
               v-for="content in content_obj">
-            <div class="col-1 col-sm-1">{{ content.id }}</div>
-            <div class="col-3 col-sm-2">{{ content.company_name }}</div>
-            <div class="col-3 col-sm-4">
+            <div class="col-1 p-0 col-sm-1">{{ content.id }}</div>
+            <div class="col-3 p-0 col-sm-2">{{ content.company_name }}</div>
+            <div class="col-3 p-0 col-sm-4">
               <router-link :to="'/landing/detail/' + content.id">{{ content.name }}</router-link>
             </div>
-            <div class="col-3">{{ content.manager_name }}</div>
-            <div class="col-1 board_centre">{{ content.view }}</div>
-            <div class="col-1 board_centre">{{ content.hit }}</div>
+            <div class="col-3 p-0">{{ content.manager_name }}</div>
+            <div class="col-1 p-0 board_centre">{{ content.view }}</div>
+            <div class="col-1 p-0 board_centre">{{ content.hit }}</div>
           </li>
         </ul>
       </div>
 
       <div v-else class="list_area">
-        <div>
-          <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2"
+        <div class="list_header">
+          <div class="list-group-item text-center d-inline-flex justify-content-between p-1 pt-2 pb-2"
                style="border-radius: 0; border-bottom: 0; width:100%;">
-            <div class="col-1">번호</div>
-            <div class="col-4">업체</div>
-            <div class="col-6">랜딩페이지</div>
-            <div class="col-1">DB</div>
+            <div class="col-2 p-0">번호</div>
+            <div class="col-3 p-0">업체</div>
+            <div class="col-5 p-0">페이지</div>
+            <div class="col-2 p-0">DB</div>
           </div>
         </div>
-        <ul class="list-group list-group-flush col-12 pr-0">
+        <ul class="list_body text-center list-group list-group-flush col-12 pr-0">
           <li v-if="content_obj.length === 0"
               class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
-            <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
+            <div class="col-12 p-0 text-center">데이터가 존재하지 않습니다.</div>
           </li>
           <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
               v-for="content in content_obj">
-            <div class="col-1">{{ content.id }}</div>
-            <div class="col-4">{{ content.company_name }}</div>
-            <div class="col-6">
+            <div class="col-2 p-0">{{ content.id }}</div>
+            <div class="col-3 p-0">{{ content.company_name }}</div>
+            <div class="col-5 p-0">
               <router-link :to="'/landing/detail/' + content.id">{{ content.name }}</router-link>
             </div>
-            <div class="col-1">{{ content.hit }}</div>
+            <div class="col-2 p-0">{{ content.hit }}</div>
           </li>
         </ul>
       </div>

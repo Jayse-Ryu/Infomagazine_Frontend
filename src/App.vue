@@ -582,8 +582,8 @@ export default {
       height: 60%;
     }
   }
-
   /* Search box ended */
+
 
   /* Pagination */
   .pagination {
@@ -633,6 +633,7 @@ export default {
 
   /*Pagination End*/
 
+  // Board lists = Edit list contents a bit
   .board_container {
     width: 100%;
     padding: 10px 0;
@@ -671,7 +672,22 @@ export default {
   }
 
 
+  // Make list contents looks good in w-320px too
+  .list_header {
+    word-break: break-all;
+  }
 
+  .list_body {
+    li {
+      word-break: break-all;
+      div {
+        word-break: break-all;
+      }
+    }
+  }
+
+
+  // Navigation
   .text_navigation {
     display: inline-block;
     margin: 15px 0 5px 15px;
@@ -690,6 +706,8 @@ export default {
     color: #007aff;
   }
 
+
+  // About transition name=fade
   .fade-enter-active {
     transition: all 200ms ease-out;
   }

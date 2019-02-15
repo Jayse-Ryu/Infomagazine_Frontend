@@ -29,61 +29,65 @@
       <div class="container">
 
         <div v-if="window_width > 1000" class="list_area">
-          <div>
+          <div class="list_header">
             <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2 text-center"
                  style="border-radius: 0; border-bottom: 0; width:100%;">
-              <div class="col-1">번호</div>
-              <div class="col-2">업체</div>
-              <div class="col-2">상호명</div>
-              <div class="col-2">담당자</div>
-              <div class="col-2">연락처</div>
-              <div class="col-3 board_centre">생성일</div>
+              <div class="col-1 p-0">번호</div>
+              <div class="col-2 p-0">소속</div>
+              <div class="col-2 p-0">상호명</div>
+              <div class="col-2 p-0">담당자</div>
+              <div class="col-2 p-0">연락처</div>
+              <div class="col-3 p-0 board_centre">생성일</div>
             </div>
           </div>
-          <ul class="list-group list-group-flush col-12 pr-0 text-center">
+          <ul class="list_body list-group list-group-flush col-12 pr-0 text-center">
             <li v-if="content_obj.length === 0"
                 class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
-              <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
+              <div class="col-12 p-0 text-center">데이터가 존재하지 않습니다.</div>
             </li>
             <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
                 v-for="content in content_obj">
-              <div class="col-1 col-sm-1">{{ content.id }}</div>
-              <div class="col-2 col-sm-2">
+              <div class="col-1 p-0 col-sm-1">{{ content.id }}</div>
+              <div class="col-2 p-0 col-sm-2">
                 <router-link :to="'/organization/detail/' + content.id">{{ content.name }}</router-link>
               </div>
-              <div class="col-2 col-sm-2">
+              <div class="col-2 p-0 col-sm-2">
                 <router-link :to="'/organization/detail/' + content.id">{{ content.sub_name }}</router-link>
               </div>
-              <div class="col-2">{{ content.manager_name }}</div>
-              <div class="col-2">{{ content.phone }}</div>
-              <div class="col-3 board_centre">{{ (content.created_date).substring(0, 10) }}</div>
+              <div class="col-2 p-0">{{ content.manager_name }}</div>
+              <div v-if="content.phone" class="col-2 p-0">{{ content.phone }}</div>
+              <div v-else-if="content.email" class="col-2 p-0">{{ content.email }}</div>
+              <div v-else class="col-2 p-0">없음</div>
+              <div class="col-3 p-0 board_centre">{{ (content.created_date).substring(0, 10) }}</div>
             </li>
           </ul>
         </div>
 
         <div v-else class="list_area">
-          <div>
-            <div class="list-group-item  d-inline-flex justify-content-between p-1 pt-2 pb-2"
+          <div class="list_header">
+            <div class="list-group-item text-center d-inline-flex justify-content-between p-1 pt-2 pb-2"
                  style="border-radius: 0; border-bottom: 0; width:100%;">
-              <div class="col-1">번호</div>
-              <div class="col-3">업체이름</div>
-              <div class="col-4">업체 연락처</div>
-              <div class="col-4 board_centre">생성일</div>
+              <div class="col-2 p-0">번호</div>
+              <div class="col-3 p-0">소속</div>
+              <div class="col-4 p-0">연락처</div>
+              <div class="col-3 p-0 board_centre">생성일</div>
             </div>
           </div>
-          <ul class="list-group list-group-flush col-12 pr-0">
+          <ul class="list_body text-center list-group list-group-flush col-12 pr-0">
             <li v-if="content_obj.length === 0"
                 class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1">
-              <div class="col-12 text-center">데이터가 존재하지 않습니다.</div>
+              <div class="col-12 p-0 text-center">데이터가 존재하지 않습니다.</div>
             </li>
             <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
                 v-for="content in content_obj">
-              <div class="col-1">{{ content.id }}</div>
-              <div class="col-3">
+              <div class="col-2 p-0">{{ content.id }}</div>
+              <div class="col-3 p-0">
                 <router-link :to="'/organization/detail/' + content.id">{{ content.name }}</router-link>
               </div>
-              <div class="col-4">{{ content.phone }}</div>
-              <div class="col-4 board_centre">{{ (content.created_date).substring(0, 10) }}</div>
+              <div v-if="content.phone" class="col-4 p-0">{{ content.phone }}</div>
+              <div v-else-if="content.email" class="col-4 p-0">{{ content.email }}</div>
+              <div v-else class="col-4 p-0">없음</div>
+              <div class="col-3 p-0 board_centre">{{ (content.created_date).substring(0, 10) }}</div>
             </li>
           </ul>
         </div>

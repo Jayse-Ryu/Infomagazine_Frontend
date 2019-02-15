@@ -143,10 +143,10 @@
                 v-for="content in user_list">
               <div class="col-2 col-sm-1">{{ content.user }}</div>
               <div class="col-3 col-sm-3">
-                <router-link :to="'/users/detail/' + content.id">{{ content.account }}</router-link>
+                <router-link :to="'/users/detail/' + content.user">{{ content.account }}</router-link>
               </div>
               <div class="col-3 col-sm-3">
-                <router-link :to="'/users/detail/' + content.id">{{ content.user_name }}</router-link>
+                <router-link :to="'/users/detail/' + content.user">{{ content.user_name }}</router-link>
               </div>
               <div class="col-2">{{ content.phone }}</div>
               <div class="col-2 col-sm-3">
@@ -194,7 +194,7 @@
                 v-for="content in user_list">
               <div class="col-4">{{ content.account }}</div>
               <div class="col-4">
-                <router-link :to="'/users/detail/' + content.id">{{ content.user_name }}</router-link>
+                <router-link :to="'/users/detail/' + content.user">{{ content.user_name }}</router-link>
               </div>
               <div class="col-4">
                 <div v-if="content.access == 1 && content.user == original_manager">
@@ -352,10 +352,10 @@
                 v-for="content in user_list">
               <div class="col-2 col-sm-1">{{ content.user }}</div>
               <div class="col-3 col-sm-3">
-                <router-link :to="'/users/detail/' + content.id">{{ content.account }}</router-link>
+                <router-link :to="'/users/detail/' + content.user">{{ content.account }}</router-link>
               </div>
               <div class="col-3 col-sm-3">
-                <router-link :to="'/users/detail/' + content.id">{{ content.user_name }}</router-link>
+                <router-link :to="'/users/detail/' + content.user">{{ content.user_name }}</router-link>
               </div>
               <div class="col-2">{{ content.phone }}</div>
               <div class="col-2 col-sm-3">
@@ -403,7 +403,7 @@
                 v-for="content in user_list">
               <div class="col-4">{{ content.account }}</div>
               <div class="col-4">
-                <router-link :to="'/users/detail/' + content.id">{{ content.user_name }}</router-link>
+                <router-link :to="'/users/detail/' + content.user">{{ content.user_name }}</router-link>
               </div>
               <div class="col-4">
                 <div v-if="content.access == 1 && content.user == original_manager">
