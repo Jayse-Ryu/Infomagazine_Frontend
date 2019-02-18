@@ -429,6 +429,9 @@
         if (this.create_obj.email) {
           formData.append('email', this.create_obj.email)
         }
+        if (this.create_obj.desc) {
+          formData.append('desc', this.create_obj.desc)
+        }
         // console.log(this.create_obj.corp_num)
         // console.log('create formdata is? ', formData)
         axios.post(this.$store.state.endpoints.baseUrl + this_url, formData)
@@ -479,37 +482,6 @@
 </script>
 
 <style lang="scss" scoped>
-  .fade-enter-active, .fade-leave-active {
-    transition: all 200ms ease-out;
-  }
-
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
-  {
-    opacity: 0;
-    position: absolute;
-    width: 100%;
-    margin: auto;
-    // transform: translateY(10px);
-  }
-
-  .fade_up-enter-active, .fade_up-leave-active {
-    transition: all 200ms ease-out;
-  }
-
-  .fade_up-leave-active {
-    transition: none;
-  }
-
-  .fade_up-enter, .fade_up-leave-to /* .fade-leave-active below version 2.1.8 */
-  {
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    margin: auto;
-    transform: translateY(-15px);
-  }
-
   .desc_text {
     font-size: 16px;
 

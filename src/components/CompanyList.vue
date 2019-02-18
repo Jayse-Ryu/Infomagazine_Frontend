@@ -10,7 +10,7 @@
       <form class="container m-auto justify-content-between row"
             v-on:submit.prevent="search(temp_option, temp_text)">
 
-        <router-link to="/landing/create/" v-if="access_obj.access == 1" class="form-group btn btn-primary p-0 col-sm-12 col-md-1">
+        <router-link to="/company/create/" v-if="access_obj.access == 1" class="form-group btn btn-primary p-0 col-sm-12 col-md-1">
           <div class="create_btn_text">생성</div>
         </router-link>
 

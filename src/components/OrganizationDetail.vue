@@ -539,7 +539,6 @@
               }
               // Get all of users in this organization whatever allowed or not
               this.user_list = response.data.results
-              console.log(this.user_list)
             })
         })
         .catch((error) => {

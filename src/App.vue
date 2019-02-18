@@ -690,7 +690,7 @@ export default {
   // Navigation
   .text_navigation {
     display: inline-block;
-    margin: 15px 0 5px 15px;
+    margin: 1% 0 3% 15px;
     background-color: rgba(255, 255, 255, 0.6);
     border-radius: 5px;
     padding: 8px;
@@ -723,6 +723,18 @@ export default {
     position: absolute;
     width: 100%;
     margin: auto;
+  }
+
+  .error_label {
+    font-family: 'Nanums_regular', sans-serif;
+    font-size: 14px;
+    display: inline-block;
+    padding: 1px 5px;
+    color: #ee5151;
+    border-radius: 5px;
+    margin: 5px 0;
+    border: 1px solid #ee5151;
+    box-sizing: border-box;
   }
 
 </style>
