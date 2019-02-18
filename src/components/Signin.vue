@@ -84,6 +84,12 @@
           password: this.password
         }
         this.$store.dispatch('obtainToken', payload)
+          .then(() => {
+            this.password = ''
+          })
+          .catch(() => {
+            this.password = ''
+          })
       }
     }
   }

@@ -170,7 +170,7 @@
           } else if (option === '2') {
             option_val = 'manager'
           } else {
-            console.log('Option not catched')
+            // console.log('Search option not catched')
           }
           this.search_option = option_val
           this.search_text = text
@@ -191,7 +191,6 @@
               this.page_max = Math.floor(response.data.count / this.page_chunk) + 1
             }
             this.content_obj = response.data.results
-            console.log(this.content_obj)
           })
       }
     },
@@ -224,6 +223,11 @@
       this.temp_text = this.$store.state.pageOptions.organization.text
       this.search_text = this.$store.state.pageOptions.organization.text
       let offset = (this.$store.state.pageOptions.organization.page - 1) * this.page_chunk
+      if(this.search_option == 'name') {
+        this.temp_option = 1
+      } else if (this.search_option == 'manager') {
+        this.temp_option = 2
+      }
       // Axios get landings
       axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
         .then((response) => {

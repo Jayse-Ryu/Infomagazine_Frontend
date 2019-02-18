@@ -110,20 +110,6 @@
 <script>
   export default {
     name: "landing_list",
-    // created() {
-    //   if (this.$store.state.authUser) {
-    //     if (this.$store.state.userAccess.access == -1 || this.$store.state.userAccess.access == -2) {
-    //       this.$router.push({
-    //         name: 'gateway'
-    //       })
-    //     }
-    //   } else {
-    //     alert('로그인이 필요합니다.')
-    //     this.$router.push({
-    //       name: 'sign_in'
-    //     })
-    //   }
-    // },
     data: () => ({
       window_width: window.innerWidth,
       // Page = options, contents
@@ -209,6 +195,13 @@
       this.temp_text = this.$store.state.pageOptions.landing.text
       this.search_text = this.$store.state.pageOptions.landing.text
       let offset = (this.$store.state.pageOptions.landing.page - 1) * this.page_chunk
+      if(this.search_option == 'name') {
+        this.temp_option = 1
+      } else if (this.search_option == 'company') {
+        this.temp_option = 2
+      } else if (this.search_option == 'manager') {
+        this.temp_option = 3
+      }
       // Axios get landings
       axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
         .then((response) => {

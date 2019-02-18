@@ -229,6 +229,11 @@
       this.temp_text = this.$store.state.pageOptions.company.text
       this.search_text = this.$store.state.pageOptions.company.text
       let offset = (this.$store.state.pageOptions.company.page - 1) * this.page_chunk
+      if(this.search_option == 'name') {
+        this.temp_option = 1
+      } else if (this.search_option == 'manager') {
+        this.temp_option = 2
+      }
       // Axios get landings
       if (!this.user_obj.is_staff && this.access_obj.access == 1) {
         def = '&organization=' + this.access_obj.organization

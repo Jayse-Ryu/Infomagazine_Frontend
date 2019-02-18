@@ -229,6 +229,7 @@ router.beforeEach((to, from, next) => {
   }
   // Block not applied users
   if (to.meta.signed) {
+    Store.dispatch('inspectToken')
     if (window.localStorage.token || Store.state.authUser.id) {
       next()
     } else {

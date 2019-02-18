@@ -16,7 +16,12 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
 
       <ul v-if="this.$store.state.jwt" class="navbar-nav ml-auto">
-        <li v-if="access_obj.access != -2" class="navbar-item">
+        <li v-if="access_obj.access == -1 || access_obj.access == -2" class="navbar-item">
+          <router-link to="/landing">
+            <div class="nav-link text-center">홈페이지</div>
+          </router-link>
+        </li>
+        <li v-else-if="access_obj.access != -2" class="navbar-item">
           <router-link to="/landing">
             <div class="nav-link text-center">랜딩페이지</div>
           </router-link>

@@ -152,7 +152,12 @@
               <div class="col-2 col-sm-3">
                 <div v-if="content.access == 1 && content.user == original_manager">
                   <button type="button" class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
-                    <div class="promote_btn">관리자</div>
+                    <div class="promote_btn">조직관리자</div>
+                  </button>
+                </div>
+                <div v-else-if="Math.abs(content.access) == 1 && content.user_staff && !user_obj.is_superuser">
+                  <button type="button" class="btn btn-outline-primary p-0 disabled" @click.prevent="promote('he', content.user)">
+                    <div class="promote_btn">운영자</div>
                   </button>
                 </div>
                 <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id">
@@ -199,7 +204,12 @@
               <div class="col-4">
                 <div v-if="content.access == 1 && content.user == original_manager">
                   <button type="button" class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
-                    <div class="promote_btn">관리자</div>
+                    <div class="promote_btn">조직관리자</div>
+                  </button>
+                </div>
+                <div v-else-if="Math.abs(content.access) == 1 && content.user_staff && !user_obj.is_superuser">
+                  <button type="button" class="btn btn-outline-primary p-0 disabled" @click.prevent="promote('he', content.user)">
+                    <div class="promote_btn">운영자</div>
                   </button>
                 </div>
                 <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id">
@@ -360,8 +370,13 @@
               <div class="col-2">{{ content.phone }}</div>
               <div class="col-2 col-sm-3">
                 <div v-if="content.access == 1 && content.user == original_manager">
-                  <button type="button" class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
-                    <div class="promote_btn">관리자</div>
+                  <button type="button" class="btn btn-primary p-0 disabled" @click.prevent="promote('he', content.user)">
+                    <div class="promote_btn">조직관리자</div>
+                  </button>
+                </div>
+                <div v-else-if="Math.abs(content.access) == 1 && content.user_staff && !user_obj.is_superuser">
+                  <button type="button" class="btn btn-outline-primary p-0 disabled" @click.prevent="promote('he', content.user)">
+                    <div class="promote_btn">운영자</div>
                   </button>
                 </div>
                 <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id">
@@ -408,7 +423,12 @@
               <div class="col-4">
                 <div v-if="content.access == 1 && content.user == original_manager">
                   <button type="button" class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
-                    <div class="promote_btn">관리자</div>
+                    <div class="promote_btn">조직관리자</div>
+                  </button>
+                </div>
+                <div v-else-if="Math.abs(content.access) == 1 && content.user_staff && !user_obj.is_superuser">
+                  <button type="button" class="btn btn-outline-primary p-0 disabled" @click.prevent="promote('he', content.user)">
+                    <div class="promote_btn">운영자</div>
                   </button>
                 </div>
                 <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id">
@@ -519,6 +539,7 @@
               }
               // Get all of users in this organization whatever allowed or not
               this.user_list = response.data.results
+              console.log(this.user_list)
             })
         })
         .catch((error) => {

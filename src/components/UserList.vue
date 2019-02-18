@@ -158,7 +158,6 @@
           } else if (option === '2') {
             option_val = 'account'
           } else {
-            // console.log('Option not catched')
             alert('검색 옵션이 없습니다.')
           }
           this.search_option = option_val
@@ -174,21 +173,8 @@
         let this_url = 'user_access/'
         let offset = page
         let def = ''
-        // if (!this.user_obj.is_staff && this.access_obj.access == 1) {
-        //   def = '&organization=' + this.access_obj.organization
-        // }
-        //
-        //
-        // axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text + def)
-        //   .then((response) => {
-        //     // Calculation for page_max
-        //     if(response.data.count % this.page_chunk === 0) {
-        //       this.page_max = Math.floor(response.data.count/this.page_chunk)
-        //     } else {
-        //       this.page_max = Math.floor(response.data.count/this.page_chunk) + 1
-        //     }
-        //     this.content_obj = response.data.results
-        //   })
+
+        // filter
         if (this.user_obj.is_staff) {
           // collect all
         } else if (this.access_obj.access == 1) {
@@ -203,7 +189,6 @@
         }
         axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&sort=1' + '&' + this.search_option + '=' + this.search_text + def)
           .then((response) => {
-            // console.log('access response = ', response)
             if (response.data.count % this.page_chunk === 0) {
               this.page_max = Math.floor(response.data.count / this.page_chunk)
             } else {
@@ -246,29 +231,18 @@
       this.temp_text = this.$store.state.pageOptions.user.text
       this.search_text = this.$store.state.pageOptions.user.text
       let offset = (this.$store.state.pageOptions.user.page - 1) * (this.page_chunk)
-      // if (!this.user_obj.is_staff && this.access_obj.access == 1) {
-      //   def = '&organization=' + this.access_obj.organization
-      // }
-      // Axios get landings
-      // axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text + def)
-      //   .then((response) => {
-      //     // Calculation for page_max
-      //     if(response.data.count % this.page_chunk === 0) {
-      //       this.page_max = Math.floor(response.data.count/this.page_chunk)
-      //     } else {
-      //       this.page_max = Math.floor(response.data.count/this.page_chunk) + 1
-      //     }
-      //     this.content_obj = response.data.results
-      //   })
-      //
-      //
-      //
-      //
+
+      if(this.search_option == 'name') {
+        this.temp_option = 1
+      } else if (this.search_option == 'account') {
+        this.temp_option = 2
+      }
+      // filter
       if (this.user_obj.is_staff) {
         // collect all
       } else if (this.access_obj.access == 1) {
         // organization == access
-        def = '&organization=' + this.access_obj.organization
+        def = '&all_organization=' + this.access_obj.organization
       } else if (this.access_obj.access == 2) {
         // company === company
         def = '&company=' + this.access_obj.company
@@ -276,9 +250,8 @@
         // Emergency break
         def = '&organization=f'
       }
-      axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&sort=1' + def)
+      axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text + '&sort=1' + def)
         .then((response) => {
-          // console.log('access response = ', response)
           if (response.data.count % this.page_chunk === 0) {
             this.page_max = Math.floor(response.data.count / this.page_chunk)
           } else {
