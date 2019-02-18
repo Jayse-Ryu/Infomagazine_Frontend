@@ -118,19 +118,8 @@
     name: "company_create",
     data: () => ({
       // For organization create
-      create_obj: [],
-      // Selected storage
-      selected: -1,
-      select_options: [],
-      // Get user button options
-      marketer_switch: 0,
-      client_switch: 0,
+      create_obj: []
     }),
-    // mounted() {
-    //   console.log('user obj', this.user_obj)
-    //   console.log('accs obj', this.access_obj)
-    //   console.log('crea obj', this.create_obj)
-    // },
     methods: {
       create_organization() {
         // Create an organization myself

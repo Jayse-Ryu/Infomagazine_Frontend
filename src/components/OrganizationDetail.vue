@@ -107,7 +107,7 @@
             </div>
           </div>
           <div v-else class="col-sm-9 mt-sm-3">
-            <div type="text" class="form-control border-0">none</div>
+            <div type="text" class="form-control border-0">비어있음</div>
           </div>
 
           <label for="org_update" class="col-form-label-sm col-sm-3 mt-3">수정일</label>
@@ -117,7 +117,7 @@
             </div>
           </div>
           <div v-else class="col-sm-9 mt-sm-3">
-            <div type="text" class="form-control border-0">none</div>
+            <div type="text" class="form-control border-0">비어있음</div>
           </div>
 
         </div>
@@ -327,7 +327,7 @@
             </div>
           </div>
           <div v-else class="col-sm-9 mt-sm-3">
-            <div type="text" class="form-control border-0">none</div>
+            <div type="text" class="form-control border-0">비어있음</div>
           </div>
 
           <label for="org_update2" class="col-form-label-sm col-sm-3 mt-3">수정일</label>
@@ -337,7 +337,7 @@
             </div>
           </div>
           <div v-else class="col-sm-9 mt-sm-3">
-            <div type="text" class="form-control border-0">none</div>
+            <div type="text" class="form-control border-0">비어있음</div>
           </div>
         </div>
 

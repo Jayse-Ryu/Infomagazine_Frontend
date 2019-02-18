@@ -109,7 +109,7 @@
             </div>
           </div>
           <div v-else class="col-sm-9 mt-sm-3">
-            <div type="text" class="form-control border-0">none</div>
+            <div type="text" class="form-control border-0">비어있음</div>
           </div>
 
           <label for="org_update" class="col-form-label-sm col-sm-3 mt-3">수정일</label>
@@ -119,7 +119,7 @@
             </div>
           </div>
           <div v-else class="col-sm-9 mt-sm-3">
-            <div type="text" class="form-control border-0">none</div>
+            <div type="text" class="form-control border-0">비어있음</div>
           </div>
 
         </div>
@@ -152,13 +152,6 @@
               </div>
               <div class="col-2">{{ content.phone }}</div>
               <div class="col-2 col-sm-3">
-                <!--
-                <div v-if="content.access == 1 && content.user == original_manager">
-                  <button type="button" class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
-                    <div class="promote_btn">관리자</div>
-                  </button>
-                </div>
-                -->
                 <div v-if="content.access == 2 && content.user != user_obj.id">
                   <button type="button" class="btn btn-danger p-0" @click.prevent="promote('de', content.user)">
                     <div class="promote_btn">강등</div>
@@ -246,6 +239,7 @@
         <!-- Submit button -->
         <div class="mt-1 mb-2">
           <button type="submit" class="btn btn-primary col">수정</button>
+          <!--<button type="button">업체 삭제</button>-->
           <router-link to="/organization">
             <button class="btn btn-dark col mt-2">취소</button>
           </router-link>
@@ -321,7 +315,7 @@
             </div>
           </div>
           <div v-else class="col-sm-9 mt-sm-3">
-            <div type="text" class="form-control border-0">none</div>
+            <div type="text" class="form-control border-0">비어있음</div>
           </div>
 
           <label for="org_update2" class="col-form-label-sm col-sm-3 mt-3">수정일</label>
@@ -331,7 +325,7 @@
             </div>
           </div>
           <div v-else class="col-sm-9 mt-sm-3">
-            <div type="text" class="form-control border-0">none</div>
+            <div type="text" class="form-control border-0">비어있음</div>
           </div>
         </div>
 
@@ -362,30 +356,6 @@
                 <router-link :to="'/users/detail/' + content.user">{{ content.user_name }}</router-link>
               </div>
               <div class="col-3">{{ content.phone }}</div>
-              <!--
-              <div class="col-2 col-sm-3">
-                <div v-if="content.access == 1 && content.user == original_manager">
-                  <button type="button" class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
-                    <div class="promote_btn">관리자</div>
-                  </button>
-                </div>
-                <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id">
-                  <button type="button" class="btn btn-danger p-0" @click.prevent="promote('de', content.user)">
-                    <div class="promote_btn">강등</div>
-                  </button>
-                </div>
-                <div v-else-if="content.access == 1 && content.user == user_obj.id">
-                  <button type="button" class="btn btn-info p-0" @click.prevent="promote('me', content.user)">
-                    <div class="promote_btn">본인</div>
-                  </button>
-                </div>
-                <div v-if="content.access == -1">
-                  <button type="button" class="btn btn-success p-0" @click.prevent="promote('pr', content.user)">
-                    <div class="promote_btn">승인</div>
-                  </button>
-                </div>
-              </div>
-              -->
             </li>
           </ul>
         </div>
@@ -414,30 +384,6 @@
               <div class="col-4">
                 {{ content.phone }}
               </div>
-              <!--
-              <div class="col-4">
-                <div v-if="content.access == 1 && content.user == original_manager">
-                  <button type="button" class="btn btn-primary p-0" @click.prevent="promote('he', content.user)">
-                    <div class="promote_btn">관리자</div>
-                  </button>
-                </div>
-                <div v-else-if="content.access == 1 && content.user != original_manager && content.user != user_obj.id">
-                  <button type="button" class="btn btn-danger p-0" @click.prevent="promote('de', content.user)">
-                    <div class="promote_btn">강등</div>
-                  </button>
-                </div>
-                <div v-else-if="content.access == 1 && content.user == user_obj.id">
-                  <button type="button" class="btn btn-info p-0" @click.prevent="promote('me', content.user)">
-                    <div class="promote_btn">본인</div>
-                  </button>
-                </div>
-                <div v-if="content.access == -1">
-                  <button type="button" class="btn btn-success p-0" @click.prevent="promote('pr', content.user)">
-                    <div class="promote_btn">승인</div>
-                  </button>
-                </div>
-              </div>
-              -->
             </li>
           </ul>
         </div>
