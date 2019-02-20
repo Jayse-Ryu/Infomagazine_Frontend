@@ -123,12 +123,9 @@
             </grid-layout>
             -->
 
-              <vue-drag-resize :isActive="true" :w="200" :h="200" v-on:resizing="resize" v-on:dragging="resize">
-                <h3>Hello World!</h3>
-                <p>{{ top }} х {{ left }} </p>
-                <p>{{ width }} х {{ height }}</p>
-              </vue-drag-resize>
-
+            <div class="form-group row mb-0">
+              <div style="background: #007aff; width:50px; height:50px; position: relative;" draggable="true" @drag="drag_it($event)">drag</div>
+            </div>
 
             <div class="form-group row mb-0">
 
@@ -272,7 +269,6 @@
 
           <hr>
 
-          <!--
                     <label class="col-sm-3 col-form-label-sm mt-3" for="db_list">DB</label>
                     <div class="col-sm-9 mt-sm-3  row ml-0">
                       <select class="custom-select col-sm-5" id="db_select">
@@ -294,78 +290,67 @@
                           <div class="col-7 p-2">DB 필드</div>
                         </li>
                         <li class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
-                            v-for="url in url_obj">
-                          &lt;!&ndash;DB part. not functioning yet&ndash;&gt;
+                            v-for="url in landing_obj">
+                          <!--DB part. not functioning yet-->
                           <div class="col-3 p-2">{{ url.url }}</div>
                           <div class="col-7 p-2">{{ url.description }}</div>
                           <button type="button" class="btn btn-outline-danger p-0 col-2">삭제</button>
                         </li>
                       </ul>
                     </div>
-          -->
 
-          <!--
                     <label class="col-sm-3 col-form-label-sm mt-3" for="form">약관 이미지</label>
 
                     <div class="col-sm-9 mt-sm-3">
                       <label class="switch" for="term_switch">
-                        <input type="checkbox" id="term_switch" v-model="landing.image_switch">
+                        <input type="checkbox" id="term_switch" v-model="landing_obj.image_switch">
                         <span class="slider round"></span>
                       </label>
                     </div>
-          -->
         </div>
-        <!--
 
-                <div class="form-group row" v-if="landing.image_switch">
+                <div class="form-group row" v-if="landing_obj.image_switch">
                   <label class="col-sm-3 col-form-label-sm mt-3" for="form">약관 이미지 파일</label>
 
                   <div class="col-sm-9 mt-sm-3">
                     <input type="text" class="form-control" id="form">
                   </div>
                 </div>
-        -->
-        <!--
 
                 <div class="form-group row" v-else>
                   <label class="col-sm-3 col-form-label-sm mt-3" for="form_title">약관 제목</label>
                   <div class="col-sm-9 mt-sm-3">
-                    <input type="text" class="form-control" id="form_title" placeholder="title" v-model="term_text.title">
+                    <input type="text" class="form-control" id="form_title" placeholder="title" v-model="landing_obj.title">
                   </div>
                   <label class="col-sm-3 col-form-label-sm mt-3" for="form_cont">약관 내용</label>
                   <div class="col-sm-9 mt-sm-3">
                     <textarea type="text" class="form-control" id="form_cont" rows="4" placeholder="content"
-                              v-model="term_text.content"></textarea>
+                              v-model="landing_obj.content"></textarea>
                   </div>
                 </div>
 
-        -->
         <hr>
-        <!--
 
                 <h5>옵션</h5>
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label-sm mt-3" for="status">활성상태</label>
                   <div class="col-sm-9 mt-sm-3">
                     <label class="switch" for="status">
-                      <input type="checkbox" id="status" v-model="landing.status">
+                      <input type="checkbox" id="status" v-model="landing_obj.status">
                       <span class="slider round"></span>
                     </label>
-                    &lt;!&ndash;<input type="text" class="form-control" id="status" v-model="landing.status">&ndash;&gt;
                   </div>
 
                   <label class="col-sm-3 col-form-label-sm mt-3" for="mobile">모바일 전용</label>
                   <div class="col-sm-9 mt-sm-3">
                     <label class="switch" for="mobile">
-                      <input type="checkbox" id="mobile" v-model="landing.mobile_only">
+                      <input type="checkbox" id="mobile" v-model="landing_obj.mobile_only">
                       <span class="slider round"></span>
                     </label>
-                    &lt;!&ndash;<input type="text" class="form-control" id="mobile" v-model="landing.mobile_only">&ndash;&gt;
                   </div>
 
                 </div>
 
-        -->
         <hr>
 
         <div class="form-group row">
@@ -398,6 +383,8 @@
       },
       landing_company: [],
       landing_manager: [],
+      layout_obj: [],
+      order_obj: [],
       term_image: false,
       term_text: [],
       url_obj: {},
@@ -409,10 +396,6 @@
         {"x": 0, "y": 3, "w": 1, "h": 5, "i": "3"},
         {"x": 0, "y": 4, "w": 1, "h": 5, "i": "4"},
       ],
-      width: 0,
-      height: 0,
-      top: 0,
-      left: 0,
       len: 0,
       is_banner: false,
       is_group: 1,
@@ -476,11 +459,10 @@
           console.log('landing obj = ', this.landing_obj)
         }
       },
-      resize(newRect) {
-        this.width = newRect.width;
-        this.height = newRect.height;
-        this.top = newRect.top;
-        this.left = newRect.left;
+      drag_it(ev) {
+        console.log('ddddd')
+        console.log(ev)
+        ev.target.style.top = ev.screenX
       }
     },
     mounted() {
