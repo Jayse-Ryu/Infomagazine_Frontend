@@ -18,7 +18,7 @@
           <select class="search_option" id="src_gbn" v-model="temp_option">
             <option value="0" selected>검색 옵션</option>
             <option value="1">업체</option>
-            <option value="2">관리자</option>
+            <option value="2">담당조직</option>
           </select>
           <input type="text" class="search_text" v-model="temp_text" placeholder="검색">
           <button type="submit" class="search_btn">
@@ -36,7 +36,7 @@
               <div class="col-1 p-0">번호</div>
               <div class="col-2 p-0">업체</div>
               <div class="col-2 p-0">상호명</div>
-              <div class="col-2 p-0">담당자</div>
+              <div class="col-2 p-0">담당조직</div>
               <div class="col-2 p-0">연락처</div>
               <div class="col-3 p-0 board_centre">생성일</div>
             </div>
@@ -55,7 +55,7 @@
               <div class="col-2 p-0 col-sm-2">
                 <router-link :to="'/company/detail/' + content.id">{{ content.sub_name }}</router-link>
               </div>
-              <div class="col-2 p-0">{{ content.manager_name }}</div>
+              <div class="col-2 p-0">{{ content.organization_name }}</div>
               <div v-if="content.phone" class="col-2 p-0">{{ content.phone }}</div>
               <div v-else-if="content.email" class="col-2 p-0">{{ content.email }}</div>
               <div v-else class="col-2 p-0">없음</div>
@@ -168,7 +168,7 @@
           if (option === '1') {
             option_val = 'name'
           } else if (option === '2') {
-            option_val = 'manager'
+            option_val = 'org_name'
           } else {
             console.log('Option not catched')
           }
@@ -231,7 +231,7 @@
       let offset = (this.$store.state.pageOptions.company.page - 1) * this.page_chunk
       if(this.search_option == 'name') {
         this.temp_option = 1
-      } else if (this.search_option == 'manager') {
+      } else if (this.search_option == 'org_name') {
         this.temp_option = 2
       }
       // Axios get landings

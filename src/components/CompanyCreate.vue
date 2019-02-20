@@ -128,7 +128,6 @@
           let axios = this.$axios
           let this_url = 'company/'
           let formData = new FormData()
-          formData.append('manager', this.user_obj.id)
           formData.append('organization', this.access_obj.organization)
           formData.append('name', this.create_obj.name)
           if (this.create_obj.sub_name) {

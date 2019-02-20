@@ -207,7 +207,7 @@
           formData.append('full_name', this.full_name)
           formData.append('email', this.email)
           formData.append('phone', this.phone)
-          const baseURI = 'http://127.0.0.1:8000'  //'http://13.209.67.94/'
+          const baseURI = this.$store.state.endpoints.baseUrl
           const config = {
             headers: {
               'Content-Type': 'application/json'
@@ -215,7 +215,7 @@
           }
 
           /* Do axios post */
-          axios.post(`${baseURI}/user/`, formData, config)
+          axios.post(`${baseURI}user/`, formData, config)
             .then((response) => {
               let get_id = response.data.id
               let formData = new FormData()
@@ -227,7 +227,7 @@
               if (this.company !== -1) {
                 formData.append('company', this.company)
               }
-              return axios.patch(`${baseURI}/user_access/` + get_id + '/', formData, config)
+              return axios.patch(`${baseURI}user_access/` + get_id + '/', formData, config)
             })
             .then((response) => {
               alert('회원가입 되었습니다.')

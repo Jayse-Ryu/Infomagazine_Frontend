@@ -10,34 +10,47 @@
 
     <div class="container" style="margin-top: 20px;">
 
-      <form>
-
+      <form v-on:submit.prevent="check_landing">
         <h5>기본정보</h5>
         <div class="form-group row">
 
-          <label class="col-sm-3 col-form-label-sm mt-3" for="company_id">업체</label>
+          <label class="col-sm-3 col-form-label-sm mt-3" for="company_id">업체*</label>
           <div class="col-sm-9 mt-sm-3">
-            <select class="form-control" name="company" id="company_id">
+            <select class="form-control" name="company" id="company_id" v-model="landing_obj.company">
               <option value="-1">선택하세요</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
+              <option v-for="content in landing_company" :value="content.id">
+                {{content.name }} - {{ content.sub_name }}
+              </option>
             </select>
           </div>
 
-          <label class="col-sm-3 col-form-label-sm mt-3" for="manager">관리자</label>
+          <label class="col-sm-3 col-form-label-sm mt-3" for="manager">관리자*</label>
           <div class="col-sm-9 mt-sm-3">
-            <select class="form-control" name="sel" id="manager">
+            <select class="form-control" name="sel" id="manager" v-model="landing_obj.manager">
               <option value="-1">선택하세요</option>
-              <option value="1">2</option>
-              <option value="2">3</option>
+              <option v-for="content in landing_manager" :value="content.user">
+                {{content.account }} - {{ content.user_name }}
+              </option>
             </select>
           </div>
 
-          <label class="col-sm-3 col-form-label-sm mt-3" for="landing">랜딩페이지 이름</label>
+          <label class="col-sm-3 col-form-label-sm mt-3" for="landing">랜딩페이지 이름*</label>
           <div class="col-sm-9 mt-sm-3">
-            <input type="text" class="form-control" id="landing">
+            <input type="text" class="form-control" id="landing" maxlength="50" v-model="landing_obj.name">
+          </div>
+
+          <label class="col-sm-3 col-form-label-sm mt-3" for="base_url"><span>메인 URL*</span>
+            <span class="question badge btn-secondary p-1 align-middle" v-if="window_width > 768" v-tooltip="{content: msg.base_url, placement: 'right',
+                            offset: 5,
+                            trigger: 'hover',
+                            }">?</span>
+            <span class="question badge btn-secondary p-1 align-middle" v-else v-tooltip="{content: msg.base_url, placement: 'right',
+                            offset: 5,
+                            trigger: 'click',
+                            }">?</span>
+          </label>
+          <div class="col-sm-9 mt-sm-3">
+            <input type="text" class="form-control" id="base_url" maxlength="30" v-model="landing_obj.base_url">
           </div>
 
         </div>
@@ -46,29 +59,41 @@
 
         <h5>페이지 내용</h5>
         <div class="form-group row">
-          <label class="col-sm-12 col-form-label-sm mt-3" for="page_title">페이지 타이틀</label>
+          <label class="col-sm-12 col-form-label-sm mt-3" for="page_title"><span>페이지 타이틀</span>
+            <span class="question badge btn-secondary p-1 align-middle" v-if="window_width > 768" v-tooltip="{content: msg.title, placement: 'right',
+                            offset: 5,
+                            trigger: 'hover',
+                            }">?</span>
+            <span class="question badge btn-secondary p-1" v-else v-tooltip="{content: msg.title, placement: 'right',
+                            offset: 5,
+                            trigger: 'click',
+                            }">?</span>
+          </label>
           <div class="col-sm-12">
-            <input type="text" class="form-control" id="page_title">
+            <input type="text" class="form-control" id="page_title" maxlength="50" v-model="landing_obj.title">
           </div>
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="header_script">헤더 스크립트</label>
           <div class="col-sm-12">
-            <textarea type="text" class="form-control" id="header_script" rows="4"></textarea>
+            <textarea type="text" class="form-control" id="header_script" rows="4" v-model="landing_obj.header_script"></textarea>
           </div>
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="body_script">바디 스크립트</label>
           <div class="col-sm-12">
-            <textarea type="text" class="form-control" id="body_script" rows="4"></textarea>
+            <textarea type="text" class="form-control" id="body_script" rows="4" v-model="landing_obj.body_script"></textarea>
           </div>
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="main_layout">랜딩 레이아웃</label>
           <div class="col-sm-12">
+            <!--
             <div class="col-12 mb-1">
               <div class="layout_control btn btn-primary" @click="layout_post">+</div>
               <div class="layout_control btn btn-danger" @click="layout_delete">-</div>
               <div class="btn btn-dark" @click="check">check</div>
             </div>
+            -->
 
+            <!--
             <grid-layout
               class="landing_layout"
               id="main_layout"
@@ -96,6 +121,14 @@
                 <div v-else class="item_area bg-primary" @mouseup="check(item.i)">{{item.i}}</div>
               </grid-item>
             </grid-layout>
+            -->
+
+              <vue-drag-resize :isActive="true" :w="200" :h="200" v-on:resizing="resize" v-on:dragging="resize">
+                <h3>Hello World!</h3>
+                <p>{{ top }} х {{ left }} </p>
+                <p>{{ width }} х {{ height }}</p>
+              </vue-drag-resize>
+
 
             <div class="form-group row mb-0">
 
@@ -354,7 +387,15 @@
   export default {
     name: "landing_create",
     data: () => ({
-      landing_obj: {},
+      window_width: window.innerWidth,
+      msg: {
+        base_url: '기본 주소를 지정합니다.',
+        title: '사이트 내부 제목입니다.'
+      },
+      landing_obj: {
+        company: -1,
+        manager: -1
+      },
       landing_company: [],
       landing_manager: [],
       term_image: false,
@@ -368,6 +409,10 @@
         {"x": 0, "y": 3, "w": 1, "h": 5, "i": "3"},
         {"x": 0, "y": 4, "w": 1, "h": 5, "i": "4"},
       ],
+      width: 0,
+      height: 0,
+      top: 0,
+      left: 0,
       len: 0,
       is_banner: false,
       is_group: 1,
@@ -381,9 +426,9 @@
       check(num) {
         this.clicked = num
         let sort = this.layout
-        console.log('max test', sort.i)
+        // console.log('max test', sort.i)
         sort.sort((a, b) => (a.y > b.y) ? 1 : ((b.y > a.y) ? -1 : 0))
-        console.log('sorted tmp', sort)
+        // console.log('sorted tmp', sort)
       },
       layout_post() {
         let len = this.len
@@ -412,28 +457,72 @@
       delete_url() {
         console.log('del function!')
       },
+      check_landing() {
+        this.$validator.validateAll()
+        // Empty filtering first
+        if (this.landing_obj.company == -1) {
+          alert('업체를 선택하세요!')
+          document.getElementById('company_id').focus()
+        } else if (this.landing_obj.manager == -1) {
+          alert('관리자를 선택하세요!')
+          document.getElementById('manager').focus()
+        } else if (!this.landing_obj.name) {
+          alert('랜딩페이지 이름을 입력하세요!')
+          document.getElementById('landing').focus()
+        } else if (!this.landing_obj.base_url) {
+          alert('메인 URL을 입력하세요!')
+          document.getElementById('base_url').focus()
+        } else {
+          console.log('landing obj = ', this.landing_obj)
+        }
+      },
+      resize(newRect) {
+        this.width = newRect.width;
+        this.height = newRect.height;
+        this.top = newRect.top;
+        this.left = newRect.left;
+      }
     },
     mounted() {
+      // Window width calculator
+      this.$nextTick(function () {
+        window.addEventListener('resize', function (e) {
+          this.window_width = window.innerWidth
+        })
+      })
       this.len = this.layout.length
       // Get company, manager
       let axios = this.$axios
-      axios.get(this.$store.state.endpoints.baseUrl + 'company/')
+      // Get companies from logged in user's organization
+      let this_url = 'company/'
+      axios.get(this.$store.state.endpoints.baseUrl + this_url + '?organization=' + this.access_obj.organization)
         .then((response) => {
-          console.log(response)
+          this.landing_company = response.data.results
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      // Get manager from logged in user's organization
+      this_url = 'user_access/'
+      axios.get(this.$store.state.endpoints.baseUrl + this_url + '?organization=' + this.access_obj.organization)
+        .then((response) => {
+          this.landing_manager = response.data.results
         })
         .catch((error) => {
           console.log(error)
         })
     },
-    update() {
-      if (this.$store.state.jwt !== null) {
-        this.$store.dispatch('getAuthUser')
+    computed: {
+      user_obj() {
+        // Get user information
+        let user = this.$store.state.authUser
+        return user
+      },
+      access_obj() {
+        // Get access information the user
+        let access = this.$store.state.userAccess
+        return access
       }
-    },
-    watch: {
-      // is_group() {
-      //   console.log('Checked!!', this.layout)
-      // }
     }
   }
 </script>
@@ -508,6 +597,7 @@
   .term_label {
     display: inline-block;
   }
+
   /*====*/
 
   /* margin dummy div */
@@ -515,11 +605,13 @@
     display: inline-block;
     width: 4%;
   }
+
   @media (max-width: 768px) {
     .margin_div {
       display: none;
     }
   }
+
   /*==*/
 
   .input_one_btn {
@@ -566,4 +658,5 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
+
 </style>

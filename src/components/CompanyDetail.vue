@@ -21,19 +21,20 @@
             <div class="form-control border-0" id="org_id">{{ content_obj.id }}</div>
           </div>
 
-          <label for="org_manager" class="col-form-label-sm col-sm-3 mt-3">관리자</label>
+          <label for="org_name" class="col-form-label-sm col-sm-3 mt-3">관리조직</label>
           <div class="col-sm-9 mt-sm-3">
             <!--<div class="form-control" id="org_manager">{{ content_obj.manager_name }}</div>-->
-            <select class="form-control" name="org_manager" id="org_manager" v-model="content_obj.manager">
+            <div class="form-control border-0" id="org_name">{{ content_obj.organization_name }}</div>
+            <!--<select class="form-control" name="org_manager" id="org_manager" v-model="content_obj.manager">
               <option v-for="item in marketer" :value="item.user">{{ item.user_name }}</option>
-            </select>
+            </select>-->
           </div>
 
-          <label for="org_name" class="col-form-label-sm col-sm-3 mt-3">업체 이름*</label>
+          <label for="com_name" class="col-form-label-sm col-sm-3 mt-3">업체 이름*</label>
           <div class="col-sm-9 mt-sm-3">
             <!--<div class="error_label" v-if="errors.has('org_name')">{{errors.first('org_name')}}</div>-->
-            <div class="error_label" v-if="errors.has('org_name')">이름은 필수 항목입니다.</div>
-            <input type="text" class="form-control" id="org_name" name="org_name" v-model="content_obj.name"
+            <div class="error_label" v-if="errors.has('com_name')">이름은 필수 항목입니다.</div>
+            <input type="text" class="form-control" id="com_name" name="com_name" v-model="content_obj.name"
                    required
                    placeholder="업체 이름을 입력하세요"
                    autofocus="autofocus"
@@ -256,14 +257,14 @@
             <div class="form-control border-0" id="org_id2">{{ content_obj.id }}</div>
           </div>
 
-          <label for="org_manager2" class="col-form-label-sm col-sm-3 mt-3">관리자</label>
+          <label for="org_name2" class="col-form-label-sm col-sm-3 mt-3">관리소속</label>
           <div class="col-sm-9 mt-sm-3">
-            <div class="form-control" id="org_manager2">{{ content_obj.manager_name }}</div>
+            <div class="form-control border-0" id="org_name2">{{ content_obj.organization_name }}</div>
           </div>
 
-          <label for="org_name2" class="col-form-label-sm col-sm-3 mt-3">업체 이름*</label>
+          <label for="com_name2" class="col-form-label-sm col-sm-3 mt-3">업체 이름</label>
           <div class="col-sm-9 mt-sm-3">
-            <div type="text" class="form-control" id="org_name2">{{ content_obj.name }}</div>
+            <div type="text" class="form-control" id="com_name2">{{ content_obj.name }}</div>
           </div>
 
           <label for="org_sub2" class="col-form-label-sm col-sm-3 mt-3">업체 상호명</label>
@@ -349,12 +350,8 @@
             <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
                 v-for="content in user_list">
               <div class="col-2 col-sm-2">{{ content.user }}</div>
-              <div class="col-3 col-sm-3">
-                <router-link :to="'/users/detail/' + content.user">{{ content.account }}</router-link>
-              </div>
-              <div class="col-4 col-sm-4">
-                <router-link :to="'/users/detail/' + content.user">{{ content.user_name }}</router-link>
-              </div>
+              <div class="col-3 col-sm-3" style="color: #287bff">{{ content.account }}</div>
+              <div class="col-4 col-sm-4" style="color: #287bff">{{ content.user_name }}</div>
               <div class="col-3">{{ content.phone }}</div>
             </li>
           </ul>
@@ -378,12 +375,8 @@
             <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
                 v-for="content in user_list">
               <div class="col-4">{{ content.account }}</div>
-              <div class="col-4">
-                <router-link :to="'/users/detail/' + content.id">{{ content.user_name }}</router-link>
-              </div>
-              <div class="col-4">
-                {{ content.phone }}
-              </div>
+              <div class="col-4" style="color: #287bff">{{ content.user_name }}</div>
+              <div class="col-4">{{ content.phone }}</div>
             </li>
           </ul>
         </div>
@@ -455,31 +448,19 @@
       axios.get(this.$store.state.endpoints.baseUrl + this_url + this.page_id)
         .then((response) => {
           this.content_obj = response.data
-          this.original_manager = response.data.manager
-          // Get manager users by organization id
-          return axios.get(this.$store.state.endpoints.baseUrl + 'user_access/' + '?organization=' + response.data.organization)
-        })
-        .then((response) => {
-          // Filtering allowed managers by access value
-          for (let i = 0; i < response.data.results.length; i++) {
-            if (response.data.results[i].access === 1) {
-              this.marketer.push(response.data.results[i])
-            }
-          }
-          // this.pagination by using company users
           let this_url = 'user_access/'
           let offset = (this.page_current - 1) * this.page_chunk
-          axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + 'company' + '=' + this.$route.params.company_id * 1)
-            .then((response) => {
-              // Calculation for page_max
-              if (response.data.count % this.page_chunk === 0) {
-                this.page_max = Math.floor(response.data.count / this.page_chunk)
-              } else {
-                this.page_max = Math.floor(response.data.count / this.page_chunk) + 1
-              }
-              // Get all of users in this company whatever allowed or not
-              this.user_list = response.data.results
-            })
+          return axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + 'company' + '=' + this.$route.params.company_id * 1)
+        })
+        .then((response) => {
+          // this.pagination by using company users
+          if (response.data.count % this.page_chunk === 0) {
+            this.page_max = Math.floor(response.data.count / this.page_chunk)
+          } else {
+            this.page_max = Math.floor(response.data.count / this.page_chunk) + 1
+          }
+          // Get all of users in this company whatever allowed or not
+          this.user_list = response.data.results
         })
         .catch((error) => {
           console.log(error)
