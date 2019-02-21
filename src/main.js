@@ -10,6 +10,7 @@ import Paginate from 'vuejs-paginate'
 // import VueDragDrop from 'vue-drag-drop'
 import VueGrid from 'vue-grid-layout'
 import VTooltip from 'v-tooltip'
+import VueDraggableResizable from 'vue-draggable-resizable'
 
 // Routers
 import Header from './Header'
@@ -17,7 +18,7 @@ import Header from './Header'
 Vue.component('app-header', Header)
 Vue.component('paginate', Paginate)
 Vue.component('vue-grid', VueGrid)
-// Vue.component('vue-drag-drop', VueDragDrop)
+Vue.component('vue-draggable-resizable', VueDraggableResizable)
 
 Vue.config.productionTip = false
 
@@ -27,6 +28,7 @@ Vue.use(VueAxios, axios)
 // Vue.use(axios)
 Vue.use(VueGrid)
 Vue.use(VTooltip)
+Vue.use(VueDraggableResizable)
 
 Vue.prototype.$jwt_decode = Decoder
 Vue.prototype.$axios = axios

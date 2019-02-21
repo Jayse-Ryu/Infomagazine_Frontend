@@ -836,4 +836,83 @@ export default {
     }
   }
 
+
+  // Drag element
+  .drag_thing_drag {
+    transition: opacity 200ms ease-in-out;
+    opacity: 0.7;
+    z-index: 99999 !important;
+  }
+
+  .drag_handle {
+    position: absolute !important;
+    background-color: #ffffff;
+    border: 1px solid #000000 !important;
+    border-radius: 50%;
+    height: 14px !important;
+    width: 14px !important;
+    z-index: 9999;
+    box-model: border-box;
+    transition: all 300ms linear;
+  }
+  .drag_handle-tl {
+    top: -14px;
+    left: -14px;
+    cursor: nw-resize;
+  }
+
+  .drag_handle-tm {
+    top: -14px;
+    left: 50%;
+    margin-left: -7px;
+    cursor: n-resize;
+  }
+
+  .drag_handle-tr {
+    top: -14px;
+    right: -14px;
+    cursor: ne-resize;
+  }
+
+  .drag_handle-ml {
+    top: 50%;
+    margin-top: -7px;
+    left: -14px;
+    cursor: w-resize;
+  }
+
+  .drag_handle-mr {
+    top: 50%;
+    margin-top: -7px;
+    right: -14px;
+    cursor: e-resize;
+  }
+
+  .drag_handle-bl {
+    bottom: -14px;
+    left: -14px;
+    cursor: sw-resize;
+  }
+
+  .drag_handle-bm {
+    bottom: -14px;
+    left: 50%;
+    margin-left: -7px;
+    cursor: s-resize;
+  }
+
+  .drag_handle-br {
+    bottom: -14px;
+    right: -14px;
+    cursor: se-resize;
+  }
+
+  .drag_handle-tl:hover,
+  .drag_handle-tr:hover,
+  .drag_handle-bl:hover,
+  .drag_handle-br:hover {
+    background-color: red;
+    transform: scale(1.4);
+  }
+
 </style>

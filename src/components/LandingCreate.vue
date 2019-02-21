@@ -123,16 +123,45 @@
             </grid-layout>
             -->
 
-            <div class="form-group row mb-0">
-              <div style="background: #007aff; width:50px; height:50px; position: relative;" draggable="true" @drag="drag_it($event)">drag</div>
+            <div id="main_layout">
+              <div class="basket">
+                <vue-draggable-resizable v-for="item in layout"
+                                         parent=".basket"
+                                         class="drag_thing"
+                                         class-name-dragging="drag_thing_drag"
+                                         class-name-handle="drag_handle"
+                                         :parent="true"
+                                         :key="item.i"
+                                         :min-width="100"
+                                         :min-height="100"
+                                         :grid=[5,5]
+                                         :lock-aspect-ratio="true">
+                  <p>Drag box</p>
+                </vue-draggable-resizable>
+
+                <vue-draggable-resizable class="drag_thing"
+                                         class-name-dragging="drag_thing_drag"
+                                         class-name-handle="drag_handle"
+                                         :parent="true"
+                                         :grid=[5,5]>
+                  <form class="form-group">
+                    <label class="col-sm-3 col-form-label-sm mt-3" for="form_g">DB 폼 그룹</label>
+                    <div class="col-sm-9 mt-sm-3 row ml-0">
+                      <input type="text" class="input_one_btn form-control col-md-11" id="form_g" placeholder="폼 그룹 이름">
+                      <button class="btn btn-primary col-md-1 p-0">추가</button>
+                    </div>
+                  </form>
+                </vue-draggable-resizable>
+
+              </div>
             </div>
 
             <div class="form-group row mb-0">
 
               <label class="col-sm-3 col-form-label-sm mt-3" for="layout_font">레이아웃 폰트</label>
               <div class="col-sm-9 mt-sm-3 row ml-0">
-                <select class="form-control" name="layout_font" id="layout_font">
-                  <option value="0">Font 1</option>
+                <select class="form-control" name="layout_font" id="layout_font" v-model="layout_obj.font">
+                  <option value="0">OS 기본</option>
                   <option value="1">Font 2</option>
                   <option value="2">Font 3</option>
                 </select>
@@ -141,14 +170,14 @@
               <label class="col-sm-3 col-form-label-sm mt-3" for="in_db">레이아웃 내 DB</label>
               <div class="col-sm-9 mt-sm-3">
                 <label class="switch" for="in_db">
-                  <input type="checkbox" id="in_db">
+                  <input type="checkbox" id="in_db" v-model="layout_obj.inner_db">
                   <span class="slider round"></span>
                 </label>
               </div>
 
               <label class="col-sm-3 col-form-label-sm mt-3" for="in_company">사업자 표기</label>
               <div class="col-sm-9 mt-sm-3">
-                <label class="switch" for="in_company">
+                <label class="switch" for="in_company" v-model="layout_obj.show_company">
                   <input type="checkbox" id="in_company">
                   <span class="slider round"></span>
                 </label>
@@ -157,18 +186,18 @@
               <label class="col-sm-3 col-form-label-sm mt-3" for="in_banner">띠배너</label>
               <div class="col-sm-9 mt-sm-3">
                 <label class="switch" for="in_banner">
-                  <input type="checkbox" id="in_banner" v-model="is_banner">
+                  <input type="checkbox" id="in_banner" v-model="layout_obj.is_banner">
                   <span class="slider round"></span>
                 </label>
               </div>
 
-              <label v-if="is_banner" class="col-sm-3 col-form-label-sm mt-3" for="url_title">띠배너 옵션</label>
-              <div v-if="is_banner" class="col-sm-9 mt-sm-3 row ml-0">
+              <label v-if="layout_obj.is_banner" class="col-sm-3 col-form-label-sm mt-3" for="url_title">띠배너 옵션</label>
+              <div v-if="layout_obj.is_banner" class="col-sm-9 mt-sm-3 row ml-0">
                 <input type="file" class="form-control col-sm-5 col-md-5 pt-1" id="in_banner_img" placeholder="이미지">
                 <div class="margin_div"></div>
-                <input type="text" class="form-control col-sm-7 col-md-5" id="in_banner_desc" placeholder="띠배너 주소">
+                <input type="text" class="form-control col-sm-7 col-md-5" id="in_banner_desc" placeholder="띠배너 주소" v-model="layout_obj.banner_url">
                 <div class="margin_div"></div>
-                <button class="btn btn-primary col-md-1 p-0">추가</button>
+                <button type="button" class="btn btn-primary col-md-1 p-0">추가</button>
               </div>
             </div>
 
@@ -181,37 +210,37 @@
         <div class="form-group row mb-0">
           <label class="col-sm-3 col-form-label-sm mt-3" for="form_group">DB 폼 그룹</label>
           <div class="col-sm-9 mt-sm-3 row ml-0">
-            <input type="text" class="input_one_btn form-control col-md-11" id="form_group" placeholder="폼 그룹 이름">
-            <button class="btn btn-primary col-md-1 p-0">추가</button>
+            <input type="text" class="input_one_btn form-control col-md-11" id="form_group" placeholder="폼 그룹 이름" v-model="form_temp">
+            <button type="button" class="btn btn-primary col-md-1 p-0" @click.prevent="add_form_group">추가</button>
           </div>
           <label class="col-sm-3 col-form-label-sm mt-3" for="form_group_del"></label>
           <div class="col-sm-9 mt-sm-3 row ml-0">
-            <select class="input_one_btn form-control col-md-11" name="form_del" id="form_group_del" v-model="is_group">
+            <select class="input_one_btn form-control col-md-11" name="form_del" id="form_group_del" v-model="form_obj">
               <option value="-1">그룹을 선택하세요</option>
-              <option value="0">form_1</option>
-              <option value="1">form_2</option>
-              <option value="2">form_3</option>
+              <option value="1">form_1</option>
+              <option value="2">form_2</option>
+              <option value="3">form_3</option>
             </select>
-            <button class="btn btn-danger col-md-1 p-0">삭제</button>
+            <button type="button" class="btn btn-danger col-md-1 p-0" @click.prevent="del_form_group">삭제</button>
           </div>
 
           <!-- Somehow !== is not responsible -->
           <label v-if="is_group != -1" class="col-sm-3 col-form-label-sm mt-3" for="form_group_bg">폼 배경색</label>
           <div v-if="is_group != -1" class="col-sm-9 mt-sm-3 row ml-0">
-            <div class="color_wrap form-control col-1" id="form_group_bg">
+            <div class="color_wrap form-control col-sm-2" id="form_group_bg">
               <input type="color" v-model="bg_color" class="color_picker">
             </div>
             <div class="margin_div"></div>
-            <input type="text" v-model="bg_color" class="form-control col-2" maxlength="7">
+            <input type="text" v-model="bg_color" class="form-control col-sm-3" maxlength="7">
           </div>
 
           <label v-if="is_group != -1" class="col-sm-3 col-form-label-sm mt-3" for="form_group_col">폼 폰트색</label>
           <div v-if="is_group != -1" class="col-sm-9 mt-sm-3 row ml-0">
-            <div class="color_wrap form-control col-1" id="form_group_col">
+            <div class="color_wrap form-control col-sm-2" id="form_group_col">
               <input type="color" v-model="tx_color" class="color_picker">
             </div>
             <div class="margin_div"></div>
-            <input type="text" v-model="tx_color" class="form-control col-2" maxlength="7">
+            <input type="text" v-model="tx_color" class="form-control col-sm-3" maxlength="7">
           </div>
 
         </div>
@@ -220,8 +249,8 @@
 
         <div class="form-group row mb-0">
           <label class="col-sm-3 col-form-label-sm mt-3" for="db_field">DB 필드</label>
-          <div class="col-sm-2 mt-sm-3">
-            <select class="form-control" name="company" id="db_field">
+          <div class="col-sm-9 mt-sm-3 row ml-0">
+            <select class="form-control col-sm-5 col-md-5" name="company" id="db_field" v-model="selected_field">
               <option value="-1">선택하세요</option>
               <option value="1">Text</option>
               <option value="2">Number</option>
@@ -232,7 +261,10 @@
               <option value="7">Url</option>
               <option value="8">Tel</option>
             </select>
-            <input type="text">
+            <div class="margin_div"></div>
+            <input type="text" class="form-control col-sm-7 col-md-5" placeholder="필드이름">
+            <div class="margin_div"></div>
+            <button class="btn btn-primary col-md-1 p-0" @click.prevent="add_field">추가</button>
           </div>
         </div>
 
@@ -242,9 +274,9 @@
         <div class="form-group row mb-0">
           <label class="col-sm-3 col-form-label-sm mt-3" for="url_title">Url</label>
           <div class="col-sm-9 mt-sm-3 row ml-0">
-            <input type="text" class="form-control col-sm-5 col-md-5" id="url_title" placeholder="Url 주소">
+            <input type="text" class="form-control col-sm-5 col-md-5" id="url_title" placeholder="Url 주소" v-model="url_temp.url">
             <div class="margin_div"></div>
-            <input type="text" class="form-control col-sm-7 col-md-5" id="url_desc" placeholder="Url 설명">
+            <input type="text" class="form-control col-sm-7 col-md-5" id="url_desc" placeholder="Url 설명" v-model="url_temp.desc">
             <div class="margin_div"></div>
             <button class="btn btn-primary col-md-1 p-0">추가</button>
           </div>
@@ -279,7 +311,7 @@
                       <div class="margin_div"></div>
                       <input type="text" class="form-control col-sm-7 col-md-5" id="db_list">
                       <div class="margin_div"></div>
-                      <button class="btn btn-primary col-md-1 p-0">추가</button>
+                      <button type="button" class="btn btn-primary col-md-1 p-0">추가</button>
                     </div>
 
                     <label class="col-sm-3 col-form-label-sm mt-3" for="field_list">DB 리스트</label>
@@ -303,13 +335,13 @@
 
                     <div class="col-sm-9 mt-sm-3">
                       <label class="switch" for="term_switch">
-                        <input type="checkbox" id="term_switch" v-model="landing_obj.image_switch">
+                        <input type="checkbox" id="term_switch" v-model="layout_obj.image_term">
                         <span class="slider round"></span>
                       </label>
                     </div>
         </div>
 
-                <div class="form-group row" v-if="landing_obj.image_switch">
+                <div class="form-group row" v-if="term_obj.image">
                   <label class="col-sm-3 col-form-label-sm mt-3" for="form">약관 이미지 파일</label>
 
                   <div class="col-sm-9 mt-sm-3">
@@ -320,12 +352,12 @@
                 <div class="form-group row" v-else>
                   <label class="col-sm-3 col-form-label-sm mt-3" for="form_title">약관 제목</label>
                   <div class="col-sm-9 mt-sm-3">
-                    <input type="text" class="form-control" id="form_title" placeholder="title" v-model="landing_obj.title">
+                    <input type="text" class="form-control" id="form_title" placeholder="title" v-model="term_obj.title">
                   </div>
                   <label class="col-sm-3 col-form-label-sm mt-3" for="form_cont">약관 내용</label>
                   <div class="col-sm-9 mt-sm-3">
                     <textarea type="text" class="form-control" id="form_cont" rows="4" placeholder="content"
-                              v-model="landing_obj.content"></textarea>
+                              v-model="term_obj.content"></textarea>
                   </div>
                 </div>
 
@@ -377,17 +409,21 @@
         base_url: '기본 주소를 지정합니다.',
         title: '사이트 내부 제목입니다.'
       },
+      landing_company: [],
+      landing_manager: [],
       landing_obj: {
         company: -1,
         manager: -1
       },
-      landing_company: [],
-      landing_manager: [],
-      layout_obj: [],
+      layout_obj: {},
       order_obj: [],
+      form_temp: '',
+      form_obj: [],
       term_image: false,
       term_text: [],
+      url_temp: {},
       url_obj: {},
+      term_obj: {},
       clicked: -1,
       layout: [
         {"x": 0, "y": 0, "w": 1, "h": 5, "i": "0"},
@@ -399,13 +435,16 @@
       len: 0,
       is_banner: false,
       is_group: 1,
-      bg_color: '#c3c83a',
-      tx_color: '#414141'
+      bg_color: '#c80a00',
+      tx_color: '#e9e9e9',
+      selected_field: -1,
+      field_temp_name: ''
     }),
     methods: {
       back_to_list() {
         this.$router.push({name: 'landing_list'})
       },
+      // Temporary layout grid system
       check(num) {
         this.clicked = num
         let sort = this.layout
@@ -433,14 +472,12 @@
           }
         }
         this.check()
-      },
-      // get_item(num) {
-      //   this.clicked = num
-      // },
+      }, // temp grid system ended
       delete_url() {
         console.log('del function!')
       },
       check_landing() {
+        // Start validate before create
         this.$validator.validateAll()
         // Empty filtering first
         if (this.landing_obj.company == -1) {
@@ -457,12 +494,28 @@
           document.getElementById('base_url').focus()
         } else {
           console.log('landing obj = ', this.landing_obj)
+          this.create_landing()
         }
       },
-      drag_it(ev) {
-        console.log('ddddd')
-        console.log(ev)
-        ev.target.style.top = ev.screenX
+      create_landing() {
+        console.log('create landing function!')
+      },
+      add_form_group() {
+        if (this.form_temp) {
+          console.log('form added', this.form_temp)
+        } else {
+          console.log('form name is empty!')
+        }
+      },
+      del_form_group() {
+        if(confirm('이 폼그룹을 삭제하시겠습니까?')){
+          console.log('form deleted')
+        }
+      },
+      add_field() {
+        if(this.selected_field != -1 && this.field_temp_name) {
+          console.log('field added')
+        }
       }
     },
     mounted() {
@@ -634,11 +687,27 @@
 
   .color_picker {
     position: relative;
-    width: 200%;
-    height: 200%;
+    width: 500%;
+    height: 300%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  .basket {
+    border: 1px solid #414141;
+    width: 1200px;
+    min-height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .drag_thing {
+    /*position: absolute;*/
+    /*display: inline-block;*/
+    background-color: #eaeaea;
+    border: 1px solid #818181;
   }
 
 </style>
