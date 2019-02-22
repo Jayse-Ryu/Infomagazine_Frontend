@@ -131,7 +131,7 @@
                                          class-name-dragging="drag_thing_drag"
                                          class-name-handle="drag_handle"
                                          :parent="true"
-                                         :key="item.i"
+                                         :key="item.z"
                                          :min-width="100"
                                          :min-height="100"
                                          :grid=[5,5]
@@ -161,13 +161,22 @@
               <label class="col-sm-3 col-form-label-sm mt-3" for="layout_font">레이아웃 폰트</label>
               <div class="col-sm-9 mt-sm-3 row ml-0">
                 <select class="form-control" name="layout_font" id="layout_font" v-model="layout_obj.font">
-                  <option value="0">OS 기본</option>
+                  <option value="-1">OS 기본</option>
                   <option value="1">Font 2</option>
                   <option value="2">Font 3</option>
                 </select>
               </div>
 
-              <label class="col-sm-3 col-form-label-sm mt-3" for="in_db">레이아웃 내 DB</label>
+              <label class="col-sm-3 col-form-label-sm mt-3" for="in_db"><span>레이아웃 내 DB</span>
+                <span class="question badge btn-secondary p-1 align-middle" v-if="window_width > 768" v-tooltip="{content: msg.in_db, placement: 'right',
+                            offset: 5,
+                            trigger: 'hover',
+                            }">?</span>
+                <span class="question badge btn-secondary p-1 align-middle" v-else v-tooltip="{content: msg.in_db, placement: 'right',
+                            offset: 5,
+                            trigger: 'click',
+                            }">?</span>
+              </label>
               <div class="col-sm-9 mt-sm-3">
                 <label class="switch" for="in_db">
                   <input type="checkbox" id="in_db" v-model="layout_obj.inner_db">
@@ -183,7 +192,16 @@
                 </label>
               </div>
 
-              <label class="col-sm-3 col-form-label-sm mt-3" for="in_banner">띠배너</label>
+              <label class="col-sm-3 col-form-label-sm mt-3" for="in_banner"><span>띠배너</span>
+                <span class="question badge btn-secondary p-1 align-middle" v-if="window_width > 768" v-tooltip="{content: msg.in_banner, placement: 'right',
+                            offset: 5,
+                            trigger: 'hover',
+                            }">?</span>
+                <span class="question badge btn-secondary p-1 align-middle" v-else v-tooltip="{content: msg.in_banner, placement: 'right',
+                            offset: 5,
+                            trigger: 'click',
+                            }">?</span>
+              </label>
               <div class="col-sm-9 mt-sm-3">
                 <label class="switch" for="in_banner">
                   <input type="checkbox" id="in_banner" v-model="layout_obj.is_banner">
@@ -215,32 +233,31 @@
           </div>
           <label class="col-sm-3 col-form-label-sm mt-3" for="form_group_del"></label>
           <div class="col-sm-9 mt-sm-3 row ml-0">
-            <select class="input_one_btn form-control col-md-11" name="form_del" id="form_group_del" v-model="form_obj">
+            {{ form_selected }}
+            <select class="input_one_btn form-control col-md-11" name="form_del" id="form_group_del" v-model="form_selected.id" @change="form_changed(form_selected)">
               <option value="-1">그룹을 선택하세요</option>
-              <option value="1">form_1</option>
-              <option value="2">form_2</option>
-              <option value="3">form_3</option>
+              <option v-for="item in form_obj" :value="item.id">{{ item.name }}</option>
             </select>
             <button type="button" class="btn btn-danger col-md-1 p-0" @click.prevent="del_form_group">삭제</button>
           </div>
 
           <!-- Somehow !== is not responsible -->
-          <label v-if="is_group != -1" class="col-sm-3 col-form-label-sm mt-3" for="form_group_bg">폼 배경색</label>
-          <div v-if="is_group != -1" class="col-sm-9 mt-sm-3 row ml-0">
+          <label class="col-sm-3 col-form-label-sm mt-3" for="form_group_bg">폼 배경색</label>
+          <div class="col-sm-9 mt-sm-3 row ml-0">
             <div class="color_wrap form-control col-sm-2" id="form_group_bg">
-              <input type="color" v-model="bg_color" class="color_picker">
+              <input type="color" v-model="form_selected.bg_color" class="color_picker">
             </div>
             <div class="margin_div"></div>
-            <input type="text" v-model="bg_color" class="form-control col-sm-3" maxlength="7">
+            <input type="text" v-model="form_selected.bg_color" class="form-control col-sm-3" maxlength="7">
           </div>
 
-          <label v-if="is_group != -1" class="col-sm-3 col-form-label-sm mt-3" for="form_group_col">폼 폰트색</label>
-          <div v-if="is_group != -1" class="col-sm-9 mt-sm-3 row ml-0">
+          <label class="col-sm-3 col-form-label-sm mt-3" for="form_group_col">폼 폰트색</label>
+          <div class="col-sm-9 mt-sm-3 row ml-0">
             <div class="color_wrap form-control col-sm-2" id="form_group_col">
-              <input type="color" v-model="tx_color" class="color_picker">
+              <input type="color" v-model="form_selected.tx_color" class="color_picker">
             </div>
             <div class="margin_div"></div>
-            <input type="text" v-model="tx_color" class="form-control col-sm-3" maxlength="7">
+            <input type="text" v-model="form_selected.tx_color" class="form-control col-sm-3" maxlength="7">
           </div>
 
         </div>
@@ -405,38 +422,81 @@
     name: "landing_create",
     data: () => ({
       window_width: window.innerWidth,
+      // msg is Tooltip messages. Static name by api.
       msg: {
         base_url: '기본 주소를 지정합니다.',
-        title: '사이트 내부 제목입니다.'
+        title: '사이트 내부 제목입니다.',
+        in_db: '레이아웃 내부에 DB 폼그룹을 위치시키거나 팝업으로 대체합니다.',
+        in_banner: '스크롤 시 따라다니는 배너를 생성합니다.'
       },
+      // Get org's companies and managers
       landing_company: [],
       landing_manager: [],
+      // // // Actual obj data what will be saved
+      // // Landing db
       landing_obj: {
         company: -1,
         manager: -1
       },
-      layout_obj: {},
+      // // Layout db
+      layout_obj: {
+        font: -1
+      },
+      // Temp order
+      layout: [
+        {"x": 0, "y": 0, "w": 1, "h": 5, "z": "0"},
+        {"x": 0, "y": 1, "w": 1, "h": 5, "z": "1"},
+        {"x": 0, "y": 2, "w": 1, "h": 5, "z": "2"},
+        {"x": 0, "y": 3, "w": 1, "h": 5, "z": "3"},
+        {"x": 0, "y": 4, "w": 1, "h": 5, "z": "4"},
+      ],
+      // // Order db
       order_obj: [],
+      // // Form-group db
+      // Form name for make one
       form_temp: '',
-      form_obj: [],
+      // Form colors, fields
+      form_selected: {
+        id: -1,
+        bg_color: '#f9f9f9',
+        tx_color: '#313131'
+      },
+      form_obj: [
+        {
+          id:1,
+          name:'f1',
+          bg_color: '#138342',
+          tx_color: '#823483'
+        },
+        {
+          id:2,
+          name:'f2',
+          bg_color: '#637843',
+          tx_color: '#238743'
+        },
+        {
+          id:3,
+          name:'f3',
+          bg_color: '#a5fe21',
+          tx_color: '#0046ce'
+        },
+        {
+          id:4,
+          name:'f4',
+          bg_color: '#ad234d',
+          tx_color: '#987233'
+        }
+      ],
+      bg_color: '#f9f9f9',
+      tx_color: '#313131',
       term_image: false,
       term_text: [],
       url_temp: {},
       url_obj: {},
       term_obj: {},
       clicked: -1,
-      layout: [
-        {"x": 0, "y": 0, "w": 1, "h": 5, "i": "0"},
-        {"x": 0, "y": 1, "w": 1, "h": 5, "i": "1"},
-        {"x": 0, "y": 2, "w": 1, "h": 5, "i": "2"},
-        {"x": 0, "y": 3, "w": 1, "h": 5, "i": "3"},
-        {"x": 0, "y": 4, "w": 1, "h": 5, "i": "4"},
-      ],
       len: 0,
-      is_banner: false,
       is_group: 1,
-      bg_color: '#c80a00',
-      tx_color: '#e9e9e9',
       selected_field: -1,
       field_temp_name: ''
     }),
@@ -510,6 +570,16 @@
       del_form_group() {
         if(confirm('이 폼그룹을 삭제하시겠습니까?')){
           console.log('form deleted')
+        }
+      },
+      form_changed(id) {
+        console.log(id)
+        for (let i = 0; i < this.form_obj.length; i++) {
+          if(this.form_obj[i].id == id) {
+            this.form_selected = this.form_obj[i]
+            console.log(this.form_obj[i])
+            console.log(':D', this.form_selected)
+          }
         }
       },
       add_field() {

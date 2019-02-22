@@ -852,7 +852,7 @@ export default {
     height: 14px !important;
     width: 14px !important;
     z-index: 9999;
-    box-model: border-box;
+    // box-model: border-box;
     transition: all 300ms linear;
   }
   .drag_handle-tl {
