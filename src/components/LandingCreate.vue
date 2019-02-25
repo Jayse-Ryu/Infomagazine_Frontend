@@ -10,7 +10,7 @@
 
     <div class="container" style="margin-top: 20px;">
 
-      <form v-on:submit.prevent="check_landing">
+      <form v-on:submit.prevent="landing_check">
         <h5>기본정보</h5>
         <div class="form-group row">
 
@@ -228,8 +228,8 @@
         <div class="form-group row mb-0">
           <label class="col-sm-3 col-form-label-sm mt-3" for="form_group">DB 폼 그룹</label>
           <div class="col-sm-9 mt-sm-3 row ml-0">
-            <input type="text" class="input_one_btn form-control col-md-11" id="form_group" placeholder="폼 그룹 이름" v-model="form_temp">
-            <button type="button" class="btn btn-primary col-md-1 p-0" @click.prevent="add_form_group">추가</button>
+            <input type="text" class="input_one_btn form-control col-md-11" id="form_group" placeholder="폼 그룹 이름" maxlength="50" v-model="form_temp">
+            <button type="button" class="btn btn-primary col-md-1 p-0" @click.prevent="form_group_add">추가</button>
           </div>
           <label class="col-sm-3 col-form-label-sm mt-3" for="form_group_del"></label>
           <div class="col-sm-9 mt-sm-3 row ml-0">
@@ -237,7 +237,7 @@
               <option value="-1">그룹을 선택하세요</option>
               <option v-for="item in form_obj" :value="item.id">{{ item.name }}</option>
             </select>
-            <button type="button" class="btn btn-danger col-md-1 p-0" @click.prevent="del_form_group(form_selected.id)">삭제</button>
+            <button type="button" class="btn btn-danger col-md-1 p-0" @click.prevent="form_group_delete(form_selected.id)">삭제</button>
           </div>
 
           <!-- Somehow !== is not responsible -->
@@ -261,12 +261,10 @@
 
         </div>
 
-        <hr>
-
         <div class="form-group row mb-0">
           <label class="col-sm-3 col-form-label-sm mt-3" for="db_field">DB 필드</label>
           <div class="col-sm-9 mt-sm-3 row ml-0">
-            <select class="form-control col-sm-5 col-md-5" name="company" id="db_field" v-model="selected_field">
+            <select class="form-control col-sm-5 col-md-5" name="company" id="db_field" v-model="field_selected">
               <option value="-1">선택하세요</option>
               <option value="1">Text</option>
               <option value="2">Number</option>
@@ -278,9 +276,28 @@
               <option value="8">Tel</option>
             </select>
             <div class="margin_div"></div>
-            <input type="text" class="form-control col-sm-7 col-md-5" placeholder="필드이름">
+            <input type="text" class="form-control col-sm-7 col-md-5" placeholder="필드이름" maxlength="10">
             <div class="margin_div"></div>
-            <button class="btn btn-primary col-md-1 p-0" @click.prevent="add_field">추가</button>
+            <button class="btn btn-primary col-md-1 p-0" @click.prevent="field_add">추가</button>
+          </div>
+
+          <label class="col-sm-3 col-form-label-sm mt-3" for="form_field_list">필드 리스트</label>
+          <div class="col-sm-9 mt-sm-3 row ml-0">
+            <ul class="list-group list-group-flush col-12 pr-0" id="form_field_list">
+              <li class="list-group-item list-group-item-action d-inline-flex p-1 font-weight-bold">
+                <div class="col-3 p-2">필드 타입</div>
+                <div class="col-5 p-2">필드 이름</div>
+                <div class="col-2 p-2 text-center">조회수</div>
+              </li>
+              <li class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
+                  v-for="url in url_obj">
+                <div class="col-3 p-2">{{ url.url }}</div>
+                <div class="col-5 p-2">{{ url.description }}</div>
+                <div class="col-2 p-2 text-center">{{ url.views }}</div>
+                <button type="button" class="btn btn-outline-danger p-0 col-2" @click="">세부사항</button>
+                <button type="button" class="btn btn-outline-danger p-0 col-2" @click="url_delete">삭제</button>
+              </li>
+            </ul>
           </div>
         </div>
 
@@ -462,6 +479,9 @@
         tx_color: '#313131'
       },
       form_obj: [],
+      // Set fields for form group
+      field_selected: -1,
+      field_temp_name: '',
       term_image: false,
       term_text: [],
       url_temp: {},
@@ -470,8 +490,6 @@
       clicked: -1,
       len: 0,
       is_group: 1,
-      selected_field: -1,
-      field_temp_name: ''
     }),
     methods: {
       back_to_list() {
@@ -506,10 +524,12 @@
         }
         this.check()
       }, // temp grid system ended
-      delete_url() {
+      // // // URL Functions
+      url_delete() {
         console.log('del function!')
       },
-      check_landing() {
+      // // // Check for make landing obj
+      landing_check() {
         // Start validate before create
         this.$validator.validateAll()
         // Empty filtering first
@@ -527,13 +547,15 @@
           document.getElementById('base_url').focus()
         } else {
           console.log('landing obj = ', this.landing_obj)
-          this.create_landing()
+          this.landing_create()
         }
       },
-      create_landing() {
+      landing_create() {
         console.log('create landing function!')
       },
-      add_form_group() {
+      // // // Form groups
+      // add form group
+      form_group_add() {
         if (this.form_temp) {
           let len = this.form_obj.length
           let flag = true
@@ -565,7 +587,8 @@
           alert('폼 그룹 이름을 입력하세요!')
         }
       },
-      del_form_group(id) {
+      // delete form group
+      form_group_delete(id) {
         if(id !== -1) {
           if(confirm('이 폼그룹을 삭제하시겠습니까?')){
             this.form_obj = this.form_obj.filter(el => el.id != id)
@@ -576,16 +599,24 @@
           alert('그룹을 먼저 선택하세요.')
         }
       },
+      // catch when form is changed
       form_changed(id) {
-        for(let i = 0; i < this.form_obj.length; i++) {
-          if(this.form_obj[i].id == id) {
-            this.form_selected = this.form_obj[i]
+        if(id == -1) {
+          this.form_selected = {id: -1, tx_color: '#313131', bg_color: '#f0f0f0'}
+        } else {
+          for(let i = 0; i < this.form_obj.length; i++) {
+            if(this.form_obj[i].id == id) {
+              this.form_selected = this.form_obj[i]
+            }
           }
         }
       },
-      add_field() {
-        if(this.selected_field != -1 && this.field_temp_name) {
+      // // add field
+      field_add() {
+        if(this.field_selected != -1 && this.field_temp_name) {
           console.log('field added')
+        } else {
+          console.log('field info is empty')
         }
       }
     },
