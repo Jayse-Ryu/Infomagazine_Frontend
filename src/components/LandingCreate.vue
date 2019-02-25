@@ -231,18 +231,18 @@
             <input type="text" class="input_one_btn form-control col-md-11" id="form_group" placeholder="폼 그룹 이름" maxlength="50" v-model="form_temp">
             <button type="button" class="btn btn-primary col-md-1 p-0" @click.prevent="form_group_add">추가</button>
           </div>
-          <label class="col-sm-3 col-form-label-sm mt-3" for="form_group_del"></label>
+          <label class="col-sm-3 col-form-label-sm mt-3" for="form_group_list"></label>
           <div class="col-sm-9 mt-sm-3 row ml-0">
-            <select class="input_one_btn form-control col-md-11" name="form_del" id="form_group_del" v-model="form_arrow" @change="form_changed(form_arrow)">
+            <select class="input_one_btn form-control col-md-11" name="form_group_list" id="form_group_list" v-model="form_arrow" @change="form_changed(form_arrow)">
               <option value="-1">그룹을 선택하세요</option>
-              <option v-for="item in form_obj" :value="item.id">{{ item.name }}</option>
+              <option v-for="item in form_obj" :value="item.sign">{{ item.name }}</option>
             </select>
-            <button type="button" class="btn btn-danger col-md-1 p-0" @click.prevent="form_group_delete(form_selected.id)">삭제</button>
+            <button type="button" class="btn btn-danger col-md-1 p-0" @click.prevent="form_group_delete(form_selected.sign)">삭제</button>
           </div>
 
           <!-- Somehow !== is not responsible -->
-          <label class="col-sm-3 col-form-label-sm mt-3" for="form_group_bg">폼 배경색</label>
-          <div class="col-sm-9 mt-sm-3 row ml-0">
+          <label v-if="form_selected.sign != -1" class="col-sm-3 col-form-label-sm mt-3" for="form_group_bg">폼 배경색</label>
+          <div v-if="form_selected.sign != -1" class="col-sm-9 mt-sm-3 row ml-0">
             <div class="color_wrap form-control col-sm-2" id="form_group_bg">
               <input type="color" v-model="form_selected.bg_color" class="color_picker">
             </div>
@@ -250,18 +250,17 @@
             <input type="text" v-model="form_selected.bg_color" class="form-control col-sm-3" maxlength="7">
           </div>
 
-          <label class="col-sm-3 col-form-label-sm mt-3" for="form_group_col">폼 폰트색</label>
-          <div class="col-sm-9 mt-sm-3 row ml-0">
+          <label v-if="form_selected.sign != -1" class="col-sm-3 col-form-label-sm mt-3" for="form_group_col">폼 폰트색</label>
+          <div v-if="form_selected.sign != -1" class="col-sm-9 mt-sm-3 row ml-0">
             <div class="color_wrap form-control col-sm-2" id="form_group_col">
               <input type="color" v-model="form_selected.tx_color" class="color_picker">
             </div>
             <div class="margin_div"></div>
             <input type="text" v-model="form_selected.tx_color" class="form-control col-sm-3" maxlength="7">
           </div>
-
         </div>
 
-        <div class="form-group row mb-0">
+        <div class="form-group row mb-0" v-if="form_selected.sign != -1">
           <label class="col-sm-3 col-form-label-sm mt-3" for="db_field">DB 필드</label>
           <div class="col-sm-9 mt-sm-3 row ml-0">
             <select class="form-control col-sm-5 col-md-5" name="company" id="db_field" v-model="field_selected">
@@ -276,7 +275,7 @@
               <option value="8">Tel</option>
             </select>
             <div class="margin_div"></div>
-            <input type="text" class="form-control col-sm-7 col-md-5" placeholder="필드이름" maxlength="10">
+            <input type="text" class="form-control col-sm-7 col-md-5" placeholder="필드이름" maxlength="10" v-model="field_temp_name">
             <div class="margin_div"></div>
             <button class="btn btn-primary col-md-1 p-0" @click.prevent="field_add">추가</button>
           </div>
@@ -285,17 +284,17 @@
           <div class="col-sm-9 mt-sm-3 row ml-0">
             <ul class="list-group list-group-flush col-12 pr-0" id="form_field_list">
               <li class="list-group-item list-group-item-action d-inline-flex p-1 font-weight-bold">
-                <div class="col-3 p-2">필드 타입</div>
-                <div class="col-5 p-2">필드 이름</div>
-                <div class="col-2 p-2 text-center">조회수</div>
+                <div class="col-3 p-2 text-center" style="word-break: keep-all;">필드 타입</div>
+                <div class="col-3 p-2 text-center" style="word-break: keep-all;">필드 이름</div>
+                <div class="col-6 p-2 text-center">옵션</div>
               </li>
               <li class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
-                  v-for="url in url_obj">
-                <div class="col-3 p-2">{{ url.url }}</div>
-                <div class="col-5 p-2">{{ url.description }}</div>
-                <div class="col-2 p-2 text-center">{{ url.views }}</div>
-                <button type="button" class="btn btn-outline-danger p-0 col-2" @click="">세부사항</button>
-                <button type="button" class="btn btn-outline-danger p-0 col-2" @click="url_delete">삭제</button>
+                  v-for="content in field_obj">
+                <div class="col-3 p-2 text-center">{{ content.type }}</div>
+                <div class="col-3 p-2 text-center">{{ content.name }}</div>
+                <button type="button" class="btn btn-outline-info p-0 col-3 col-sm-2 m-auto" @click="">설정</button>
+                <button type="button" class="btn btn-outline-danger p-0 col-3 col-sm-2 m-auto" @click="field_delete(content.sign)">삭제</button>
+                <div></div>
               </li>
             </ul>
           </div>
@@ -474,14 +473,16 @@
       // Form colors, fields
       form_arrow: -1,
       form_selected: {
-        id: -1,
+        sign: -1,
         bg_color: '#f9f9f9',
         tx_color: '#313131'
       },
       form_obj: [],
-      // Set fields for form group
+      // // Set fields for form group
       field_selected: -1,
       field_temp_name: '',
+      field_obj: [],
+      // // // Term info
       term_image: false,
       term_text: [],
       url_temp: {},
@@ -528,6 +529,98 @@
       url_delete() {
         console.log('del function!')
       },
+      // // // Form groups
+      // add form group
+      form_group_add() {
+        if (this.form_temp) {
+          let len = this.form_obj.length
+          let flag = true
+          if (len) {
+            for(let i = 0; i < len; i++) {
+              if (this.form_obj[i].name === this.form_temp) {
+                alert('폼 그룹 이름이 이미 존재합니다.')
+                flag = false
+                return flag
+              }
+            }
+            if(flag) {
+              let highest = 0
+              for(let i = 0; i < len; i++) {
+                if (this.form_obj[i].sign > highest) {
+                  highest = this.form_obj[i].sign
+                }
+              }
+              this.form_obj.push({sign: highest+1, name: this.form_temp, bg_color: '#f0f0f0', tx_color: '#313131'})
+              this.form_temp = ''
+              alert('폼 그룹이 생성되었습니다.')
+            }
+          } else {
+            this.form_obj.push({sign: 1, name: this.form_temp, bg_color: '#f0f0f0', tx_color: '#313131'})
+            this.form_temp = ''
+            alert('폼 그룹이 생성되었습니다.')
+          }
+        } else {
+          alert('폼 그룹 이름을 입력하세요!')
+        }
+      },
+      // delete form group
+      form_group_delete(id) {
+        if(id !== -1) {
+          if(confirm('이 폼그룹을 삭제하시겠습니까?')){
+            this.form_obj = this.form_obj.filter(el => el.sign != id)
+            this.form_arrow = -1
+            this.form_selected = {sign: -1, tx_color: '#313131', bg_color:'#f9f9f9'}
+          }
+        } else {
+          alert('그룹을 먼저 선택하세요.')
+        }
+      },
+      // catch when form is changed
+      form_changed(id) {
+        if(id == -1) {
+          this.form_selected = {sign: -1, tx_color: '#313131', bg_color: '#f0f0f0'}
+        } else {
+          for(let i = 0; i < this.form_obj.length; i++) {
+            if(this.form_obj[i].sign == id) {
+              this.form_selected = this.form_obj[i]
+            }
+          }
+        }
+      },
+      // // add field
+      field_add() {
+        if(this.form_selected.sign !== -1) {
+          if(this.field_selected !== -1 && this.field_temp_name) {
+            if(this.field_obj.length !== 0) {
+              let highest = 0
+              let flag = true
+              for(let i = 0; i < this.field_obj.length; i++) {
+                if(this.field_temp_name == this.field_obj[i].name) {
+                  alert('이미 존재하는 필드 이름입니다.')
+                  flag = false
+                  return flag
+                }
+                if (this.field_obj[i].sign > highest) {
+                  highest = this.field_obj[i].sign
+                }
+              }
+              this.field_obj.push({sign: highest + 1, type: this.field_selected, name: this.field_temp_name})
+            } else {
+              this.field_obj.push({sign: 1, type: this.field_selected, name: this.field_temp_name})
+            }
+            this.field_obj.push()
+          } else {
+            alert('필드 타입과 내용을 입력하세요.')
+            document.getElementById('db_field').focus()
+          }
+        } else {
+          alert('폼 그룹을 먼저 선택하세요.')
+          document.getElementById('form_group_list').focus()
+        }
+      },
+      field_delete(id) {
+        console.log(id)
+      },
       // // // Check for make landing obj
       landing_check() {
         // Start validate before create
@@ -553,72 +646,6 @@
       landing_create() {
         console.log('create landing function!')
       },
-      // // // Form groups
-      // add form group
-      form_group_add() {
-        if (this.form_temp) {
-          let len = this.form_obj.length
-          let flag = true
-          if (len) {
-            for(let i = 0; i < len; i++) {
-              if (this.form_obj[i].name === this.form_temp) {
-                alert('폼 그룹 이름이 이미 존재합니다.')
-                flag = false
-                return flag
-              }
-            }
-            if(flag) {
-              let highest = 0
-              for(let i = 0; i < len; i++) {
-                if (this.form_obj[i].id > highest) {
-                  highest = this.form_obj[i].id
-                }
-              }
-              this.form_obj.push({id: highest+1, name: this.form_temp, bg_color: '#f0f0f0', tx_color: '#313131'})
-              this.form_temp = ''
-              alert('폼 그룹이 생성되었습니다.')
-            }
-          } else {
-            this.form_obj.push({id: 1, name: this.form_temp, bg_color: '#f0f0f0', tx_color: '#313131'})
-            this.form_temp = ''
-            alert('폼 그룹이 생성되었습니다.')
-          }
-        } else {
-          alert('폼 그룹 이름을 입력하세요!')
-        }
-      },
-      // delete form group
-      form_group_delete(id) {
-        if(id !== -1) {
-          if(confirm('이 폼그룹을 삭제하시겠습니까?')){
-            this.form_obj = this.form_obj.filter(el => el.id != id)
-            this.form_arrow = -1
-            this.form_selected = {id: -1, tx_color: '#313131', bg_color:'#f9f9f9'}
-          }
-        } else {
-          alert('그룹을 먼저 선택하세요.')
-        }
-      },
-      // catch when form is changed
-      form_changed(id) {
-        if(id == -1) {
-          this.form_selected = {id: -1, tx_color: '#313131', bg_color: '#f0f0f0'}
-        } else {
-          for(let i = 0; i < this.form_obj.length; i++) {
-            if(this.form_obj[i].id == id) {
-              this.form_selected = this.form_obj[i]
-            }
-          }
-        }
-      },
-      // // add field
-      field_add() {
-        if(this.field_selected != -1 && this.field_temp_name) {
-          console.log('field added')
-        } else {
-          console.log('field info is empty')
-        }
-      }
     },
     mounted() {
       // Window width calculator
