@@ -233,12 +233,11 @@
           </div>
           <label class="col-sm-3 col-form-label-sm mt-3" for="form_group_del"></label>
           <div class="col-sm-9 mt-sm-3 row ml-0">
-            {{ form_selected }}
-            <select class="input_one_btn form-control col-md-11" name="form_del" id="form_group_del" v-model="form_selected.id" @change="form_changed(form_selected)">
+            <select class="input_one_btn form-control col-md-11" name="form_del" id="form_group_del" v-model="form_arrow" @change="form_changed(form_arrow)">
               <option value="-1">그룹을 선택하세요</option>
               <option v-for="item in form_obj" :value="item.id">{{ item.name }}</option>
             </select>
-            <button type="button" class="btn btn-danger col-md-1 p-0" @click.prevent="del_form_group">삭제</button>
+            <button type="button" class="btn btn-danger col-md-1 p-0" @click.prevent="del_form_group(form_selected.id)">삭제</button>
           </div>
 
           <!-- Somehow !== is not responsible -->
@@ -456,39 +455,13 @@
       // Form name for make one
       form_temp: '',
       // Form colors, fields
+      form_arrow: -1,
       form_selected: {
         id: -1,
         bg_color: '#f9f9f9',
         tx_color: '#313131'
       },
-      form_obj: [
-        {
-          id:1,
-          name:'f1',
-          bg_color: '#138342',
-          tx_color: '#823483'
-        },
-        {
-          id:2,
-          name:'f2',
-          bg_color: '#637843',
-          tx_color: '#238743'
-        },
-        {
-          id:3,
-          name:'f3',
-          bg_color: '#a5fe21',
-          tx_color: '#0046ce'
-        },
-        {
-          id:4,
-          name:'f4',
-          bg_color: '#ad234d',
-          tx_color: '#987233'
-        }
-      ],
-      bg_color: '#f9f9f9',
-      tx_color: '#313131',
+      form_obj: [],
       term_image: false,
       term_text: [],
       url_temp: {},
@@ -562,23 +535,51 @@
       },
       add_form_group() {
         if (this.form_temp) {
-          console.log('form added', this.form_temp)
+          let len = this.form_obj.length
+          let flag = true
+          if (len) {
+            for(let i = 0; i < len; i++) {
+              if (this.form_obj[i].name === this.form_temp) {
+                alert('폼 그룹 이름이 이미 존재합니다.')
+                flag = false
+                return flag
+              }
+            }
+            if(flag) {
+              let highest = 0
+              for(let i = 0; i < len; i++) {
+                if (this.form_obj[i].id > highest) {
+                  highest = this.form_obj[i].id
+                }
+              }
+              this.form_obj.push({id: highest+1, name: this.form_temp, bg_color: '#f0f0f0', tx_color: '#313131'})
+              this.form_temp = ''
+              alert('폼 그룹이 생성되었습니다.')
+            }
+          } else {
+            this.form_obj.push({id: 1, name: this.form_temp, bg_color: '#f0f0f0', tx_color: '#313131'})
+            this.form_temp = ''
+            alert('폼 그룹이 생성되었습니다.')
+          }
         } else {
-          console.log('form name is empty!')
+          alert('폼 그룹 이름을 입력하세요!')
         }
       },
-      del_form_group() {
-        if(confirm('이 폼그룹을 삭제하시겠습니까?')){
-          console.log('form deleted')
+      del_form_group(id) {
+        if(id !== -1) {
+          if(confirm('이 폼그룹을 삭제하시겠습니까?')){
+            this.form_obj = this.form_obj.filter(el => el.id != id)
+            this.form_arrow = -1
+            this.form_selected = {id: -1, tx_color: '#313131', bg_color:'#f9f9f9'}
+          }
+        } else {
+          alert('그룹을 먼저 선택하세요.')
         }
       },
       form_changed(id) {
-        console.log(id)
-        for (let i = 0; i < this.form_obj.length; i++) {
+        for(let i = 0; i < this.form_obj.length; i++) {
           if(this.form_obj[i].id == id) {
             this.form_selected = this.form_obj[i]
-            console.log(this.form_obj[i])
-            console.log(':D', this.form_selected)
           }
         }
       },
