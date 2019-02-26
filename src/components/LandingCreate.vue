@@ -264,15 +264,15 @@
           <label class="col-sm-3 col-form-label-sm mt-3" for="db_field">DB 필드</label>
           <div class="col-sm-9 mt-sm-3 row ml-0">
             <select class="form-control col-sm-5 col-md-5" name="company" id="db_field" v-model="field_selected">
-              <option value="-1">선택하세요</option>
-              <option value="1">Text</option>
-              <option value="2">Number</option>
-              <option value="3">Select</option>
-              <option value="4">Radio</option>
-              <option value="5">Check</option>
-              <option value="6">Date</option>
-              <option value="7">Url</option>
-              <option value="8">Tel</option>
+              <option value="-1">타입을 선택하세요</option>
+              <option value="1">텍스트</option>
+              <option value="2">번호</option>
+              <option value="3">선택 스크롤</option>
+              <option value="4">선택 버튼</option>
+              <option value="5">체크박스</option>
+              <option value="6">날짜</option>
+              <option value="7">링크</option>
+              <option value="8">전화걸기</option>
             </select>
             <div class="margin_div"></div>
             <input type="text" class="form-control col-sm-7 col-md-5" placeholder="필드이름" maxlength="10" v-model="field_temp_name">
@@ -290,11 +290,27 @@
               </li>
               <li class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
                   v-for="content in field_obj">
-                <div class="col-3 p-2 text-center">{{ content.type }}</div>
+                <div class="col-3 p-2 text-center" v-if="content.type == 1">텍스트</div>
+                <div class="col-3 p-2 text-center" v-if="content.type == 2">번호</div>
+                <div class="col-3 p-2 text-center" v-if="content.type == 3">선택 스크롤</div>
+                <div class="col-3 p-2 text-center" v-if="content.type == 4">선택 버튼</div>
+                <div class="col-3 p-2 text-center" v-if="content.type == 5">체크박스</div>
+                <div class="col-3 p-2 text-center" v-if="content.type == 6">날짜</div>
+                <div class="col-3 p-2 text-center" v-if="content.type == 7">링크</div>
+                <div class="col-3 p-2 text-center" v-if="content.type == 8">전화걸기</div>
                 <div class="col-3 p-2 text-center">{{ content.name }}</div>
-                <button type="button" class="btn btn-outline-info p-0 col-3 col-sm-2 m-auto" @click="">설정</button>
+                <button type="button" class="btn btn-outline-info p-0 col-3 col-sm-2 m-auto" data-toggle="collapse" v-bind:href="'#collapse_option'+ content.sign" aria-expanded="false">설정</button>
                 <button type="button" class="btn btn-outline-danger p-0 col-3 col-sm-2 m-auto" @click="field_delete(content.sign)">삭제</button>
-                <div></div>
+                <div class="field_option_wrap collapse" v-bind:id="'collapse_option'+ content.sign" data-parent="#form_field_list">
+                  <div>
+                    <div class="form-group row p-4">
+                      <label class="col-sm-3 col-form-label-sm mt-3" for="f_name">필드 이름*</label>
+                      <div class="col-sm-9 mt-sm-3">
+                        <input type="text" class="form-control" id="f_name" maxlength="10" v-model="content.name">
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>
@@ -589,9 +605,12 @@
       },
       // // add field
       field_add() {
-        if(this.form_selected.sign !== -1) {
-          if(this.field_selected !== -1 && this.field_temp_name) {
-            if(this.field_obj.length !== 0) {
+        // get form group sign
+        if(this.form_selected.sign != -1) {
+          // get field type and field name
+          if(this.field_selected != -1 && this.field_temp_name) {
+            // if field object is not empty
+            if(this.field_obj.length != 0) {
               let highest = 0
               let flag = true
               for(let i = 0; i < this.field_obj.length; i++) {
@@ -600,13 +619,19 @@
                   flag = false
                   return flag
                 }
-                if (this.field_obj[i].sign > highest) {
-                  highest = this.field_obj[i].sign
+              }
+              if (flag) {
+                for(let i = 0; i < this.field_obj.length; i++) {
+                  if (this.field_obj[i].sign > highest) {
+                    highest = this.field_obj[i].sign
+                  }
                 }
               }
               this.field_obj.push({sign: highest + 1, type: this.field_selected, name: this.field_temp_name})
+              this.field_temp_name = ''
             } else {
               this.field_obj.push({sign: 1, type: this.field_selected, name: this.field_temp_name})
+              this.field_temp_name = ''
             }
             this.field_obj.push()
           } else {
@@ -837,6 +862,17 @@
     /*display: inline-block;*/
     background-color: #eaeaea;
     border: 1px solid #818181;
+  }
+
+  .field_option_wrap {
+    position: absolute;
+    width: calc(100% - 10px);
+    background-color: #f5f5f5;
+    border: 1px solid #c1c1c1;
+    border-radius: 8px;
+    margin: auto;
+    top: 40px;
+    z-index: 900;
   }
 
 </style>
