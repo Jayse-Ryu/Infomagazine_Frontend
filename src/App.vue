@@ -751,6 +751,8 @@ export default {
       color: #fefefe;
       border-radius: 16px;
       padding: 5px 10px 4px;
+      max-width: 210px !important;
+      word-break: keep-all;
     }
 
     .tooltip-arrow {
