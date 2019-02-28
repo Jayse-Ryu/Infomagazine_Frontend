@@ -3,7 +3,7 @@
     <div class="text_navigation">
       <router-link to="/">홈</router-link>
       <span>></span>
-      <router-link to="/landing">랜딩페이지 리스트</router-link>
+      <router-link to="/landing">랜딩 리스트</router-link>
     </div>
 
 
