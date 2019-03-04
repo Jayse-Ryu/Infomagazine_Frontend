@@ -642,16 +642,31 @@
       landing_obj: {
         company: -1,
         manager: -1,
+        name: '',
+        title: '',
+        header_script: '',
+        body_script: '',
+        base_url: '',
         is_hijack: 0,
-        is_active: 1
+        hijack_url: '',
+        is_active: 1,
+        is_mobile: 0
       },
       // // Layout db
       layout_obj: {
-        font: -1,
+        is_banner: 0,
+        banner_url: '',
+        banner_image: '',
         inner_db: 1,
+        font: -1,
         is_term: 0,
-        image_term: 0
+        image_term: 0,
+        show_company: 0
       },
+      // // in_banner obj
+      in_banner_file_flag: 0,
+      in_banner_file: [],
+      in_banner_file_info: '',
       // // Order db
       order_obj: [
         {
@@ -661,36 +676,38 @@
           type: 0
         },
       ],
-      // // in_banner obj
-      in_banner_file_flag: 0,
-      in_banner_file: [],
-      in_banner_file_info: '',
       // // Form-group db
       // Form name for make one
       form_temp: '',
       // Form colors, fields
+      form_obj: [],
       form_arrow: -1,
       form_selected: {
         sign: -1,
         bg_color: '#f9f9f9',
         tx_color: '#313131'
       },
-      filtered_fields: [],
-      form_obj: [],
       // // Set fields for form group
+      field_obj: [],
+      filtered_fields: [],
       field_selected: -1,
       field_temp_name: '',
-      field_obj: [],
       // // // Term info
+      term_obj: {
+        title: '',
+        content: '',
+        image: ''
+      },
       term_file_flag: 0,
       term_file: [],
       term_file_info: '',
-      term_obj: {},
+      // // // URL
       url_temp: {},
       url_obj: [],
+      // Layout temporary
       clicked: -1,
       len: 0,
-      is_group: 1,
+      // is_group: 1,
     }),
     methods: {
       in_banner_file_add() {
@@ -1006,21 +1023,88 @@
         }
         console.log('create landing function!')
         let formData = new FormData()
-        formData.append('company_id', this.landing_obj.company)
-        formData.append('manager_id', this.landing_obj.manager)
-        formData.append('base_url', this.landing_obj.base_url)
+        formData.append('company', this.landing_obj.company)
+        formData.append('manager', this.landing_obj.manager)
         formData.append('name', this.landing_obj.name)
         formData.append('title', this.landing_obj.title)
         formData.append('header_script', this.landing_obj.header_script)
         formData.append('body_script', this.landing_obj.body_script)
+        formData.append('base_url', this.landing_obj.base_url)
         formData.append('is_hijack', this.landing_obj.is_hijack)
         formData.append('hijack_url', this.landing_obj.hijack_url)
         formData.append('is_active', this.landing_obj.is_active)
-        //
-        console.log('last of landing_obj = ', this.landing_obj)
+        formData.append('is_mobile', this.landing_obj.is_mobile)
         axios.post(this.$store.state.endpoints.baseUrl + 'landing/', formData, config)
           .then((response) => {
-            console.log(response)
+            let landing_id = response.data.id
+            // // Axios landing - term
+            let term_data = new FormData()
+            term_data.append('landing', landing_id)
+            term_data.append('title', this.term_obj.title)
+            term_data.append('content', this.term_obj.content)
+            if(this.term_file_flag && this.layout_obj.image_term) {
+              // term_data.append('image', this.term_file[0])
+              let term_image = new FormData()
+              term_image.append('image', this.term_file[0])
+              axios.post(this.$store.state.endpoints.baseUrl + 'image/', term_image, config)
+                .then((response) => {
+                  // console.log(response)
+                  term_data.append('image', response.data.id)
+                  return axios.post(this.$store.state.endpoints.baseUrl + 'term/', term_data, config)
+                })
+                .then((response) => {
+                  console.log('set term with image', response)
+                })
+                .catch((error) => {
+                  console.log(error)
+                })
+            } else {
+              axios.post(this.$store.state.endpoints.baseUrl + 'term/', term_data, config)
+                .then((response) => {
+                  console.log('set term without image', response)
+                })
+                .catch((error) => {
+                  console.log(error)
+                })
+            }
+            // // Axios landing - layout
+            let layoutFormData = new FormData()
+            console.log('layout obj before axios = ', this.layout_obj)
+            console.log(response.data.id)
+            // Form Data inject
+            layoutFormData.append('landing', response.data.id)
+            layoutFormData.append('is_banner', this.layout_obj.is_banner)
+            layoutFormData.append('banner_url', this.layout_obj.banner_url)
+            layoutFormData.append('inner_db', this.layout_obj.inner_db)
+            layoutFormData.append('font', this.layout_obj.font)
+            layoutFormData.append('is_term', this.layout_obj.is_term)
+            layoutFormData.append('image_term', this.layout_obj.image_term)
+            layoutFormData.append('show_company', this.layout_obj.show_company)
+            // Banner image filter
+            if(this.layout_obj.is_banner && this.in_banner_file_flag){
+              let layout_image_data = new FormData()
+              layout_image_data.append('image', this.in_banner_file[0])
+              axios.post(this.$store.state.endpoints.baseUrl + 'image/', layout_image_data, config)
+                .then((response) => {
+                  console.log('image post response = ', response)
+                  layoutFormData.append('banner_image', response.data.id)
+                  return axios.patch(this.$store.state.endpoints.baseUrl + 'layout/' + landing_id + '/', layoutFormData, config)
+                })
+                .then((response) => {
+                  console.log('layout with image response = ', response)
+                })
+                .catch((error) => {
+                  console.log(error)
+                })
+            } else {
+              return axios.patch(this.$store.state.endpoints.baseUrl + 'layout/' + landing_id + '/', layoutFormData, config)
+                .then((response) => {
+                  console.log('layout without image resposne = ', response)
+                })
+                .catch((error) => {
+                  console.log(error)
+                })
+            }
           })
           .catch((error) => {
             console.log(error)
