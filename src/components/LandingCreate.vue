@@ -466,7 +466,7 @@
                       <label v-if="content.type == 7 || content.type == 8" class="col-sm-3 col-form-label-sm mt-3"
                              for="f_back">배경색</label>
                       <div v-if="content.type == 7 || content.type == 8" class="col-sm-9 mt-sm-3">
-                        <div class="color_wrap form-control col-sm-2">
+                        <div class="color_wrap form-control col">
                           <input type="color" v-model="content.back_color" class="color_picker">
                         </div>
                         <input type="text" class="form-control" id="f_back" maxlength="10" v-model="content.back_color">
@@ -475,17 +475,18 @@
                       <label v-if="content.type == 7 || content.type == 8" class="col-sm-3 col-form-label-sm mt-3"
                              for="f_color">글씨색</label>
                       <div v-if="content.type == 7 || content.type == 8" class="col-sm-9 mt-sm-3">
-                        <div class="color_wrap form-control col-sm-2">
+                        <div class="color_wrap form-control col">
                           <input type="color" v-model="content.text_color" class="color_picker">
                         </div>
                         <input type="text" class="form-control" id="f_color" maxlength="10"
                                v-model="content.text_color">
                       </div>
-
                       <label v-if="content.type == 7 || content.type == 8" class="col-sm-3 col-form-label-sm mt-3"
                              for="f_img">이미지</label>
                       <div v-if="content.type == 7 || content.type == 8" class="col-sm-9 mt-sm-3">
-                        <input type="text" class="form-control" id="f_img" maxlength="10" v-model="content.image_id">
+                        <input type="file" class="input_one_btn form-control col-md-11 pt-1" id="f_img" placeholder="이미지"
+                               ref="field_file_input" @change="field_file_add(content.sign)" :value="content.image">
+                        <button type="button" class="btn btn-danger w-100 mt-1" id="f_imgg" @click.prevent="field_file_delete(content.sign)">파일삭제</button>
                       </div>
                     </div>
                     <button type="button" class="btn btn-info col-12 m-auto" data-toggle="collapse"
@@ -742,6 +743,23 @@
         this.term_file_info = ''
         this.term_file_flag = 0
       },
+      field_file_add(sign) {
+        let file_data = event.target.files[0]
+        for(let i = 0; i < this.field_obj.length; i++) {
+          if (this.field_obj[i].sign == sign) {
+            this.field_obj[i].image_data[0] = file_data
+            console.log(this.field_obj[i])
+          }
+        }
+      },
+      field_file_delete(sign) {
+        this.$refs.field_file_input.value = ''
+        for(let i = 0; i < this.field_obj.length; i++) {
+          if(this.field_obj[i].sign == sign) {
+            this.field_obj[i].image_data = []
+          }
+        }
+      },
       back_to_list() {
         this.$router.push({name: 'landing_list'})
       },
@@ -877,7 +895,8 @@
                 form_group_id: this.form_selected.sign,
                 back_color: '#287BFF',
                 text_color: '#f0f0f0',
-                list: []
+                list: [],
+                image_data: []
               })
               this.field_temp_name = ''
               this.filter_change()
@@ -890,7 +909,8 @@
                 form_group_id: this.form_selected.sign,
                 back_color: '#287BFF',
                 text_color: '#fafafa',
-                list: []
+                list: [],
+                image_data: []
               })
               this.field_temp_name = ''
               this.filter_change()
@@ -1015,13 +1035,15 @@
         }
       },
       landing_create() {
+        console.log('landing create function!')
         let axios = this.$axios
         const config = {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         }
-        console.log('create landing function!')
+        // // //
+        // // Axios landing
         let formData = new FormData()
         formData.append('company', this.landing_obj.company)
         formData.append('manager', this.landing_obj.manager)
@@ -1037,79 +1059,204 @@
         axios.post(this.$store.state.endpoints.baseUrl + 'landing/', formData, config)
           .then((response) => {
             let landing_id = response.data.id
-            // // Axios landing - term
-            let term_data = new FormData()
-            term_data.append('landing', landing_id)
-            term_data.append('title', this.term_obj.title)
-            term_data.append('content', this.term_obj.content)
-            if(this.term_file_flag && this.layout_obj.image_term) {
-              // term_data.append('image', this.term_file[0])
-              let term_image = new FormData()
-              term_image.append('image', this.term_file[0])
-              axios.post(this.$store.state.endpoints.baseUrl + 'image/', term_image, config)
-                .then((response) => {
-                  // console.log(response)
-                  term_data.append('image', response.data.id)
-                  return axios.post(this.$store.state.endpoints.baseUrl + 'term/', term_data, config)
-                })
-                .then((response) => {
-                  console.log('set term with image', response)
-                })
-                .catch((error) => {
-                  console.log(error)
-                })
+            if(landing_id) {
+              this.layout_create(landing_id)
+              this.url_create(landing_id)
             } else {
-              axios.post(this.$store.state.endpoints.baseUrl + 'term/', term_data, config)
-                .then((response) => {
-                  console.log('set term without image', response)
-                })
-                .catch((error) => {
-                  console.log(error)
-                })
-            }
-            // // Axios landing - layout
-            let layoutFormData = new FormData()
-            console.log('layout obj before axios = ', this.layout_obj)
-            console.log(response.data.id)
-            // Form Data inject
-            layoutFormData.append('landing', response.data.id)
-            layoutFormData.append('is_banner', this.layout_obj.is_banner)
-            layoutFormData.append('banner_url', this.layout_obj.banner_url)
-            layoutFormData.append('inner_db', this.layout_obj.inner_db)
-            layoutFormData.append('font', this.layout_obj.font)
-            layoutFormData.append('is_term', this.layout_obj.is_term)
-            layoutFormData.append('image_term', this.layout_obj.image_term)
-            layoutFormData.append('show_company', this.layout_obj.show_company)
-            // Banner image filter
-            if(this.layout_obj.is_banner && this.in_banner_file_flag){
-              let layout_image_data = new FormData()
-              layout_image_data.append('image', this.in_banner_file[0])
-              axios.post(this.$store.state.endpoints.baseUrl + 'image/', layout_image_data, config)
-                .then((response) => {
-                  console.log('image post response = ', response)
-                  layoutFormData.append('banner_image', response.data.id)
-                  return axios.patch(this.$store.state.endpoints.baseUrl + 'layout/' + landing_id + '/', layoutFormData, config)
-                })
-                .then((response) => {
-                  console.log('layout with image response = ', response)
-                })
-                .catch((error) => {
-                  console.log(error)
-                })
-            } else {
-              return axios.patch(this.$store.state.endpoints.baseUrl + 'layout/' + landing_id + '/', layoutFormData, config)
-                .then((response) => {
-                  console.log('layout without image resposne = ', response)
-                })
-                .catch((error) => {
-                  console.log(error)
-                })
+              console.log('create function before get landing id')
             }
           })
           .catch((error) => {
-            console.log(error)
+            console.log('When create landing page', error)
           })
       },
+      layout_create(landing_id) {
+        let axios = this.$axios
+        const config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        // // //
+        // // Axios landing - layout
+        let layoutFormData = new FormData()
+        // Form Data inject
+        layoutFormData.append('landing', landing_id)
+        layoutFormData.append('is_banner', this.layout_obj.is_banner)
+        layoutFormData.append('banner_url', this.layout_obj.banner_url)
+        layoutFormData.append('inner_db', this.layout_obj.inner_db)
+        layoutFormData.append('font', this.layout_obj.font)
+        layoutFormData.append('is_term', this.layout_obj.is_term)
+        layoutFormData.append('image_term', this.layout_obj.image_term)
+        layoutFormData.append('show_company', this.layout_obj.show_company)
+        // // Banner image filter
+        if(this.layout_obj.is_banner && this.in_banner_file_flag){
+          let layout_image_data = new FormData()
+          layout_image_data.append('image', this.in_banner_file[0])
+          axios.post(this.$store.state.endpoints.baseUrl + 'image/', layout_image_data, config)
+            .then((response) => {
+              layoutFormData.append('banner_image', response.data.id)
+              return axios.patch(this.$store.state.endpoints.baseUrl + 'layout/' + landing_id + '/', layoutFormData, config)
+            })
+            .then((response) => {
+              let layout_id = response.data.id
+              this.term_create(layout_id)
+              this.form_group_create(layout_id)
+            })
+            .catch((error) => {
+              console.log('When create layout with image', error)
+            })
+        } else {
+          return axios.patch(this.$store.state.endpoints.baseUrl + 'layout/' + landing_id + '/', layoutFormData, config)
+            .then((response) => {
+              let layout_id = response.data.id
+              this.term_create(layout_id)
+              this.form_group_create(layout_id)
+            })
+            .catch((error) => {
+              console.log('When create layout without image', error)
+            })
+        }
+      },
+      url_create(landing_id) {
+        let axios = this.$axios
+        const config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        // // //
+        // // Url create (for..?)
+        for(let i = 0; i < this.url_obj.length; i++) {
+          this.url_obj[i].landing = landing_id
+          let url_info = new FormData()
+          url_info.append('landing', landing_id)
+          url_info.append('url', this.url_obj[i].url)
+          url_info.append('desc', this.url_obj[i].desc)
+          axios.post(this.$store.state.endpoints.baseUrl + 'url/', url_info, config)
+            .catch((error) => {
+              console.log('When create url', error)
+            })
+        }
+      },
+      term_create(layout_id) {
+        let axios = this.$axios
+        const config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        // // //
+        // // Axios landing - term
+        let term_data = new FormData()
+        term_data.append('layout', layout_id)
+        term_data.append('title', this.term_obj.title)
+        term_data.append('content', this.term_obj.content)
+        if(this.term_file_flag && this.layout_obj.image_term) {
+          // term_data.append('image', this.term_file[0])
+          let term_image = new FormData()
+          term_image.append('image', this.term_file[0])
+          axios.post(this.$store.state.endpoints.baseUrl + 'image/', term_image, config)
+            .then((response) => {
+              term_data.append('image', response.data.id)
+              return axios.post(this.$store.state.endpoints.baseUrl + 'term/', term_data, config)
+            })
+            // .then((response) => {
+            //   console.log('set term with image', response)
+            // })
+            .catch((error) => {
+              console.log(error)
+            })
+        } else {
+          axios.post(this.$store.state.endpoints.baseUrl + 'term/', term_data, config)
+            // .then((response) => {
+            //   console.log('set term without image', response)
+            // })
+            .catch((error) => {
+              console.log(error)
+            })
+        }
+      },
+      form_group_create(layout_id) {
+        let axios = this.$axios
+        const config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        for(let i = 0; i < this.form_obj.length; i ++) {
+          let form_group_data = new FormData()
+          form_group_data.append('layout', layout_id)
+          form_group_data.append('name', this.form_obj[i].name)
+          form_group_data.append('back_color', this.form_obj[i].bg_color)
+          form_group_data.append('text_color', this.form_obj[i].tx_color)
+          // form_group_data.append('fields', this.form_obj[i].fields)
+          form_group_data.append('fields', '{}')
+          axios.post(this.$store.state.endpoints.baseUrl + 'form_group/', form_group_data, config)
+            .then((response) => {
+              for(let j = 0; j < this.field_obj.length; j++) {
+                if(this.form_obj[i].sign == this.field_obj[j].sign) {
+                  if(this.field_obj[j].image_data.length) {
+                    // // //
+                    // // Put field image
+                    let field_image = new FormData()
+                    field_image.append('image', this.field_obj[j].image_data)
+                    axios.post(this.$store.state.endpoints.baseUrl + 'image/', field_image, config)
+                      .then((response) => {
+                        let image_id = response.data.id
+                        let field_data = new FormData()
+                        field_data.append('form_group', response.data.id)
+                        field_data.append('type', this.field_obj[j].type)
+                        field_data.append('name', this.field_obj[j].name)
+                        field_data.append('holder', this.field_obj[j].holder)
+                        field_data.append('value', this.field_obj[j].value)
+                        field_data.append('url', this.field_obj[j].url)
+                        field_data.append('list', this.field_obj[j].list)
+                        // field_data.append('width', this.field_obj[j].width)
+                        field_data.append('width', '12')
+                        field_data.append('back_color', this.field_obj[j].back_color)
+                        field_data.append('text_color', this.field_obj[j].text_color)
+                        field_data.append('image', image_id)
+                        axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
+                          .catch((error) => {
+                            console.log('When create field with image', error)
+                          })
+                      })
+                  } else {
+                    let field_data = new FormData()
+                    field_data.append('form_group', response.data.id)
+                    field_data.append('type', this.field_obj[j].type)
+                    field_data.append('name', this.field_obj[j].name)
+                    field_data.append('holder', this.field_obj[j].holder)
+                    field_data.append('value', this.field_obj[j].value)
+                    field_data.append('url', this.field_obj[j].url)
+                    field_data.append('list', this.field_obj[j].list)
+                    // field_data.append('width', this.field_obj[j].width)
+                    field_data.append('width', '12')
+                    field_data.append('back_color', this.field_obj[j].back_color)
+                    field_data.append('text_color', this.field_obj[j].text_color)
+                    axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
+                      .catch((error) => {
+                        console.log('When create field without image', error)
+                      })
+                  }
+                }
+              }
+              this.order_create(layout_id)
+            })
+            .catch((error) => {
+              console.log('When create form group', error)
+            })
+        }
+      },
+      order_create(layout_id) {
+        let axios = this.$axios
+        const config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      }
     },
     mounted() {
       // Window width calculator
