@@ -114,22 +114,34 @@
           </label>
           <div class="col-sm-12">
 
-            <div id="main_layout">
+            <div class="main_layout" id="main_layout">
               <div class="basket">
                 <vue-draggable-resizable v-for="item in order_obj"
+                                         @dragging="order_move"
+                                         @resizing="order_resize"
                                          parent=".basket"
                                          class="drag_thing"
                                          class-name-dragging="drag_thing_drag"
                                          class-name-handle="drag_handle"
-                                         :parent="true"
-                                         :key="item.z"
+                                         :sign="item.sign"
+                                         :parent="false"
+                                         :x="item.position.x"
+                                         :y="item.position.y"
+                                         :w="item.position.w"
+                                         :h="item.position.h"
+                                         :z-index="item.position.z"
+                                         :key="item.position.z"
                                          :min-width="100"
                                          :min-height="100"
                                          :grid=[5,5]
-                                         :lock-aspect-ratio="true">
-                  <p>Drag box</p>
+                                         :lock-aspect-ratio="false">
+                  <p>{{ item.sign }}</p>
+                  <p>{{ item.name }}</p>
+                  <p>{{ item.position.x }}</p>
+                  <p>{{ item.position.y }}</p>
+                  <p>{{ item.position.w }}</p>
+                  <p>{{ item.position.h }}</p>
                 </vue-draggable-resizable>
-
                 <vue-draggable-resizable class="drag_thing"
                                          class-name-dragging="drag_thing_drag"
                                          class-name-handle="drag_handle"
@@ -272,7 +284,7 @@
               <div v-if="layout_obj.is_banner" class="col-sm-9 mt-sm-3 row ml-0">
 
                 <input type="file" class="form-control col-sm-5 col-md-5 pt-1" id="in_banner_img" placeholder="이미지"
-                       ref="in_banner_file_input" @change="in_banner_file_add()">
+                       ref="in_banner_file_input" @change="in_banner_file_add()" accept="image/*">
                 <div class="margin_div"></div>
                 <input type="text" class="form-control col-sm-7 col-md-5" id="in_banner_desc" placeholder="띠배너 주소"
                        v-model="layout_obj.banner_url">
@@ -484,8 +496,8 @@
                       <label v-if="content.type == 7 || content.type == 8" class="col-sm-3 col-form-label-sm mt-3"
                              for="f_img">이미지</label>
                       <div v-if="content.type == 7 || content.type == 8" class="col-sm-9 mt-sm-3">
-                        <input type="file" class="input_one_btn form-control col-md-11 pt-1" id="f_img" placeholder="이미지"
-                               ref="field_file_input" @change="field_file_add(content.sign)" :value="content.image">
+                        <input type="file" class="input_one_btn form-control col-md-11 pt-1" id="f_img" placeholder="이미지" :id="'field_file_input'+content.sign"
+                               ref="field_file_input" @change="field_file_add(content.sign)" :value="content.image" accept="image/*">
                         <button type="button" class="btn btn-danger w-100 mt-1" id="f_imgg" @click.prevent="field_file_delete(content.sign)">파일삭제</button>
                       </div>
                     </div>
@@ -564,7 +576,7 @@
           <label class="col-sm-3 col-form-label-sm mt-3" for="term_img">약관 이미지 파일</label>
           <div class="col-sm-9 mt-sm-3 row ml-0">
             <input type="file" class="input_one_btn form-control col-md-11 pt-1" id="term_img" placeholder="이미지"
-                   ref="term_file_input" @change="term_file_add()">
+                   ref="term_file_input" @change="term_file_add()" accept="image/*">
             <button type="button" class="btn btn-danger col-md-1 p-0" @click.prevent="term_file_delete()">삭제</button>
           </div>
         </div>
@@ -671,11 +683,17 @@
       // // Order db
       order_obj: [
         {
-          landing_id: 1,
+          sign: 1,
           name: 'order1',
-          position: {x: 0, y: 0, w: 1, h: 5, z: 0},
+          position: {x: 400, y: 300, w: 450, h: 300, z: 1},
           type: 0
         },
+        {
+          sign: 2,
+          name: 'order2',
+          position: {x: 200, y: 100, w: 150, h: 50, z: 2},
+          type: 0
+        }
       ],
       // // Form-group db
       // Form name for make one
@@ -711,6 +729,36 @@
       // is_group: 1,
     }),
     methods: {
+      order_move(x, y, w, h, sign) {
+        console.log(x, y, w, h, sign)
+        this.order_obj[0].position.x = x
+        this.order_obj[0].position.y = y
+      },
+      order_resize(x, y, w, h, sign) {
+        console.log(x, y, w, h, sign)
+        this.order_obj[0].position.x = x
+        this.order_obj[0].position.y = y
+        this.order_obj[0].position.w = w
+        this.order_obj[0].position.h = h
+      },
+      order_add() {
+        let len = this.len
+        this.order_obj.push({"x": 0, "y": 0, "w": 1, "h": 5, "i": len + 1})
+        this.len += 1
+      },
+      order_delete() {
+        for (let i = 0; i < this.order_obj.length; i++) {
+          if (this.order_obj[i].i === this.clicked) {
+            if (i === 0) {
+              this.order_obj.shift()
+              this.clicked = -1
+            } else {
+              this.order_obj.splice(i, 1)
+              this.clicked = -1
+            }
+          }
+        }
+      }, // temp grid system ended
       in_banner_file_add() {
         /* When file data changed */
         let file_data = event.target.files[0]
@@ -748,12 +796,12 @@
         for(let i = 0; i < this.field_obj.length; i++) {
           if (this.field_obj[i].sign == sign) {
             this.field_obj[i].image_data[0] = file_data
-            console.log(this.field_obj[i])
           }
         }
       },
       field_file_delete(sign) {
-        this.$refs.field_file_input.value = ''
+        // this.$refs.field_file_input.value = ''
+        document.getElementById('field_file_input' + sign).value = ''
         for(let i = 0; i < this.field_obj.length; i++) {
           if(this.field_obj[i].sign == sign) {
             this.field_obj[i].image_data = []
@@ -763,35 +811,6 @@
       back_to_list() {
         this.$router.push({name: 'landing_list'})
       },
-      // Temporary layout grid system
-      check(num) {
-        this.clicked = num
-        let sort = this.order_obj
-        // console.log('max test', sort.i)
-        sort.sort((a, b) => (a.y > b.y) ? 1 : ((b.y > a.y) ? -1 : 0))
-        // console.log('sorted tmp', sort)
-      },
-      layout_post() {
-        let len = this.len
-        this.order_obj.push({"x": 0, "y": 0, "w": 1, "h": 5, "i": len + 1})
-        this.len += 1
-        this.check()
-      },
-      layout_delete() {
-        for (let i = 0; i < this.order_obj.length; i++) {
-          if (this.order_obj[i].i === this.clicked) {
-            console.log('get i obj?', this.order_obj[i])
-            if (i === 0) {
-              this.order_obj.shift()
-              this.clicked = -1
-            } else {
-              this.order_obj.splice(i, 1)
-              this.clicked = -1
-            }
-          }
-        }
-        this.check()
-      }, // temp grid system ended
       // // // Form groups
       // add form group
       form_group_add() {
@@ -1035,7 +1054,6 @@
         }
       },
       landing_create() {
-        console.log('landing create function!')
         let axios = this.$axios
         const config = {
           headers: {
@@ -1063,7 +1081,7 @@
               this.layout_create(landing_id)
               this.url_create(landing_id)
             } else {
-              console.log('create function before get landing id')
+              console.log('create function launched before get landing id')
             }
           })
           .catch((error) => {
@@ -1153,7 +1171,6 @@
         term_data.append('title', this.term_obj.title)
         term_data.append('content', this.term_obj.content)
         if(this.term_file_flag && this.layout_obj.image_term) {
-          // term_data.append('image', this.term_file[0])
           let term_image = new FormData()
           term_image.append('image', this.term_file[0])
           axios.post(this.$store.state.endpoints.baseUrl + 'image/', term_image, config)
@@ -1161,17 +1178,11 @@
               term_data.append('image', response.data.id)
               return axios.post(this.$store.state.endpoints.baseUrl + 'term/', term_data, config)
             })
-            // .then((response) => {
-            //   console.log('set term with image', response)
-            // })
             .catch((error) => {
               console.log(error)
             })
         } else {
           axios.post(this.$store.state.endpoints.baseUrl + 'term/', term_data, config)
-            // .then((response) => {
-            //   console.log('set term without image', response)
-            // })
             .catch((error) => {
               console.log(error)
             })
@@ -1190,17 +1201,15 @@
           form_group_data.append('name', this.form_obj[i].name)
           form_group_data.append('back_color', this.form_obj[i].bg_color)
           form_group_data.append('text_color', this.form_obj[i].tx_color)
-          // form_group_data.append('fields', this.form_obj[i].fields)
-          form_group_data.append('fields', '{}')
           axios.post(this.$store.state.endpoints.baseUrl + 'form_group/', form_group_data, config)
             .then((response) => {
               for(let j = 0; j < this.field_obj.length; j++) {
                 if(this.form_obj[i].sign == this.field_obj[j].sign) {
-                  if(this.field_obj[j].image_data.length) {
+                  if(this.field_obj[j].image_data[0]) {
                     // // //
                     // // Put field image
                     let field_image = new FormData()
-                    field_image.append('image', this.field_obj[j].image_data)
+                    field_image.append('image', this.field_obj[j].image_data[0])
                     axios.post(this.$store.state.endpoints.baseUrl + 'image/', field_image, config)
                       .then((response) => {
                         let image_id = response.data.id
@@ -1434,13 +1443,20 @@
     transform: translate(-50%, -50%);
   }
 
+  .main_layout {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    overflow: auto;
+  }
+
   .basket {
     border: 1px solid #414141;
-    width: 1200px;
+    width: 1000px;
     min-height: 500px;
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
+    margin: auto;
   }
 
   .drag_thing {
