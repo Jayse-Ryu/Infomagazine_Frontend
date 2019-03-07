@@ -70,237 +70,6 @@
 
         <hr>
 
-        <h5>페이지 내용</h5>
-        <div class="form-group row">
-          <label class="col-sm-12 col-form-label-sm mt-3" for="page_title">
-            <span>페이지 타이틀</span>
-            <span class="question badge btn-secondary p-1 align-middle" v-if="window_width > 768"
-                  v-tooltip="{
-                  content: msg.title,
-                  placement: 'right',
-                  offset: 5,
-                  trigger: 'hover',
-                  }">?</span>
-            <span class="question badge btn-secondary p-1" v-else
-                  v-tooltip="{
-                  content: msg.title,
-                  placement: 'right',
-                  offset: 5,
-                  trigger: 'click',
-                  }">?</span>
-          </label>
-          <div class="col-sm-12">
-            <input type="text" class="form-control" id="page_title" maxlength="50" v-model="landing_obj.title">
-          </div>
-
-          <label class="col-sm-3 col-form-label-sm mt-3" for="header_script">
-            <span>헤더 스크립트</span>
-          </label>
-          <div class="col-sm-12">
-            <textarea type="text" class="form-control" id="header_script" rows="4"
-                      v-model="landing_obj.header_script"></textarea>
-          </div>
-
-          <label class="col-sm-3 col-form-label-sm mt-3" for="body_script">
-            <span>바디 스크립트</span>
-          </label>
-          <div class="col-sm-12">
-            <textarea type="text" class="form-control" id="body_script" rows="4"
-                      v-model="landing_obj.body_script"></textarea>
-          </div>
-
-          <label class="col-sm-3 col-form-label-sm mt-3" for="main_layout">
-            <span>랜딩 레이아웃</span>
-          </label>
-          <div class="col-sm-12">
-
-            <div class="main_layout" id="main_layout">
-              <div class="basket">
-                <vue-draggable-resizable v-for="item in order_obj"
-                                         @dragging="order_move"
-                                         @resizing="order_resize"
-                                         parent=".basket"
-                                         class="drag_thing"
-                                         class-name-dragging="drag_thing_drag"
-                                         class-name-handle="drag_handle"
-                                         :sign="item.sign"
-                                         :parent="false"
-                                         :x="item.position.x"
-                                         :y="item.position.y"
-                                         :w="item.position.w"
-                                         :h="item.position.h"
-                                         :z-index="item.position.z"
-                                         :key="item.position.z"
-                                         :min-width="100"
-                                         :min-height="100"
-                                         :grid=[5,5]
-                                         :lock-aspect-ratio="false">
-                  <p>{{ item.sign }}</p>
-                  <p>{{ item.name }}</p>
-                  <p>{{ item.position.x }}</p>
-                  <p>{{ item.position.y }}</p>
-                  <p>{{ item.position.w }}</p>
-                  <p>{{ item.position.h }}</p>
-                </vue-draggable-resizable>
-                <vue-draggable-resizable class="drag_thing"
-                                         class-name-dragging="drag_thing_drag"
-                                         class-name-handle="drag_handle"
-                                         :parent="true"
-                                         :grid=[5,5]>
-                  <form class="form-group">
-                    <label class="col-sm-3 col-form-label-sm mt-3" for="form_g">
-                      <span>DB 폼 그룹</span>
-                    </label>
-                    <div class="col-sm-9 mt-sm-3 row ml-0">
-                      <input type="text" class="input_one_btn form-control col-md-11" id="form_g" placeholder="폼 그룹 이름">
-                      <button class="btn btn-primary col-md-1 p-0">추가</button>
-                    </div>
-                  </form>
-                </vue-draggable-resizable>
-
-              </div>
-            </div>
-
-            <div class="form-group row mb-0">
-
-              <label class="col-sm-3 col-form-label-sm mt-3" for="layout_font">
-                <span>레이아웃 폰트</span>
-              </label>
-              <div class="col-sm-9 mt-sm-3 row ml-0">
-                <select class="form-control" name="layout_font" id="layout_font" v-model="layout_obj.font">
-                  <option value="-1">OS 기본</option>
-                  <option value="1">Font 2</option>
-                  <option value="2">Font 3</option>
-                </select>
-              </div>
-
-              <label class="col-sm-3 col-form-label-sm mt-3" for="in_db">
-                <span>레이아웃 내 DB</span>
-                <span class="question badge btn-secondary p-1 align-middle" v-if="window_width > 768"
-                      v-tooltip="{
-                      content: msg.in_db,
-                      placement: 'right',
-                      offset: 5,
-                      trigger: 'hover',
-                      }">?</span>
-                <span class="question badge btn-secondary p-1 align-middle" v-else
-                      v-tooltip="{
-                      content: msg.in_db,
-                      placement: 'right',
-                      offset: 5,
-                      trigger: 'click',
-                      }">?</span>
-              </label>
-              <div class="col-sm-9 mt-sm-3">
-                <label class="switch" for="in_db">
-                  <input type="checkbox" id="in_db" v-model="layout_obj.inner_db">
-                  <span class="slider round"></span>
-                </label>
-              </div>
-
-              <label class="col-sm-3 col-form-label-sm mt-3" for="in_company">
-                <span>사업자 표기</span>
-                <span class="question badge btn-secondary p-1 align-middle" v-if="window_width > 768"
-                      v-tooltip="{
-                      content: msg.in_company,
-                      placement: 'right',
-                      offset: 5,
-                      trigger: 'hover',
-                      }">?</span>
-                <span class="question badge btn-secondary p-1 align-middle" v-else
-                      v-tooltip="{
-                      content: msg.in_company,
-                      placement: 'right',
-                      offset: 5,
-                      trigger: 'click',
-                      }">?</span>
-              </label>
-              <div class="col-sm-9 mt-sm-3">
-                <label class="switch" for="in_company" v-model="layout_obj.show_company">
-                  <input type="checkbox" id="in_company">
-                  <span class="slider round"></span>
-                </label>
-              </div>
-
-
-              <label class="col-sm-3 col-form-label-sm mt-3" for="is_hijack">
-                <span>후팝업</span>
-                <span class="question badge btn-secondary p-1 align-middle" v-if="window_width > 768"
-                      v-tooltip="{
-                      content: msg.hijack,
-                      placement: 'right',
-                      offset: 5,
-                      trigger: 'hover',
-                      }">?</span>
-                <span class="question badge btn-secondary p-1 align-middle" v-else
-                      v-tooltip="{
-                      content: msg.hijack,
-                      placement: 'right',
-                      offset: 5,
-                      trigger: 'click',
-                      }">?</span>
-              </label>
-              <div class="col-sm-9 mt-sm-3">
-                <label class="switch" for="is_hijack">
-                  <input type="checkbox" id="is_hijack" v-model="landing_obj.is_hijack">
-                  <span class="slider round"></span>
-                </label>
-              </div>
-              <label v-if="landing_obj.is_hijack" class="col-sm-3 col-form-label-sm mt-3" for="hijack">
-                <span>후팝업 링크</span>
-              </label>
-              <div v-if="landing_obj.is_hijack" class="col-sm-9 mt-sm-3 row ml-0">
-                <input type="text" class="form-control col" id="hijack" placeholder="후팝업 주소"
-                       v-model="landing_obj.hijack_url">
-                <hr>
-              </div>
-
-              <label class="col-sm-3 col-form-label-sm mt-3" for="in_banner">
-                <span>띠배너</span>
-                <span class="question badge btn-secondary p-1 align-middle" v-if="window_width > 768"
-                      v-tooltip="{content: msg.in_banner,
-                      placement: 'right',
-                      offset: 5,
-                      trigger: 'hover',
-                      }">?</span>
-                <span class="question badge btn-secondary p-1 align-middle" v-else
-                      v-tooltip="{content: msg.in_banner,
-                      placement: 'right',
-                      offset: 5,
-                      trigger: 'click',
-                      }">?</span>
-              </label>
-              <div class="col-sm-9 mt-sm-3">
-                <label class="switch" for="in_banner">
-                  <input type="checkbox" id="in_banner" v-model="layout_obj.is_banner"
-                         @change="in_banner_file_delete()">
-                  <span class="slider round"></span>
-                </label>
-              </div>
-
-              <label v-if="layout_obj.is_banner" class="col-sm-3 col-form-label-sm mt-3" for="in_banner_img">
-                <span>띠배너 옵션</span>
-              </label>
-              <div v-if="layout_obj.is_banner" class="col-sm-9 mt-sm-3 row ml-0">
-
-                <input type="file" class="form-control col-sm-5 col-md-5 pt-1" id="in_banner_img" placeholder="이미지"
-                       ref="in_banner_file_input" @change="in_banner_file_add()" accept="image/*">
-                <div class="margin_div"></div>
-                <input type="text" class="form-control col-sm-7 col-md-5" id="in_banner_desc" placeholder="띠배너 주소"
-                       v-model="layout_obj.banner_url">
-                <div class="margin_div"></div>
-                <!--<button type="button" class="btn btn-primary col-md-1 p-0">추가</button>-->
-                <button type="button" class="btn btn-danger col-md-1 p-0" @click.prevent="in_banner_file_delete()">
-                  <span>삭제</span>
-                </button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <hr>
-
         <h5>DB 폼</h5>
         <div class="form-group row mb-0">
           <label class="col-sm-3 col-form-label-sm mt-3" for="form_group">DB 폼 그룹</label>
@@ -593,6 +362,263 @@
           </div>
         </div>
 
+
+        <hr>
+
+        <h5>페이지 내용</h5>
+        <div class="form-group row">
+          <label class="col-sm-12 col-form-label-sm mt-3" for="page_title">
+            <span>페이지 타이틀</span>
+            <span class="question badge btn-secondary p-1 align-middle" v-if="window_width > 768"
+                  v-tooltip="{
+                  content: msg.title,
+                  placement: 'right',
+                  offset: 5,
+                  trigger: 'hover',
+                  }">?</span>
+            <span class="question badge btn-secondary p-1" v-else
+                  v-tooltip="{
+                  content: msg.title,
+                  placement: 'right',
+                  offset: 5,
+                  trigger: 'click',
+                  }">?</span>
+          </label>
+          <div class="col-sm-12">
+            <input type="text" class="form-control" id="page_title" maxlength="50" v-model="landing_obj.title">
+          </div>
+
+          <label class="col-sm-3 col-form-label-sm mt-3" for="header_script">
+            <span>헤더 스크립트</span>
+          </label>
+          <div class="col-sm-12">
+            <textarea type="text" class="form-control" id="header_script" rows="4"
+                      v-model="landing_obj.header_script"></textarea>
+          </div>
+
+          <label class="col-sm-3 col-form-label-sm mt-3" for="body_script">
+            <span>바디 스크립트</span>
+          </label>
+          <div class="col-sm-12">
+            <textarea type="text" class="form-control" id="body_script" rows="4"
+                      v-model="landing_obj.body_script"></textarea>
+          </div>
+
+          <label class="col-sm-3 col-form-label-sm mt-3" for="main_layout">
+            <span>랜딩 레이아웃</span>
+            <span class="question badge btn-secondary p-1 align-middle" v-if="window_width > 768"
+                  v-tooltip="{
+                  content: msg.order,
+                  placement: 'right',
+                  offset: 5,
+                  trigger: 'hover',
+                  }">?</span>
+            <span class="question badge btn-secondary p-1" v-else
+                  v-tooltip="{
+                  content: msg.order,
+                  placement: 'right',
+                  offset: 5,
+                  trigger: 'click',
+                  }">?</span>
+          </label>
+          <div class="col-sm-12">
+
+            <div class="main_layout" id="main_layout">
+              <div class="basket">
+                <vue-draggable-resizable v-for="item in order_obj"
+                                         @activated="order_activated(item.sign)"
+                                         @deactivated="order_deactivated"
+                                         @dragging="order_move"
+                                         @resizing="order_resize"
+                                         parent=".basket"
+                                         class="drag_thing"
+                                         class-name-dragging="drag_thing_drag"
+                                         class-name-handle="drag_handle"
+                                         :key="item.sign"
+                                         :sign="item.sign"
+                                         :parent="false"
+                                         :x="item.position.x"
+                                         :y="item.position.y"
+                                         :w="item.position.w"
+                                         :h="item.position.h"
+                                         :z-index="item.position.z"
+                                         :min-width="100"
+                                         :min-height="100"
+                                         :grid=[5,5]
+                                         :lock-aspect-ratio="false">
+                  <p>{{ item.sign }}</p>
+                </vue-draggable-resizable>
+              </div>
+              <div class="console" v-if="order_selected != 0">
+                <div class="form-group row p-4">
+
+                  <label for="console_x" class="col-sm-3 col-form-label-sm mt-3">X 좌표</label>
+                  <div class="col-sm-9 mt-sm-3">
+                    <input type="text" id="console_x" v-model="console_obj.position.x" class="form-control">
+                  </div>
+
+                  <label for="console_y" class="col-sm-3 col-form-label-sm mt-3">Y 좌표</label>
+                  <div class="col-sm-9 mt-sm-3">
+                    <input type="text" id="console_y" v-model="console_obj.position.y" class="form-control">
+                  </div>
+
+                  <label for="console_w" class="col-sm-3 col-form-label-sm mt-3">너비</label>
+                  <div class="col-sm-9 mt-sm-3">
+                    <input type="text" id="console_w" v-model="console_obj.position.w" class="form-control">
+                  </div>
+
+                  <label for="console_h" class="col-sm-3 col-form-label-sm mt-3">높이</label>
+                  <div class="col-sm-9 mt-sm-3">
+                    <input type="text" id="console_h" v-model="console_obj.position.h" class="form-control">
+                  </div>
+
+                  <label for="console_z" class="col-sm-3 col-form-label-sm mt-3">우선순위</label>
+                  <div class="col-sm-9 mt-sm-3">
+                    <input type="text" id="console_z" v-model="console_obj.position.z" class="form-control">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="form-group row mb-0">
+
+              <label class="col-sm-3 col-form-label-sm mt-3" for="layout_font">
+                <span>레이아웃 폰트</span>
+              </label>
+              <div class="col-sm-9 mt-sm-3 row ml-0">
+                <select class="form-control" name="layout_font" id="layout_font" v-model="layout_obj.font">
+                  <option value="-1">OS 기본</option>
+                  <option value="1">Font 2</option>
+                  <option value="2">Font 3</option>
+                </select>
+              </div>
+
+              <label class="col-sm-3 col-form-label-sm mt-3" for="in_db">
+                <span>레이아웃 내 DB</span>
+                <span class="question badge btn-secondary p-1 align-middle" v-if="window_width > 768"
+                      v-tooltip="{
+                      content: msg.in_db,
+                      placement: 'right',
+                      offset: 5,
+                      trigger: 'hover',
+                      }">?</span>
+                <span class="question badge btn-secondary p-1 align-middle" v-else
+                      v-tooltip="{
+                      content: msg.in_db,
+                      placement: 'right',
+                      offset: 5,
+                      trigger: 'click',
+                      }">?</span>
+              </label>
+              <div class="col-sm-9 mt-sm-3">
+                <label class="switch" for="in_db">
+                  <input type="checkbox" id="in_db" v-model="layout_obj.inner_db">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+
+              <label class="col-sm-3 col-form-label-sm mt-3" for="in_company">
+                <span>사업자 표기</span>
+                <span class="question badge btn-secondary p-1 align-middle" v-if="window_width > 768"
+                      v-tooltip="{
+                      content: msg.in_company,
+                      placement: 'right',
+                      offset: 5,
+                      trigger: 'hover',
+                      }">?</span>
+                <span class="question badge btn-secondary p-1 align-middle" v-else
+                      v-tooltip="{
+                      content: msg.in_company,
+                      placement: 'right',
+                      offset: 5,
+                      trigger: 'click',
+                      }">?</span>
+              </label>
+              <div class="col-sm-9 mt-sm-3">
+                <label class="switch" for="in_company" v-model="layout_obj.show_company">
+                  <input type="checkbox" id="in_company">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+
+
+              <label class="col-sm-3 col-form-label-sm mt-3" for="is_hijack">
+                <span>후팝업</span>
+                <span class="question badge btn-secondary p-1 align-middle" v-if="window_width > 768"
+                      v-tooltip="{
+                      content: msg.hijack,
+                      placement: 'right',
+                      offset: 5,
+                      trigger: 'hover',
+                      }">?</span>
+                <span class="question badge btn-secondary p-1 align-middle" v-else
+                      v-tooltip="{
+                      content: msg.hijack,
+                      placement: 'right',
+                      offset: 5,
+                      trigger: 'click',
+                      }">?</span>
+              </label>
+              <div class="col-sm-9 mt-sm-3">
+                <label class="switch" for="is_hijack">
+                  <input type="checkbox" id="is_hijack" v-model="landing_obj.is_hijack">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <label v-if="landing_obj.is_hijack" class="col-sm-3 col-form-label-sm mt-3" for="hijack">
+                <span>후팝업 링크</span>
+              </label>
+              <div v-if="landing_obj.is_hijack" class="col-sm-9 mt-sm-3 row ml-0">
+                <input type="text" class="form-control col" id="hijack" placeholder="후팝업 주소"
+                       v-model="landing_obj.hijack_url">
+                <hr>
+              </div>
+
+              <label class="col-sm-3 col-form-label-sm mt-3" for="in_banner">
+                <span>띠배너</span>
+                <span class="question badge btn-secondary p-1 align-middle" v-if="window_width > 768"
+                      v-tooltip="{content: msg.in_banner,
+                      placement: 'right',
+                      offset: 5,
+                      trigger: 'hover',
+                      }">?</span>
+                <span class="question badge btn-secondary p-1 align-middle" v-else
+                      v-tooltip="{content: msg.in_banner,
+                      placement: 'right',
+                      offset: 5,
+                      trigger: 'click',
+                      }">?</span>
+              </label>
+              <div class="col-sm-9 mt-sm-3">
+                <label class="switch" for="in_banner">
+                  <input type="checkbox" id="in_banner" v-model="layout_obj.is_banner"
+                         @change="in_banner_file_delete()">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+
+              <label v-if="layout_obj.is_banner" class="col-sm-3 col-form-label-sm mt-3" for="in_banner_img">
+                <span>띠배너 옵션</span>
+              </label>
+              <div v-if="layout_obj.is_banner" class="col-sm-9 mt-sm-3 row ml-0">
+
+                <input type="file" class="form-control col-sm-5 col-md-5 pt-1" id="in_banner_img" placeholder="이미지"
+                       ref="in_banner_file_input" @change="in_banner_file_add()" accept="image/*">
+                <div class="margin_div"></div>
+                <input type="text" class="form-control col-sm-7 col-md-5" id="in_banner_desc" placeholder="띠배너 주소"
+                       v-model="layout_obj.banner_url">
+                <div class="margin_div"></div>
+                <!--<button type="button" class="btn btn-primary col-md-1 p-0">추가</button>-->
+                <button type="button" class="btn btn-danger col-md-1 p-0" @click.prevent="in_banner_file_delete()">
+                  <span>삭제</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
         <hr>
 
         <h5>옵션</h5>
@@ -640,6 +666,7 @@
       msg: {
         base_url: '기본 주소를 지정합니다.',
         title: '사이트 내부 제목입니다.',
+        order: '랜딩페이지를 커스터마이징 합니다. 1000px 이상의 화면에서 작업을 추천합니다.',
         in_db: '레이아웃 내부에 DB 폼 그룹을 위치시키거나 하단 팝업으로 대체합니다.',
         in_company: '랜딩 페이지에 하단 Footer로 해당 고객업체의 정보를 자동 기입합니다.',
         hijack: '사용자가 뒤로 가기 시 해당 링크로 강제 이동시킵니다.',
@@ -681,6 +708,9 @@
       in_banner_file: [],
       in_banner_file_info: '',
       // // Order db
+      // order_selected: 0,
+      order_selected: 0,
+      console_obj: {},
       order_obj: [
         {
           sign: 1,
@@ -691,7 +721,7 @@
         {
           sign: 2,
           name: 'order2',
-          position: {x: 200, y: 100, w: 150, h: 50, z: 2},
+          position: {x: 100, y: 100, w: 200, h: 200, z: 2},
           type: 0
         }
       ],
@@ -729,17 +759,35 @@
       // is_group: 1,
     }),
     methods: {
-      order_move(x, y, w, h, sign) {
-        console.log(x, y, w, h, sign)
-        this.order_obj[0].position.x = x
-        this.order_obj[0].position.y = y
+      order_activated(sign) {
+        this.order_selected = sign
+        for(let i = 0; i < this.order_obj.length; i ++) {
+          if(this.order_obj[i]. sign == sign) {
+            this.console_obj = this.order_obj[i]
+          }
+        }
       },
-      order_resize(x, y, w, h, sign) {
-        console.log(x, y, w, h, sign)
-        this.order_obj[0].position.x = x
-        this.order_obj[0].position.y = y
-        this.order_obj[0].position.w = w
-        this.order_obj[0].position.h = h
+      order_deactivated() {
+        // this.order_selected = 0
+        // this.console_obj = {}
+      },
+      order_move(x, y) {
+        for(let i = 0; i < this.order_obj.length; i ++) {
+          if (this.order_obj[i].sign == this.order_selected) {
+            this.order_obj[i].position.x = x
+            this.order_obj[i].position.y = y
+          }
+        }
+      },
+      order_resize(x, y, w, h) {
+        for(let i = 0; i < this.order_obj.length; i ++) {
+          if (this.order_obj[i].sign == this.order_selected) {
+            this.order_obj[i].position.x = x
+            this.order_obj[i].position.y = y
+            this.order_obj[i].position.w = w
+            this.order_obj[i].position.h = h
+          }
+        }
       },
       order_add() {
         let len = this.len
@@ -1450,7 +1498,7 @@
   }
 
   .basket {
-    border: 1px solid #414141;
+    border: 1px solid #ee5151;
     width: 1000px;
     min-height: 500px;
     overflow-x: hidden;
@@ -1477,4 +1525,11 @@
     z-index: 900;
   }
 
+  .console {
+    width: 100%;
+    max-width: 1000px;
+    border: 1px solid #515151;
+    margin: auto;
+    background-color: #eaeaea;
+  }
 </style>
