@@ -449,16 +449,24 @@
                                          :min-height="100"
                                          :grid=[5,5]
                                          :lock-aspect-ratio="false">
-                  <img v-if="item.type == 1" src="../assets/logo1.png" alt="logo" style="width: 100%; height: 100%; object-fit: contain;">
+                  <img v-if="item.type == 1 && item.image_data.length == 0" src="../assets/logo1.png" alt="logo" style="width: 100%; height: 100%; object-fit: contain;">
+                  <img v-if="item.type == 1 && item.image_data.length !== 0" :src="item.image_url" alt="logo" style="width: 100%; height: 100%; object-fit: contain;">
                   <div v-if="item.type == 2">
                     <span>type 2</span>
                   </div>
                   <div v-if="item.type == 3">
-                    <span>type 33</span>
+                    <span v-if="!console_obj.video_data">유튜브, Vimeo</span>
+                    <div style="position: relative; width: 100%; max-width: 630px; margin: auto;">
+                      <div style=" position: relative; padding-bottom: 56.25%; height:0;">
+                        <iframe style="width: 100%; height: 100%; top:0; left:0; position: absolute;" type="text/html" src="https://www.youtube.com/embed/Ul0-znYSeEk?&autoplay=1&loop=1&playlist=Ra8s0IHng6A&showinfo=0&fs=1&disablekb=1&vq=auto&controls=0&rel=0&iv_load_policy=3&mute=0&playsinline=1&modestbranding=1" allow="autoplay" frameborder="0" volume="1" allowfullscreen="" webkitallowfullscreen="" mozallowfullscreen=""></iframe>
+                      </div>
+                    </div>
                   </div>
                 </vue-draggable-resizable>
               </div>
               <div class="console" v-if="console_obj.sign != 0">
+                {{ order_obj }}
+                {{ console_obj }}
                 <div class="form-group row p-4">
                   <label for="console_name" class="col-sm-3 col-form-label-sm mt-3">이름</label>
                   <div class="col-sm-9 mt-sm-3">
@@ -478,12 +486,12 @@
                   <label v-if="console_obj.type == 2" class="col-sm-3 col-form-label-sm mt-3" for="choose_set">폼 그룹 선택</label>
                   <label v-if="console_obj.type == 3" class="col-sm-3 col-form-label-sm mt-3" for="choose_set">동영상 주소 (Youtube, Vimeo)</label>
                   <div class="col-sm-9 mt-sm-3" id="choose_set">
-                    <input v-if="console_obj.type == 1" type="file" class="form-control p-1">
+                    <input v-if="console_obj.type == 1" type="file" class="form-control p-1" @change="order_image_change(console_obj.sign)" accept="image/*">
                     <select v-if="console_obj.type == 2" class="form-control">
                       <option value="-1">폼 그룹을 선택하세요</option>
                       <option v-for="content in form_obj" :value="content.sign">{{ content.name }}</option>
                     </select>
-                    <input v-if="console_obj.type == 3" type="text" class="form-control">
+                    <input v-if="console_obj.type == 3" type="text" class="form-control" v-model="console_obj.video_data" @keyup.prevent="order_video_change">
                   </div>
 
                   <label for="console_x" class="col-sm-3 col-form-label-sm mt-3">X 좌표</label>
@@ -763,6 +771,7 @@
           position: {x: 400, y: 300, w: 450, h: 300, z: 1},
           type: 1,
           image_data: [],
+          image_url: '',
           video_data: '',
           form_group: 0
         },
@@ -772,6 +781,7 @@
           position: {x: 100, y: 100, w: 200, h: 200, z: 2},
           type: 1,
           image_data: [],
+          image_url: '',
           video_data: '',
           form_group: 0
         }
@@ -810,10 +820,27 @@
       // is_group: 1,
     }),
     methods: {
+      order_image_change(sign) {
+        let file_data = event.target.files[0]
+        for(let i = 0; i < this.order_obj.length; i ++) {
+          if(this.order_obj[i].sign == sign) {
+            this.order_obj[i].image_data = file_data
+            this.order_obj[i].image_url = URL.createObjectURL(file_data)
+          }
+        }
+        // this.in_banner_file_info = file_data
+      },
       order_name_change() {
         for(let i = 0; i < this.order_obj.length; i ++) {
           if(this.order_obj[i].sign == this.order_selected) {
             this.order_obj[i].name = this.console_obj.name
+          }
+        }
+      },
+      order_video_change() {
+        for(let i = 0; i < this.order_obj.length; i ++) {
+          if(this.order_obj[i].sign == this.order_selected) {
+            this.order_obj[i].video_data = this.console_obj.video_data
           }
         }
       },
@@ -833,6 +860,7 @@
             this.console_obj.position = this.order_obj[i].position
             this.console_obj.type = this.order_obj[i].type
             this.console_obj.image_data = this.order_obj[i].image_data
+            this.console_obj.image_url = this.order_obj[i].image_url
             this.console_obj.video_data = this.order_obj[i].video_data
             this.console_obj.form_group = this.order_obj[i].form_group
           }
@@ -864,16 +892,22 @@
         let len = this.order_obj.length
         if (len) {
           let highest = 0
+          let z = 1
           for (let i = 0; i < len; i++) {
             if (this.order_obj[i].sign > highest) {
               highest = this.order_obj[i].sign
             }
           }
-          let order_ready = {sign: highest + 1, type: 1, name: 'new layout', position: {x: 0, y: 0, w: 100, h: 100, z: 1}}
+          for (let j = 0; j < len; j++) {
+            if (this.order_obj[j].position.z > z) {
+              z = this.order_obj[j].position.z
+            }
+          }
+          let order_ready = {sign: highest + 1, type: 1, name: 'new layout', position: {x: 0, y: 0, w: 100, h: 100, z: z + 1}, image_data: [], image_url: ''}
           this.order_obj.push(order_ready)
           alert('레이아웃이 생성되었습니다.')
         } else {
-          let order_ready = {sign: 1, type: 1, name: 'new layout', position: {x: 0, y: 0, w: 100, h: 100, z: 1}}
+          let order_ready = {sign: 1, type: 1, name: 'new layout', position: {x: 0, y: 0, w: 100, h: 100, z: 1}, image_data: [], image_url: ''}
           this.order_obj.push(order_ready)
           alert('레이아웃이 생성되었습니다.')
         }
