@@ -421,8 +421,11 @@
                   trigger: 'click',
                   }">?</span>
           </label>
+          <div class="col-sm-9 col-form-label-sm mt-3 text-right">
+            <button type="button" class="btn btn-primary btn-sm p-1" @click.prevent="order_add">객체 추가</button>
+            <button type="button" class="btn btn-danger btn-sm p-1" @click.prevent="order_delete">선택 삭제</button>
+          </div>
           <div class="col-sm-12">
-
             <div class="main_layout" id="main_layout">
               <div class="basket">
                 <vue-draggable-resizable v-for="item in order_obj"
@@ -441,44 +444,77 @@
                                          :y="item.position.y"
                                          :w="item.position.w"
                                          :h="item.position.h"
-                                         :z-index="item.position.z"
+                                         :z="item.position.z"
                                          :min-width="100"
                                          :min-height="100"
                                          :grid=[5,5]
                                          :lock-aspect-ratio="false">
-                  <p>{{ item.sign }}</p>
+                  <img v-if="item.type == 1" src="../assets/logo1.png" alt="logo" style="width: 100%; height: 100%; object-fit: contain;">
+                  <div v-if="item.type == 2">
+                    <span>type 2</span>
+                  </div>
+                  <div v-if="item.type == 3">
+                    <span>type 33</span>
+                  </div>
                 </vue-draggable-resizable>
               </div>
-              <div class="console" v-if="order_selected != 0">
+              <div class="console" v-if="console_obj.sign != 0">
                 <div class="form-group row p-4">
+                  <label for="console_name" class="col-sm-3 col-form-label-sm mt-3">이름</label>
+                  <div class="col-sm-9 mt-sm-3">
+                    <input type="text" id="console_name" v-model="console_obj.name" class="form-control" step="5" maxlength="30" @keyup.prevent="order_name_change">
+                  </div>
+
+                  <label for="console_type" class="col-sm-3 col-form-label-sm mt-3">타입</label>
+                  <div class="col-sm-9 mt-sm-3">
+                    <select class="form-control" id="console_type" v-model.number="console_obj.type" @change.prevent="order_type_change">
+                      <option value="-1">선택하세요</option>
+                      <option value="1">이미지</option>
+                      <option value="2">폼그룹</option>
+                      <option value="3">비디오</option>
+                    </select>
+                  </div>
+                  <label v-if="console_obj.type == 1" class="col-sm-3 col-form-label-sm mt-3" for="choose_set">이미지 첨부</label>
+                  <label v-if="console_obj.type == 2" class="col-sm-3 col-form-label-sm mt-3" for="choose_set">폼 그룹 선택</label>
+                  <label v-if="console_obj.type == 3" class="col-sm-3 col-form-label-sm mt-3" for="choose_set">동영상 주소 (Youtube, Vimeo)</label>
+                  <div class="col-sm-9 mt-sm-3" id="choose_set">
+                    <input v-if="console_obj.type == 1" type="file" class="form-control p-1">
+                    <select v-if="console_obj.type == 2" class="form-control">
+                      <option value="-1">폼 그룹을 선택하세요</option>
+                      <option v-for="content in form_obj" :value="content.sign">{{ content.name }}</option>
+                    </select>
+                    <input v-if="console_obj.type == 3" type="text" class="form-control">
+                  </div>
 
                   <label for="console_x" class="col-sm-3 col-form-label-sm mt-3">X 좌표</label>
                   <div class="col-sm-9 mt-sm-3">
-                    <input type="text" id="console_x" v-model="console_obj.position.x" class="form-control">
+                    <input type="number" id="console_x" v-model.number="console_obj.position.x" class="form-control" step="5">
                   </div>
 
                   <label for="console_y" class="col-sm-3 col-form-label-sm mt-3">Y 좌표</label>
                   <div class="col-sm-9 mt-sm-3">
-                    <input type="text" id="console_y" v-model="console_obj.position.y" class="form-control">
+                    <input type="number" id="console_y" v-model.number="console_obj.position.y" class="form-control" step="5">
                   </div>
 
                   <label for="console_w" class="col-sm-3 col-form-label-sm mt-3">너비</label>
                   <div class="col-sm-9 mt-sm-3">
-                    <input type="text" id="console_w" v-model="console_obj.position.w" class="form-control">
+                    <input type="number" id="console_w" v-model.number="console_obj.position.w" class="form-control" step="5">
                   </div>
 
                   <label for="console_h" class="col-sm-3 col-form-label-sm mt-3">높이</label>
                   <div class="col-sm-9 mt-sm-3">
-                    <input type="text" id="console_h" v-model="console_obj.position.h" class="form-control">
+                    <input type="number" id="console_h" v-model.number="console_obj.position.h" class="form-control" step="5">
                   </div>
 
                   <label for="console_z" class="col-sm-3 col-form-label-sm mt-3">우선순위</label>
                   <div class="col-sm-9 mt-sm-3">
-                    <input type="text" id="console_z" v-model="console_obj.position.z" class="form-control">
+                    <input type="number" id="console_z" v-model.number="console_obj.position.z" class="form-control">
                   </div>
                 </div>
-
               </div>
+            </div>
+            <div class="preview">
+              <button type="button" class="btn btn-info w-100">미리보기</button>
             </div>
 
             <div class="form-group row mb-0">
@@ -709,20 +745,35 @@
       in_banner_file_info: '',
       // // Order db
       // order_selected: 0,
+      order_focus_flag: false,
       order_selected: 0,
-      console_obj: {},
+      console_obj: {
+        sign: 0,
+        name: '',
+        position: {x: 0, y: 0, w: 0, h: 0, z: 0},
+        type: 0,
+        image_data: [],
+        video_data: '',
+        form_group: 0
+      },
       order_obj: [
         {
           sign: 1,
           name: 'order1',
           position: {x: 400, y: 300, w: 450, h: 300, z: 1},
-          type: 0
+          type: 1,
+          image_data: [],
+          video_data: '',
+          form_group: 0
         },
         {
           sign: 2,
           name: 'order2',
           position: {x: 100, y: 100, w: 200, h: 200, z: 2},
-          type: 0
+          type: 1,
+          image_data: [],
+          video_data: '',
+          form_group: 0
         }
       ],
       // // Form-group db
@@ -759,11 +810,31 @@
       // is_group: 1,
     }),
     methods: {
+      order_name_change() {
+        for(let i = 0; i < this.order_obj.length; i ++) {
+          if(this.order_obj[i].sign == this.order_selected) {
+            this.order_obj[i].name = this.console_obj.name
+          }
+        }
+      },
+      order_type_change() {
+        for(let i = 0; i < this.order_obj.length; i ++) {
+          if(this.order_obj[i].sign == this.order_selected) {
+            this.order_obj[i].type = this.console_obj.type
+          }
+        }
+      },
       order_activated(sign) {
         this.order_selected = sign
         for(let i = 0; i < this.order_obj.length; i ++) {
           if(this.order_obj[i]. sign == sign) {
-            this.console_obj = this.order_obj[i]
+            this.console_obj.sign = this.order_obj[i].sign
+            this.console_obj.name = this.order_obj[i].name
+            this.console_obj.position = this.order_obj[i].position
+            this.console_obj.type = this.order_obj[i].type
+            this.console_obj.image_data = this.order_obj[i].image_data
+            this.console_obj.video_data = this.order_obj[i].video_data
+            this.console_obj.form_group = this.order_obj[i].form_group
           }
         }
       },
@@ -790,21 +861,44 @@
         }
       },
       order_add() {
-        let len = this.len
-        this.order_obj.push({"x": 0, "y": 0, "w": 1, "h": 5, "i": len + 1})
-        this.len += 1
-      },
-      order_delete() {
-        for (let i = 0; i < this.order_obj.length; i++) {
-          if (this.order_obj[i].i === this.clicked) {
-            if (i === 0) {
-              this.order_obj.shift()
-              this.clicked = -1
-            } else {
-              this.order_obj.splice(i, 1)
-              this.clicked = -1
+        let len = this.order_obj.length
+        if (len) {
+          let highest = 0
+          for (let i = 0; i < len; i++) {
+            if (this.order_obj[i].sign > highest) {
+              highest = this.order_obj[i].sign
             }
           }
+          let order_ready = {sign: highest + 1, type: 1, name: 'new layout', position: {x: 0, y: 0, w: 100, h: 100, z: 1}}
+          this.order_obj.push(order_ready)
+          alert('레이아웃이 생성되었습니다.')
+        } else {
+          let order_ready = {sign: 1, type: 1, name: 'new layout', position: {x: 0, y: 0, w: 100, h: 100, z: 1}}
+          this.order_obj.push(order_ready)
+          alert('레이아웃이 생성되었습니다.')
+        }
+      },
+      order_delete() {
+        if(this.order_selected) {
+          if(confirm('선택한 레이아웃을 삭제하시겠습니까?')) {
+            for(let i = 0; i < this.order_obj.length; i ++) {
+              if(this.order_obj[i].sign == this.order_selected) {
+                if (i === 0) {
+                  this.order_obj.shift()
+                  this.clicked = -1
+                } else {
+                  this.order_obj.splice(i, 1)
+                  this.clicked = -1
+                }
+              }
+            }
+            let console_clear = {sign: 0, type: 0, name: '', position: {x:0, y: 0,w: 0,h: 0,z: 0}}
+            this.console_obj = console_clear
+            this.order_selected = 0
+            this.order_activated(0)
+          }
+        } else {
+          alert('먼저 레이아웃을 선택하세요.')
         }
       }, // temp grid system ended
       in_banner_file_add() {
@@ -1495,6 +1589,7 @@
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     overflow: auto;
+    transition: all 200ms ease-in-out;
   }
 
   .basket {
@@ -1531,5 +1626,10 @@
     border: 1px solid #515151;
     margin: auto;
     background-color: #eaeaea;
+  }
+
+  .preview {
+    width: 100%;
+    margin: auto;
   }
 </style>

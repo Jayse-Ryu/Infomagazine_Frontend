@@ -843,7 +843,7 @@ export default {
   .drag_thing_drag {
     transition: opacity 200ms ease-in-out;
     opacity: 0.7;
-    z-index: 99999 !important;
+    z-index: 9980 !important;
   }
 
   .drag_handle {
@@ -853,7 +853,7 @@ export default {
     border-radius: 50%;
     height: 14px !important;
     width: 14px !important;
-    z-index: 9999;
+    z-index: 9999 !important;
     // box-model: border-box;
     transition: all 300ms linear;
   }
