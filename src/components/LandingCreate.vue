@@ -452,13 +452,41 @@
                   <img v-if="item.type == 1 && item.image_data.length == 0" src="../assets/logo1.png" alt="logo" style="width: 100%; height: 100%; object-fit: contain;">
                   <img v-if="item.type == 1 && item.image_data.length !== 0" :src="item.image_url" alt="logo" style="width: 100%; height: 100%; object-fit: contain;">
                   <div v-if="item.type == 2">
-                    <span>type 2</span>
+
+                    {{ item.form_group }}
+
+
+<!--                <option value="1">텍스트 입력</option>
+                    <option value="2">번호 입력</option>
+                    <option value="3">선택 스크롤</option>
+                    <option value="4">선택 버튼</option>
+                    <option value="5">체크 박스</option>
+                    <option value="6">날짜</option>
+                    <option value="7">링크 버튼</option>
+                    <option value="8">전화 버튼</option>-->
+
+                    <div class="container">
+                      <div v-for="field in field_obj" class="form-group row mb-0">
+                        <label v-if="field.form_group_id == item.form_group" class="col-sm-3 col-form-label-sm mt-3">
+                          {{ field.name }}
+                        </label>
+                        <div v-if="field.form_group_id == item.form_group" class="col-sm-9 mt-sm-3">
+                          <input v-if="field.type == 1" type="text" class="form-control" maxlength="0" :placeholder="field.holder">
+                          <input v-if="field.type == 2" type="number" class="form-control" maxlength="0" :placeholder="field.holder">
+                          <select v-if="field.type == 3" type="number" class="form-control" maxlength="0" :placeholder="field.holder">
+                            <option value="some">some</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div v-if="item.type == 3">
-                    <span v-if="!console_obj.video_data">유튜브, Vimeo</span>
-                    <div style="position: relative; width: 100%; max-width: 630px; margin: auto;">
+                    <span class="video_handler">비디오 드래그</span>
+                    <span class="video_handler_2">비디오 드래그</span>
+                    <div style="position: relative; width: 100%; max-width: 1000px; margin: auto;">
                       <div style=" position: relative; padding-bottom: 56.25%; height:0;">
-                        <iframe style="width: 100%; height: 100%; top:0; left:0; position: absolute;" type="text/html" src="https://www.youtube.com/embed/Ul0-znYSeEk?&autoplay=1&loop=1&playlist=Ra8s0IHng6A&showinfo=0&fs=1&disablekb=1&vq=auto&controls=0&rel=0&iv_load_policy=3&mute=0&playsinline=1&modestbranding=1" allow="autoplay" frameborder="0" volume="1" allowfullscreen="" webkitallowfullscreen="" mozallowfullscreen=""></iframe>
+                        <iframe v-if="console_obj.video_type == 1" style="width: 100%; height: 100%; top:0; left:0; position: absolute;" type="text/html" :src="'https://www.youtube.com/embed/' + item.video_data + '?&playlist=Ra8s0IHng6A&autoplay=0&loop=1&showinfo=0&fs=1&disablekb=1&vq=auto&controls=0&rel=0&iv_load_policy=3&mute=0&playsinline=1&modestbranding=1'" frameborder="0" volume="1" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
+                        <iframe v-if="console_obj.video_type == 2" style="width: 100%; height: 100%; top:0; left:0; position: absolute;" type="text/html" :src="'https://player.vimeo.com/video/' + item.video_data + '?&loop=1'" frameborder="0" volume="1" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
                       </div>
                     </div>
                   </div>
@@ -476,22 +504,29 @@
                   <label for="console_type" class="col-sm-3 col-form-label-sm mt-3">타입</label>
                   <div class="col-sm-9 mt-sm-3">
                     <select class="form-control" id="console_type" v-model.number="console_obj.type" @change.prevent="order_type_change">
-                      <option value="-1">선택하세요</option>
                       <option value="1">이미지</option>
                       <option value="2">폼그룹</option>
                       <option value="3">비디오</option>
                     </select>
                   </div>
-                  <label v-if="console_obj.type == 1" class="col-sm-3 col-form-label-sm mt-3" for="choose_set">이미지 첨부</label>
-                  <label v-if="console_obj.type == 2" class="col-sm-3 col-form-label-sm mt-3" for="choose_set">폼 그룹 선택</label>
-                  <label v-if="console_obj.type == 3" class="col-sm-3 col-form-label-sm mt-3" for="choose_set">동영상 주소 (Youtube, Vimeo)</label>
+
+                  <label v-if="console_obj.type == 3" for="video_type" class="col-sm-3 col-form-label-sm mt-3">비디오 타입</label>
+                  <div v-if="console_obj.type == 3" class="col-sm-9 mt-sm-3">
+                    <select id="video_type" class="form-control" v-model="console_obj.video_type" @change="order_video_type_change">
+                      <option value="1">Youtube</option>
+                      <option value="2">Vimeo</option>
+                    </select>
+                  </div>
+                  <label v-if="console_obj.type == 1" class="col-sm-3 col-form-label-sm mt-3" for="image_set">이미지 첨부</label>
+                  <label v-if="console_obj.type == 2" class="col-sm-3 col-form-label-sm mt-3" for="form_set">폼 그룹 선택</label>
+                  <label v-if="console_obj.type == 3" class="col-sm-3 col-form-label-sm mt-3" for="video_set">동영상 값</label>
                   <div class="col-sm-9 mt-sm-3" id="choose_set">
-                    <input v-if="console_obj.type == 1" type="file" class="form-control p-1" @change="order_image_change(console_obj.sign)" accept="image/*">
-                    <select v-if="console_obj.type == 2" class="form-control">
-                      <option value="-1">폼 그룹을 선택하세요</option>
+                    <input v-if="console_obj.type == 1" type="file" class="form-control p-1" id="image_set" @change="order_image_change(console_obj.sign)" accept="image/*">
+                    <select v-if="console_obj.type == 2" class="form-control" id="form_set" v-model="console_obj.form_group" @change="order_form_change">
+                      <option value="0">폼 그룹을 선택하세요</option>
                       <option v-for="content in form_obj" :value="content.sign">{{ content.name }}</option>
                     </select>
-                    <input v-if="console_obj.type == 3" type="text" class="form-control" v-model="console_obj.video_data" @keyup.prevent="order_video_change">
+                    <input v-if="console_obj.type == 3" type="text" class="form-control" id="video_set" v-model="console_obj.video_data" @keyup.prevent="order_video_change">
                   </div>
 
                   <label for="console_x" class="col-sm-3 col-form-label-sm mt-3">X 좌표</label>
@@ -761,6 +796,7 @@
         position: {x: 0, y: 0, w: 0, h: 0, z: 0},
         type: 0,
         image_data: [],
+        video_type: 1,
         video_data: '',
         form_group: 0
       },
@@ -772,6 +808,7 @@
           type: 1,
           image_data: [],
           image_url: '',
+          video_type: 1,
           video_data: '',
           form_group: 0
         },
@@ -782,6 +819,7 @@
           type: 1,
           image_data: [],
           image_url: '',
+          video_type: 1,
           video_data: '',
           form_group: 0
         }
@@ -837,6 +875,25 @@
           }
         }
       },
+      order_form_change() {
+        for(let i = 0; i < this.order_obj.length; i ++) {
+          if(this.order_obj[i].sign == this.order_selected) {
+            this.order_obj[i].form_group = this.console_obj.form_group
+          }
+          // for(let j = 0; j < this.form_obj.length; j ++) {
+          //   if(this.form_obj[j].sign == this.order_obj[i].form_group) {
+          //     //
+          //   }
+          // }
+        }
+      },
+      order_video_type_change() {
+        for(let i = 0; i < this.order_obj.length; i ++) {
+          if(this.order_obj[i].sign == this.order_selected) {
+            this.order_obj[i].video_type = this.console_obj.video_type
+          }
+        }
+      },
       order_video_change() {
         for(let i = 0; i < this.order_obj.length; i ++) {
           if(this.order_obj[i].sign == this.order_selected) {
@@ -861,6 +918,7 @@
             this.console_obj.type = this.order_obj[i].type
             this.console_obj.image_data = this.order_obj[i].image_data
             this.console_obj.image_url = this.order_obj[i].image_url
+            this.console_obj.video_type = this.order_obj[i].video_type
             this.console_obj.video_data = this.order_obj[i].video_data
             this.console_obj.form_group = this.order_obj[i].form_group
           }
@@ -903,11 +961,11 @@
               z = this.order_obj[j].position.z
             }
           }
-          let order_ready = {sign: highest + 1, type: 1, name: 'new layout', position: {x: 0, y: 0, w: 100, h: 100, z: z + 1}, image_data: [], image_url: ''}
+          let order_ready = {sign: highest + 1, type: 1, name: 'new layout', position: {x: 0, y: 0, w: 100, h: 100, z: z + 1}, image_data: [], image_url: '', video_type: 1}
           this.order_obj.push(order_ready)
           alert('레이아웃이 생성되었습니다.')
         } else {
-          let order_ready = {sign: 1, type: 1, name: 'new layout', position: {x: 0, y: 0, w: 100, h: 100, z: 1}, image_data: [], image_url: ''}
+          let order_ready = {sign: 1, type: 1, name: 'new layout', position: {x: 0, y: 0, w: 100, h: 100, z: 1}, image_data: [], image_url: '', video_type: 1}
           this.order_obj.push(order_ready)
           alert('레이아웃이 생성되었습니다.')
         }
@@ -1665,5 +1723,27 @@
   .preview {
     width: 100%;
     margin: auto;
+  }
+
+  .video_handler {
+    position: absolute;
+    border-radius: 7px 7px 0px 0px;
+    top: -30px;
+    left: -1px;
+    background-color: #515151;
+    color: #e1e1e1;
+    font-weight: bold;
+    padding: 8px;
+  }
+
+  .video_handler_2 {
+    position: absolute;
+    border-radius: 0px 0px 7px 7px;
+    bottom: -34px;
+    right: -1px;
+    background-color: #515151;
+    color: #e1e1e1;
+    font-weight: bold;
+    padding: 8px;
   }
 </style>
