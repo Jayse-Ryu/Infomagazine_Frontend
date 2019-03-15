@@ -456,26 +456,33 @@
                     {{ item.form_group }}
 
 
-<!--                <option value="1">텍스트 입력</option>
+                    <!--
+                    <option value="1">텍스트 입력</option>
                     <option value="2">번호 입력</option>
                     <option value="3">선택 스크롤</option>
                     <option value="4">선택 버튼</option>
                     <option value="5">체크 박스</option>
                     <option value="6">날짜</option>
                     <option value="7">링크 버튼</option>
-                    <option value="8">전화 버튼</option>-->
+                    <option value="8">전화 버튼</option>
+                    -->
 
                     <div class="container">
-                      <div v-for="field in field_obj" class="form-group row mb-0">
-                        <label v-if="field.form_group_id == item.form_group" class="col-sm-3 col-form-label-sm mt-3">
-                          {{ field.name }}
-                        </label>
-                        <div v-if="field.form_group_id == item.form_group" class="col-sm-9 mt-sm-3">
-                          <input v-if="field.type == 1" type="text" class="form-control" maxlength="0" :placeholder="field.holder">
-                          <input v-if="field.type == 2" type="number" class="form-control" maxlength="0" :placeholder="field.holder">
-                          <select v-if="field.type == 3" type="number" class="form-control" maxlength="0" :placeholder="field.holder">
-                            <option value="some">some</option>
-                          </select>
+                      <div class="form-group row">
+                        <div class="w-100 row m-0" v-for="field in field_obj">
+                          <label v-if="field.form_group_id == item.form_group" class="col-sm-3 col-form-label-sm mt-3">
+                            {{ field.name }}
+                          </label>
+                          <div v-if="field.form_group_id == item.form_group" class="col-sm-9 mt-sm-3">
+                            <input v-if="field.type == 1" type="text" class="form-control" maxlength="0" :placeholder="field.holder">
+                            <input v-if="field.type == 2" type="number" class="form-control" maxlength="0" :placeholder="field.holder">
+                            <select v-if="field.type == 3" type="number" class="form-control" maxlength="0" :placeholder="field.holder">
+                              <option value="some">some</option>
+                            </select>
+                            <div v-if="field.type == 4">
+                              <input v-for="content in field.list" type="checkbox" :name="field.name" :value="content">{{ content }}<br>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
