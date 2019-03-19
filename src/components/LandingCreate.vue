@@ -477,10 +477,16 @@
                             <input v-if="field.type == 1" type="text" class="form-control" maxlength="0" :placeholder="field.holder">
                             <input v-if="field.type == 2" type="number" class="form-control" maxlength="0" :placeholder="field.holder">
                             <select v-if="field.type == 3" type="number" class="form-control" maxlength="0" :placeholder="field.holder">
-                              <option value="some">some</option>
+                              <option value="0">select here</option>
+                              <option v-for="list in field.list" :value="list">{{ list }}</option>
                             </select>
-                            <div v-if="field.type == 4">
-                              <input v-for="content in field.list" type="checkbox" :name="field.name" :value="content">{{ content }}<br>
+                            <div class="form-check-inline" v-if="field.type == 4">
+                              <div v-for="list in field.list">
+                                <label class="form-check-label" :for="'field_' + list">
+                                  <input class="form-check-input" type="checkbox" :id="'field_' + list" :value="list">
+                                  {{ list }}
+                                </label>
+                              </div>
                             </div>
                           </div>
                         </div>
