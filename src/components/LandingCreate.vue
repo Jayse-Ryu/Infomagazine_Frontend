@@ -125,6 +125,7 @@
               <option value="6">날짜</option>
               <option value="7">링크 버튼</option>
               <option value="8">전화 버튼</option>
+              <option value="9">완료 버튼</option>
             </select>
             <div class="margin_div"></div>
             <input type="text" class="form-control col-sm-7 col-md-5" placeholder="필드이름" maxlength="10"
@@ -151,6 +152,7 @@
                 <div class="col-3 p-2 text-center" v-if="content.type == 6">날짜</div>
                 <div class="col-3 p-2 text-center" v-if="content.type == 7">링크 버튼</div>
                 <div class="col-3 p-2 text-center" v-if="content.type == 8">전화 버튼</div>
+                <div class="col-3 p-2 text-center" v-if="content.type == 9">완료 버튼</div>
                 <div class="col-3 p-2 text-center">{{ content.name }}</div>
                 <button type="button" class="btn btn-outline-info p-0 col-3 col-sm-2 m-auto" data-toggle="collapse"
                         v-bind:href="'#collapse_option'+ content.sign" aria-expanded="false">설정
@@ -175,6 +177,7 @@
                           <option value="6">날짜</option>
                           <option value="7">링크 버튼</option>
                           <option value="8">전화 버튼</option>
+                          <option value="9">완료 버튼</option>
                         </select>
                       </div>
 
@@ -244,27 +247,27 @@
                         </div>
                       </div>
 
-                      <label v-if="content.type == 7 || content.type == 8" class="col-sm-3 col-form-label-sm mt-3"
+                      <label v-if="content.type == 7 || content.type == 8 || content.type == 9" class="col-sm-3 col-form-label-sm mt-3"
                              for="f_back">배경색</label>
-                      <div v-if="content.type == 7 || content.type == 8" class="col-sm-9 mt-sm-3">
+                      <div v-if="content.type == 7 || content.type == 8 || content.type == 9" class="col-sm-9 mt-sm-3">
                         <div class="color_wrap form-control col">
                           <input type="color" v-model="content.back_color" class="color_picker">
                         </div>
                         <input type="text" class="form-control" id="f_back" maxlength="10" v-model="content.back_color">
                       </div>
 
-                      <label v-if="content.type == 7 || content.type == 8" class="col-sm-3 col-form-label-sm mt-3"
+                      <label v-if="content.type == 7 || content.type == 8 || content.type == 9" class="col-sm-3 col-form-label-sm mt-3"
                              for="f_color">글씨색</label>
-                      <div v-if="content.type == 7 || content.type == 8" class="col-sm-9 mt-sm-3">
+                      <div v-if="content.type == 7 || content.type == 8 || content.type == 9" class="col-sm-9 mt-sm-3">
                         <div class="color_wrap form-control col">
                           <input type="color" v-model="content.text_color" class="color_picker">
                         </div>
                         <input type="text" class="form-control" id="f_color" maxlength="10"
                                v-model="content.text_color">
                       </div>
-                      <label v-if="content.type == 7 || content.type == 8" class="col-sm-3 col-form-label-sm mt-3"
+                      <label v-if="content.type == 7 || content.type == 8 || content.type == 9" class="col-sm-3 col-form-label-sm mt-3"
                              for="f_img">이미지</label>
-                      <div v-if="content.type == 7 || content.type == 8" class="col-sm-9 mt-sm-3">
+                      <div v-if="content.type == 7 || content.type == 8 || content.type == 9" class="col-sm-9 mt-sm-3">
                         <input type="file" class="input_one_btn form-control col-md-11 pt-1" id="f_img" placeholder="이미지" :id="'field_file_input'+content.sign"
                                ref="field_file_input" @change="field_file_add(content.sign)" :value="content.image" accept="image/*">
                         <button type="button" class="btn btn-danger w-100 mt-1" id="f_imgg" @click.prevent="field_file_delete(content.sign)">파일삭제</button>
@@ -449,50 +452,74 @@
                                          :min-height="100"
                                          :grid=[5,5]
                                          :lock-aspect-ratio="false">
+
                   <img v-if="item.type == 1 && item.image_data.length == 0" src="../assets/logo1.png" alt="logo" style="width: 100%; height: 100%; object-fit: contain;">
                   <img v-if="item.type == 1 && item.image_data.length !== 0" :src="item.image_url" alt="logo" style="width: 100%; height: 100%; object-fit: contain;">
-                  <div v-if="item.type == 2">
 
-                    {{ item.form_group }}
+                  <div v-if="item.type == 2" class="form_layout" v-for="form in form_obj">
 
-
-                    <!--
-                    <option value="1">텍스트 입력</option>
-                    <option value="2">번호 입력</option>
-                    <option value="3">선택 스크롤</option>
-                    <option value="4">선택 버튼</option>
-                    <option value="5">체크 박스</option>
-                    <option value="6">날짜</option>
-                    <option value="7">링크 버튼</option>
-                    <option value="8">전화 버튼</option>
-                    -->
-
-                    <div class="container">
-                      <div class="form-group row">
-                        <div class="w-100 row m-0" v-for="field in field_obj">
-                          <label v-if="field.form_group_id == item.form_group" class="col-sm-3 col-form-label-sm mt-3">
+                    <div class="container form_layout_cont" v-if="form.sign == item.form_group" :style="'background:'+form.bg_color+';' + 'color:'+form.tx_color+';'">
+                      <div class="form-group row mb-1" v-for="field in field_obj">
+                        <div class="w-100 row m-0" v-if="field.type != 7 && field.type != 8 && field.type != 9">
+                          <label v-if="field.form_group_id == item.form_group" class="col-sm-3 col-form-label-sm mt-3 text-center font-weight-bold pr-0 pl-0 pt-2" :for="'label'+field.name">
                             {{ field.name }}
                           </label>
                           <div v-if="field.form_group_id == item.form_group" class="col-sm-9 mt-sm-3">
-                            <input v-if="field.type == 1" type="text" class="form-control" maxlength="0" :placeholder="field.holder">
-                            <input v-if="field.type == 2" type="number" class="form-control" maxlength="0" :placeholder="field.holder">
-                            <select v-if="field.type == 3" type="number" class="form-control" maxlength="0" :placeholder="field.holder">
+
+                            <input v-if="field.type == 1" type="text" class="form-control" maxlength="0" :placeholder="field.holder" :id="'label'+field.name">
+
+                            <input v-if="field.type == 2" type="number" class="form-control" maxlength="0" :placeholder="field.holder" :id="'label'+field.name">
+
+                            <select v-if="field.type == 3" type="number" class="form-control" maxlength="0" :placeholder="field.holder" :id="'label'+field.name">
                               <option value="0">select here</option>
                               <option v-for="list in field.list" :value="list">{{ list }}</option>
                             </select>
-                            <div class="form-check-inline" v-if="field.type == 4">
-                              <div v-for="list in field.list">
+
+                            <div v-if="field.type == 4" :id="'label'+field.name" class="form-check-inline d-flex flex-wrap justify-content-around">
+                              <div class="p-2" v-for="list in field.list">
+                                <label class="form-check-label" :for="'field_' + list">
+                                  <input class="form-check-input" type="radio" :name="field.sign" :value="list" :id="'field_'+list">
+                                  {{ list }}
+                                </label>
+                              </div>
+                            </div>
+
+                            <div v-if="field.type == 5" :id="'label'+field.name" class="form-check-inline d-flex flex-wrap justify-content-around">
+                              <div class="p-2" v-for="list in field.list">
                                 <label class="form-check-label" :for="'field_' + list">
                                   <input class="form-check-input" type="checkbox" :id="'field_' + list" :value="list">
                                   {{ list }}
                                 </label>
                               </div>
                             </div>
+
+                            <input v-if="field.type == 6" type="text" class="form-control" disabled placeholder="Datepicker" :id="'label'+field.name">
+
                           </div>
+                        </div>
+                        <div class="pl-3 pr-3 pt-1 pb-1 col" v-else>
+                          <!-- link -->
+                          <button v-if="field.type == 7 && field.image_data.length == 0" type="button" class="btn w-100" :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">{{ field.holder }}</button>
+                          <button v-else-if="field.type == 7 && field.image_data.length == 1" type="button" class="btn w-100 p-0" style="background: transparent;">
+                            <img :src="field.image_url" alt="button image" class="w-100" style="width: 100%; height: 100%; object-fit: contain;">
+                          </button>
+
+                          <!-- tel -->
+                          <button v-if="field.type == 8 && field.image_data.length == 0" type="button" class="btn w-100" :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">{{ field.holder }}</button>
+                          <button v-else-if="field.type == 8 && field.image_data.length == 1" type="button" class="btn w-100 p-0" style="background: transparent;">
+                            <img :src="field.image_url" alt="button image" class="w-100" style="width: 100%; height: 100%; object-fit: contain;">
+                          </button>
+
+                          <!-- submit -->
+                          <button v-if="field.type == 9 && field.image_data.length == 0" type="button" class="btn w-100" :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">{{ field.holder }}not f</button>
+                          <button v-else-if="field.type == 9 && field.image_data.length == 1" type="button" class="btn w-100 p-0" style="background: transparent;">
+                            <img :src="field.image_url" alt="button image" style="width: 100%; height: 100%; object-fit: contain;">
+                          </button>
                         </div>
                       </div>
                     </div>
                   </div>
+
                   <div v-if="item.type == 3">
                     <span class="video_handler">비디오 드래그</span>
                     <span class="video_handler_2">비디오 드래그</span>
@@ -503,11 +530,12 @@
                       </div>
                     </div>
                   </div>
+
                 </vue-draggable-resizable>
+
               </div>
+
               <div class="console" v-if="console_obj.sign != 0">
-                {{ order_obj }}
-                {{ console_obj }}
                 <div class="form-group row p-4">
                   <label for="console_name" class="col-sm-3 col-form-label-sm mt-3">이름</label>
                   <div class="col-sm-9 mt-sm-3">
@@ -823,7 +851,9 @@
           image_url: '',
           video_type: 1,
           video_data: '',
-          form_group: 0
+          form_group: 0,
+          bg_color: '',
+          tx_color: ''
         },
         {
           sign: 2,
@@ -834,7 +864,9 @@
           image_url: '',
           video_type: 1,
           video_data: '',
-          form_group: 0
+          form_group: 0,
+          bg_color: '',
+          tx_color: ''
         }
       ],
       // // Form-group db
@@ -893,11 +925,6 @@
           if(this.order_obj[i].sign == this.order_selected) {
             this.order_obj[i].form_group = this.console_obj.form_group
           }
-          // for(let j = 0; j < this.form_obj.length; j ++) {
-          //   if(this.form_obj[j].sign == this.order_obj[i].form_group) {
-          //     //
-          //   }
-          // }
         }
       },
       order_video_type_change() {
@@ -1038,11 +1065,24 @@
         this.term_file_info = ''
         this.term_file_flag = 0
       },
+      /*
+       order_image_change(sign) {
+        let file_data = event.target.files[0]
+        for(let i = 0; i < this.order_obj.length; i ++) {
+          if(this.order_obj[i].sign == sign) {
+            this.order_obj[i].image_data = file_data
+            this.order_obj[i].image_url = URL.createObjectURL(file_data)
+          }
+        }
+        // this.in_banner_file_info = file_data
+      }
+      */
       field_file_add(sign) {
         let file_data = event.target.files[0]
         for(let i = 0; i < this.field_obj.length; i++) {
           if (this.field_obj[i].sign == sign) {
             this.field_obj[i].image_data[0] = file_data
+            this.field_obj[i].image_url = URL.createObjectURL(file_data)
           }
         }
       },
@@ -1052,6 +1092,7 @@
         for(let i = 0; i < this.field_obj.length; i++) {
           if(this.field_obj[i].sign == sign) {
             this.field_obj[i].image_data = []
+            this.field_obj[i].image_url = ''
           }
         }
       },
@@ -1758,5 +1799,16 @@
     color: #e1e1e1;
     font-weight: bold;
     padding: 8px;
+  }
+
+  .form_layout {
+    /*width: 100%;
+    height: 100%;*/
+  }
+
+  .form_layout_cont {
+    width: 100%;
+    height: 100%;
+    /*max-width: 750px;*/
   }
 </style>
