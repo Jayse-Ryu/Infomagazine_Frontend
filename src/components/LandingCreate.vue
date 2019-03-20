@@ -86,13 +86,15 @@
               <option v-for="item in form_obj" :value="item.sign">{{ item.name }}</option>
             </select>
             <button type="button" class="btn btn-danger col-md-1 p-0"
-                    @click.prevent="form_group_delete(form_selected.sign)">삭제
+                    @click.prevent="form_group_delete(form_selected.sign)">
+              삭제
             </button>
           </div>
 
           <!-- Somehow !== is not responsible -->
           <label v-if="form_selected.sign != -1" class="col-sm-3 col-form-label-sm mt-3" for="form_group_bg">
-            폼 배경색</label>
+            폼 배경색
+          </label>
           <div v-if="form_selected.sign != -1" class="col-sm-9 mt-sm-3 row ml-0">
             <div class="color_wrap form-control col-sm-2" id="form_group_bg">
               <input type="color" v-model="form_selected.bg_color" class="color_picker">
@@ -102,7 +104,8 @@
           </div>
 
           <label v-if="form_selected.sign != -1" class="col-sm-3 col-form-label-sm mt-3" for="form_group_col">
-            폼 폰트색</label>
+            폼 폰트색
+          </label>
           <div v-if="form_selected.sign != -1" class="col-sm-9 mt-sm-3 row ml-0">
             <div class="color_wrap form-control col-sm-2" id="form_group_col">
               <input type="color" v-model="form_selected.tx_color" class="color_picker">
@@ -155,10 +158,12 @@
                 <div class="col-3 p-2 text-center" v-if="content.type == 9">완료 버튼</div>
                 <div class="col-3 p-2 text-center">{{ content.name }}</div>
                 <button type="button" class="btn btn-outline-info p-0 col-3 col-sm-2 m-auto" data-toggle="collapse"
-                        v-bind:href="'#collapse_option'+ content.sign" aria-expanded="false">설정
+                        v-bind:href="'#collapse_option'+ content.sign" aria-expanded="false">
+                  설정
                 </button>
                 <button type="button" class="btn btn-outline-danger p-0 col-3 col-sm-2 m-auto"
-                        @click="field_delete(content.sign)">삭제
+                        @click="field_delete(content.sign)">
+                  삭제
                 </button>
                 <div class="field_option_wrap collapse" v-bind:id="'collapse_option'+ content.sign"
                      data-parent="#form_field_list">
@@ -247,7 +252,8 @@
                         </div>
                       </div>
 
-                      <label v-if="content.type == 7 || content.type == 8 || content.type == 9" class="col-sm-3 col-form-label-sm mt-3"
+                      <label v-if="content.type == 7 || content.type == 8 || content.type == 9"
+                             class="col-sm-3 col-form-label-sm mt-3"
                              for="f_back">배경색</label>
                       <div v-if="content.type == 7 || content.type == 8 || content.type == 9" class="col-sm-9 mt-sm-3">
                         <div class="color_wrap form-control col">
@@ -256,7 +262,8 @@
                         <input type="text" class="form-control" id="f_back" maxlength="10" v-model="content.back_color">
                       </div>
 
-                      <label v-if="content.type == 7 || content.type == 8 || content.type == 9" class="col-sm-3 col-form-label-sm mt-3"
+                      <label v-if="content.type == 7 || content.type == 8 || content.type == 9"
+                             class="col-sm-3 col-form-label-sm mt-3"
                              for="f_color">글씨색</label>
                       <div v-if="content.type == 7 || content.type == 8 || content.type == 9" class="col-sm-9 mt-sm-3">
                         <div class="color_wrap form-control col">
@@ -265,16 +272,23 @@
                         <input type="text" class="form-control" id="f_color" maxlength="10"
                                v-model="content.text_color">
                       </div>
-                      <label v-if="content.type == 7 || content.type == 8 || content.type == 9" class="col-sm-3 col-form-label-sm mt-3"
+                      <label v-if="content.type == 7 || content.type == 8 || content.type == 9"
+                             class="col-sm-3 col-form-label-sm mt-3"
                              for="f_img">이미지</label>
                       <div v-if="content.type == 7 || content.type == 8 || content.type == 9" class="col-sm-9 mt-sm-3">
-                        <input type="file" class="input_one_btn form-control col-md-11 pt-1" id="f_img" placeholder="이미지" :id="'field_file_input'+content.sign"
-                               ref="field_file_input" @change="field_file_add(content.sign)" :value="content.image" accept="image/*">
-                        <button type="button" class="btn btn-danger w-100 mt-1" id="f_imgg" @click.prevent="field_file_delete(content.sign)">파일삭제</button>
+                        <input type="file" class="input_one_btn form-control col-md-11 pt-1" id="f_img"
+                               placeholder="이미지" :id="'field_file_input'+content.sign"
+                               ref="field_file_input" @change="field_file_add(content.sign)" :value="content.image"
+                               accept="image/*">
+                        <button type="button" class="btn btn-danger w-100 mt-1" id="f_imgg"
+                                @click.prevent="field_file_delete(content.sign)">
+                          파일삭제
+                        </button>
                       </div>
                     </div>
                     <button type="button" class="btn btn-info col-12 m-auto" data-toggle="collapse"
-                            v-bind:href="'#collapse_option'+ content.sign" aria-expanded="false">닫기
+                            v-bind:href="'#collapse_option'+ content.sign" aria-expanded="false">
+                      닫기
                     </button>
                   </form>
                 </div>
@@ -314,7 +328,8 @@
                 <div class="col-5 p-2 text-center">{{ url.url }}</div>
                 <div class="col-5 p-2 text-center">{{ url.desc }}</div>
                 <button type="button" class="btn btn-outline-danger p-0 col-2" @click.prevent="url_delete(url.sign)">
-                  삭제</button>
+                  삭제
+                </button>
               </li>
               <li v-if="url_obj.length == 0" class="d-inline-flex justify-content-between p-1">
                 <div class="col p-2 text-center bg-light">데이터 없음</div>
@@ -453,37 +468,48 @@
                                          :grid=[5,5]
                                          :lock-aspect-ratio="false">
 
-                  <img v-if="item.type == 1 && item.image_data.length == 0" src="../assets/logo1.png" alt="logo" style="width: 100%; height: 100%; object-fit: contain;">
-                  <img v-if="item.type == 1 && item.image_data.length !== 0" :src="item.image_url" alt="logo" style="width: 100%; height: 100%; object-fit: contain;">
+                  <img v-if="item.type == 1 && item.image_data.length == 0" src="../assets/logo1.png" alt="logo"
+                       style="width: 100%; height: 100%; object-fit: contain;">
+                  <img v-if="item.type == 1 && item.image_data.length !== 0" :src="item.image_url" alt="logo"
+                       style="width: 100%; height: 100%; object-fit: contain;">
 
                   <div v-if="item.type == 2" class="form_layout" v-for="form in form_obj">
-                    <div class="container form_layout_cont" v-if="form.sign == item.form_group" :style="'background:'+form.bg_color+';' + 'color:'+form.tx_color+';'+'z-index:10;'">
+                    <div class="container form_layout_cont" v-if="form.sign == item.form_group"
+                         :style="'background:'+form.bg_color+';' + 'color:'+form.tx_color+';'+'z-index:10;'">
                       <div class="form-group row mb-1" v-for="field in field_obj">
                         <div class="w-100 row m-0" v-if="field.type != 7 && field.type != 8 && field.type != 9">
-                          <label v-if="field.form_group_id == item.form_group" class="col-sm-3 col-form-label-sm mt-3 text-center font-weight-bold pr-0 pl-0 pt-2" :for="'label'+field.name">
+                          <label v-if="field.form_group_id == item.form_group"
+                                 class="col-sm-3 col-form-label-sm mt-3 text-center font-weight-bold pr-0 pl-0 pt-2"
+                                 :for="'label'+field.name">
                             {{ field.name }}
                           </label>
                           <div v-if="field.form_group_id == item.form_group" class="col-sm-9 mt-sm-3">
 
-                            <input v-if="field.type == 1" type="text" class="form-control" maxlength="0" :placeholder="field.holder" :id="'label'+field.name">
+                            <input v-if="field.type == 1" type="text" class="form-control" maxlength="0"
+                                   :placeholder="field.holder" :id="'label'+field.name">
 
-                            <input v-if="field.type == 2" type="number" class="form-control" maxlength="0" :placeholder="field.holder" :id="'label'+field.name">
+                            <input v-if="field.type == 2" type="number" class="form-control" maxlength="0"
+                                   :placeholder="field.holder" :id="'label'+field.name">
 
-                            <select v-if="field.type == 3" type="number" class="form-control" maxlength="0" :placeholder="field.holder" :id="'label'+field.name">
+                            <select v-if="field.type == 3" type="number" class="form-control" maxlength="0"
+                                    :placeholder="field.holder" :id="'label'+field.name">
                               <option value="0">select here</option>
                               <option v-for="list in field.list" :value="list">{{ list }}</option>
                             </select>
 
-                            <div v-if="field.type == 4" :id="'label'+field.name" class="form-check-inline d-flex flex-wrap justify-content-around">
+                            <div v-if="field.type == 4" :id="'label'+field.name"
+                                 class="form-check-inline d-flex flex-wrap justify-content-around">
                               <div class="p-2" v-for="list in field.list">
                                 <label class="form-check-label" :for="'field_' + list">
-                                  <input class="form-check-input" type="radio" :name="field.sign" :value="list" :id="'field_'+list">
+                                  <input class="form-check-input" type="radio" :name="field.sign" :value="list"
+                                         :id="'field_'+list">
                                   {{ list }}
                                 </label>
                               </div>
                             </div>
 
-                            <div v-if="field.type == 5" :id="'label'+field.name" class="form-check-inline d-flex flex-wrap justify-content-around">
+                            <div v-if="field.type == 5" :id="'label'+field.name"
+                                 class="form-check-inline d-flex flex-wrap justify-content-around">
                               <div class="p-2" v-for="list in field.list">
                                 <label class="form-check-label" :for="'field_' + list">
                                   <input class="form-check-input" type="checkbox" :id="'field_' + list" :value="list">
@@ -492,28 +518,48 @@
                               </div>
                             </div>
 
-                            <input v-if="field.type == 6" type="text" class="form-control" disabled placeholder="Datepicker" :id="'label'+field.name">
+                            <input v-if="field.type == 6" type="text" class="form-control" disabled
+                                   placeholder="Datepicker" :id="'label'+field.name">
 
                           </div>
                         </div>
-                        <div class="pl-3 pr-3 pt-1 pb-1 col" v-else-if="field.type == 7 || field.type == 8 || field.type == 9">
+                        <div class="pl-3 pr-3 pt-1 pb-1 col"
+                             v-else-if="field.type == 7 || field.type == 8 || field.type == 9">
                           <div v-if="field.form_group_id == item.form_group">
                             <!-- link -->
-                            <button v-if="field.type == 7 && field.image_data.length == 0" type="button" class="btn w-100" :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">{{ field.holder }}</button>
-                            <button v-else-if="field.type == 7 && field.image_data.length == 1" type="button" class="btn w-100 p-0" style="background: transparent;">
-                              <img :src="field.image_url" alt="button image" class="w-100" style="width: 100%; height: 100%; object-fit: contain;">
+                            <button v-if="field.type == 7 && field.image_data.length == 0" type="button"
+                                    class="btn w-100"
+                                    :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">
+                              {{ field.holder }}
+                            </button>
+                            <button v-else-if="field.type == 7 && field.image_data.length == 1" type="button"
+                                    class="btn w-100 p-0" style="background: transparent;">
+                              <img :src="field.image_url" alt="button image" class="w-100"
+                                   style="width: 100%; height: 100%; max-height: 50px; object-fit: contain;">
                             </button>
 
                             <!-- tel -->
-                            <button v-if="field.type == 8 && field.image_data.length == 0" type="button" class="btn w-100" :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">{{ field.holder }}</button>
-                            <button v-else-if="field.type == 8 && field.image_data.length == 1" type="button" class="btn w-100 p-0" style="background: transparent;">
-                              <img :src="field.image_url" alt="button image" class="w-100" style="width: 100%; height: 100%; object-fit: contain;">
+                            <button v-if="field.type == 8 && field.image_data.length == 0" type="button"
+                                    class="btn w-100"
+                                    :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">
+                              {{ field.holder }}
+                            </button>
+                            <button v-else-if="field.type == 8 && field.image_data.length == 1" type="button"
+                                    class="btn w-100 p-0" style="background: transparent;">
+                              <img :src="field.image_url" alt="button image" class="w-100"
+                                   style="width: 100%; height: 100%; max-height: 50px; object-fit: contain;">
                             </button>
 
                             <!-- submit -->
-                            <button v-if="field.type == 9 && field.image_data.length == 0" type="button" class="btn w-100" :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">{{ field.holder }}</button>
-                            <button v-else-if="field.type == 9 && field.image_data.length == 1" type="button" class="btn w-100 p-0" style="background: transparent;">
-                              <img :src="field.image_url" alt="button image" style="width: 100%; height: 100%; object-fit: contain;">
+                            <button v-if="field.type == 9 && field.image_data.length == 0" type="button"
+                                    class="btn w-100"
+                                    :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">
+                              {{ field.holder }}
+                            </button>
+                            <button v-else-if="field.type == 9 && field.image_data.length == 1" type="button"
+                                    class="btn w-100 p-0" style="background: transparent;">
+                              <img :src="field.image_url" alt="button image"
+                                   style="width: 100%; height: 100%; max-height: 50px; object-fit: contain;">
                             </button>
                           </div>
                         </div>
@@ -526,8 +572,17 @@
                     <span class="video_handler_2">비디오 드래그</span>
                     <div style="position: relative; width: 100%; max-width: 1000px; margin: auto;">
                       <div style=" position: relative; padding-bottom: 56.25%; height:0;">
-                        <iframe v-if="console_obj.video_type == 1" style="width: 100%; height: 100%; top:0; left:0; position: absolute;" type="text/html" :src="'https://www.youtube.com/embed/' + item.video_data + '?&playlist=Ra8s0IHng6A&autoplay=0&loop=1&showinfo=0&fs=1&disablekb=1&vq=auto&controls=0&rel=0&iv_load_policy=3&mute=0&playsinline=1&modestbranding=1'" frameborder="0" volume="1" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
-                        <iframe v-if="console_obj.video_type == 2" style="width: 100%; height: 100%; top:0; left:0; position: absolute;" type="text/html" :src="'https://player.vimeo.com/video/' + item.video_data + '?&loop=1'" frameborder="0" volume="1" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                        <iframe v-if="console_obj.video_type == 1"
+                                style="width: 100%; height: 100%; top:0; left:0; position: absolute;" type="text/html"
+                                :src="'https://www.youtube.com/embed/'
+                                + item.video_data
+                                + '?&playlist=Ra8s0IHng6A&autoplay=0&loop=1&showinfo=0&fs=1&disablekb=1&vq=auto&controls=0&rel=0&iv_load_policy=3&mute=0&playsinline=1&modestbranding=1'"
+                                frameborder="0" volume="1" allowfullscreen webkitallowfullscreen
+                                mozallowfullscreen></iframe>
+                        <iframe v-if="console_obj.video_type == 2"
+                                style="width: 100%; height: 100%; top:0; left:0; position: absolute;" type="text/html"
+                                :src="'https://player.vimeo.com/video/' + item.video_data + '?&loop=1'" frameborder="0"
+                                volume="1" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
                       </div>
                     </div>
                   </div>
@@ -540,55 +595,73 @@
                 <div class="form-group row p-4">
                   <label for="console_name" class="col-sm-3 col-form-label-sm mt-3">이름</label>
                   <div class="col-sm-9 mt-sm-3">
-                    <input type="text" id="console_name" v-model="console_obj.name" class="form-control" step="5" maxlength="30" @keyup.prevent="order_name_change">
+                    <input type="text" id="console_name" v-model="console_obj.name" class="form-control" step="5"
+                           maxlength="30" @keyup.prevent="order_name_change">
                   </div>
 
                   <label for="console_type" class="col-sm-3 col-form-label-sm mt-3">타입</label>
                   <div class="col-sm-9 mt-sm-3">
-                    <select class="form-control" id="console_type" v-model.number="console_obj.type" @change.prevent="order_type_change">
+                    <select class="form-control" id="console_type" v-model.number="console_obj.type"
+                            @change.prevent="order_type_change">
                       <option value="1">이미지</option>
                       <option value="2">폼그룹</option>
                       <option value="3">비디오</option>
                     </select>
                   </div>
 
-                  <label v-if="console_obj.type == 3" for="video_type" class="col-sm-3 col-form-label-sm mt-3">비디오 타입</label>
+                  <label v-if="console_obj.type == 3" for="video_type" class="col-sm-3 col-form-label-sm mt-3">
+                    비디오 타입
+                  </label>
                   <div v-if="console_obj.type == 3" class="col-sm-9 mt-sm-3">
-                    <select id="video_type" class="form-control" v-model="console_obj.video_type" @change="order_video_type_change">
+                    <select id="video_type" class="form-control" v-model="console_obj.video_type"
+                            @change="order_video_type_change">
                       <option value="1">Youtube</option>
                       <option value="2">Vimeo</option>
                     </select>
                   </div>
-                  <label v-if="console_obj.type == 1" class="col-sm-3 col-form-label-sm mt-3" for="image_set">이미지 첨부</label>
-                  <label v-if="console_obj.type == 2" class="col-sm-3 col-form-label-sm mt-3" for="form_set">폼 그룹 선택</label>
-                  <label v-if="console_obj.type == 3" class="col-sm-3 col-form-label-sm mt-3" for="video_set">동영상 값</label>
+                  <label v-if="console_obj.type == 1" class="col-sm-3 col-form-label-sm mt-3" for="image_set">
+                    이미지 첨부
+                  </label>
+                  <label v-if="console_obj.type == 2" class="col-sm-3 col-form-label-sm mt-3" for="form_set">
+                    폼 그룹 선택
+                  </label>
+                  <label v-if="console_obj.type == 3" class="col-sm-3 col-form-label-sm mt-3" for="video_set">
+                    동영상 값
+                  </label>
                   <div class="col-sm-9 mt-sm-3" id="choose_set">
-                    <input v-if="console_obj.type == 1" type="file" class="form-control p-1" id="image_set" @change="order_image_change(console_obj.sign)" accept="image/*">
-                    <select v-if="console_obj.type == 2" class="form-control" id="form_set" v-model="console_obj.form_group" @change="order_form_change">
+                    <input v-if="console_obj.type == 1" type="file" class="form-control p-1" id="image_set"
+                           @change="order_image_change(console_obj.sign)" accept="image/*">
+                    <select v-if="console_obj.type == 2" class="form-control" id="form_set"
+                            v-model="console_obj.form_group" @change="order_form_change">
                       <option value="0">폼 그룹을 선택하세요</option>
                       <option v-for="content in form_obj" :value="content.sign">{{ content.name }}</option>
                     </select>
-                    <input v-if="console_obj.type == 3" type="text" class="form-control" id="video_set" v-model="console_obj.video_data" @keyup.prevent="order_video_change">
+                    <input v-if="console_obj.type == 3" type="text" class="form-control" id="video_set"
+                           v-model="console_obj.video_data" @keyup.prevent="order_video_change">
                   </div>
 
                   <label for="console_x" class="col-sm-3 col-form-label-sm mt-3">X 좌표</label>
                   <div class="col-sm-9 mt-sm-3">
-                    <input type="number" id="console_x" v-model.number="console_obj.position.x" class="form-control" step="5">
+                    <input type="number" id="console_x" v-model.number="console_obj.position.x" class="form-control"
+                           step="5">
                   </div>
 
                   <label for="console_y" class="col-sm-3 col-form-label-sm mt-3">Y 좌표</label>
                   <div class="col-sm-9 mt-sm-3">
-                    <input type="number" id="console_y" v-model.number="console_obj.position.y" class="form-control" step="5">
+                    <input type="number" id="console_y" v-model.number="console_obj.position.y" class="form-control"
+                           step="5">
                   </div>
 
                   <label for="console_w" class="col-sm-3 col-form-label-sm mt-3">너비</label>
                   <div class="col-sm-9 mt-sm-3">
-                    <input type="number" id="console_w" v-model.number="console_obj.position.w" class="form-control" step="5">
+                    <input type="number" id="console_w" v-model.number="console_obj.position.w" class="form-control"
+                           step="5">
                   </div>
 
                   <label for="console_h" class="col-sm-3 col-form-label-sm mt-3">높이</label>
                   <div class="col-sm-9 mt-sm-3">
-                    <input type="number" id="console_h" v-model.number="console_obj.position.h" class="form-control" step="5">
+                    <input type="number" id="console_h" v-model.number="console_obj.position.h" class="form-control"
+                           step="5">
                   </div>
 
                   <label for="console_z" class="col-sm-3 col-form-label-sm mt-3">우선순위</label>
@@ -906,8 +979,8 @@
     methods: {
       order_image_change(sign) {
         let file_data = event.target.files[0]
-        for(let i = 0; i < this.order_obj.length; i ++) {
-          if(this.order_obj[i].sign == sign) {
+        for (let i = 0; i < this.order_obj.length; i++) {
+          if (this.order_obj[i].sign == sign) {
             this.order_obj[i].image_data = file_data
             this.order_obj[i].image_url = URL.createObjectURL(file_data)
           }
@@ -915,44 +988,44 @@
         // this.in_banner_file_info = file_data
       },
       order_name_change() {
-        for(let i = 0; i < this.order_obj.length; i ++) {
-          if(this.order_obj[i].sign == this.order_selected) {
+        for (let i = 0; i < this.order_obj.length; i++) {
+          if (this.order_obj[i].sign == this.order_selected) {
             this.order_obj[i].name = this.console_obj.name
           }
         }
       },
       order_form_change() {
-        for(let i = 0; i < this.order_obj.length; i ++) {
-          if(this.order_obj[i].sign == this.order_selected) {
+        for (let i = 0; i < this.order_obj.length; i++) {
+          if (this.order_obj[i].sign == this.order_selected) {
             this.order_obj[i].form_group = this.console_obj.form_group
           }
         }
       },
       order_video_type_change() {
-        for(let i = 0; i < this.order_obj.length; i ++) {
-          if(this.order_obj[i].sign == this.order_selected) {
+        for (let i = 0; i < this.order_obj.length; i++) {
+          if (this.order_obj[i].sign == this.order_selected) {
             this.order_obj[i].video_type = this.console_obj.video_type
           }
         }
       },
       order_video_change() {
-        for(let i = 0; i < this.order_obj.length; i ++) {
-          if(this.order_obj[i].sign == this.order_selected) {
+        for (let i = 0; i < this.order_obj.length; i++) {
+          if (this.order_obj[i].sign == this.order_selected) {
             this.order_obj[i].video_data = this.console_obj.video_data
           }
         }
       },
       order_type_change() {
-        for(let i = 0; i < this.order_obj.length; i ++) {
-          if(this.order_obj[i].sign == this.order_selected) {
+        for (let i = 0; i < this.order_obj.length; i++) {
+          if (this.order_obj[i].sign == this.order_selected) {
             this.order_obj[i].type = this.console_obj.type
           }
         }
       },
       order_activated(sign) {
         this.order_selected = sign
-        for(let i = 0; i < this.order_obj.length; i ++) {
-          if(this.order_obj[i]. sign == sign) {
+        for (let i = 0; i < this.order_obj.length; i++) {
+          if (this.order_obj[i].sign == sign) {
             this.console_obj.sign = this.order_obj[i].sign
             this.console_obj.name = this.order_obj[i].name
             this.console_obj.position = this.order_obj[i].position
@@ -970,7 +1043,7 @@
         // this.console_obj = {}
       },
       order_move(x, y) {
-        for(let i = 0; i < this.order_obj.length; i ++) {
+        for (let i = 0; i < this.order_obj.length; i++) {
           if (this.order_obj[i].sign == this.order_selected) {
             this.order_obj[i].position.x = x
             this.order_obj[i].position.y = y
@@ -978,7 +1051,7 @@
         }
       },
       order_resize(x, y, w, h) {
-        for(let i = 0; i < this.order_obj.length; i ++) {
+        for (let i = 0; i < this.order_obj.length; i++) {
           if (this.order_obj[i].sign == this.order_selected) {
             this.order_obj[i].position.x = x
             this.order_obj[i].position.y = y
@@ -1002,20 +1075,36 @@
               z = this.order_obj[j].position.z
             }
           }
-          let order_ready = {sign: highest + 1, type: 1, name: 'new layout', position: {x: 0, y: 0, w: 100, h: 100, z: z + 1}, image_data: [], image_url: '', video_type: 1}
+          let order_ready = {
+            sign: highest + 1,
+            type: 1,
+            name: 'new layout',
+            position: {x: 0, y: 0, w: 100, h: 100, z: z + 1},
+            image_data: [],
+            image_url: '',
+            video_type: 1
+          }
           this.order_obj.push(order_ready)
           alert('레이아웃이 생성되었습니다.')
         } else {
-          let order_ready = {sign: 1, type: 1, name: 'new layout', position: {x: 0, y: 0, w: 100, h: 100, z: 1}, image_data: [], image_url: '', video_type: 1}
+          let order_ready = {
+            sign: 1,
+            type: 1,
+            name: 'new layout',
+            position: {x: 0, y: 0, w: 100, h: 100, z: 1},
+            image_data: [],
+            image_url: '',
+            video_type: 1
+          }
           this.order_obj.push(order_ready)
           alert('레이아웃이 생성되었습니다.')
         }
       },
       order_delete() {
-        if(this.order_selected) {
-          if(confirm('선택한 레이아웃을 삭제하시겠습니까?')) {
-            for(let i = 0; i < this.order_obj.length; i ++) {
-              if(this.order_obj[i].sign == this.order_selected) {
+        if (this.order_selected) {
+          if (confirm('선택한 레이아웃을 삭제하시겠습니까?')) {
+            for (let i = 0; i < this.order_obj.length; i++) {
+              if (this.order_obj[i].sign == this.order_selected) {
                 if (i === 0) {
                   this.order_obj.shift()
                   this.clicked = -1
@@ -1025,7 +1114,7 @@
                 }
               }
             }
-            let console_clear = {sign: 0, type: 0, name: '', position: {x:0, y: 0,w: 0,h: 0,z: 0}}
+            let console_clear = {sign: 0, type: 0, name: '', position: {x: 0, y: 0, w: 0, h: 0, z: 0}}
             this.console_obj = console_clear
             this.order_selected = 0
             this.order_activated(0)
@@ -1080,7 +1169,7 @@
       */
       field_file_add(sign) {
         let file_data = event.target.files[0]
-        for(let i = 0; i < this.field_obj.length; i++) {
+        for (let i = 0; i < this.field_obj.length; i++) {
           if (this.field_obj[i].sign == sign) {
             this.field_obj[i].image_data[0] = file_data
             this.field_obj[i].image_url = URL.createObjectURL(file_data)
@@ -1090,8 +1179,8 @@
       field_file_delete(sign) {
         // this.$refs.field_file_input.value = ''
         document.getElementById('field_file_input' + sign).value = ''
-        for(let i = 0; i < this.field_obj.length; i++) {
-          if(this.field_obj[i].sign == sign) {
+        for (let i = 0; i < this.field_obj.length; i++) {
+          if (this.field_obj[i].sign == sign) {
             this.field_obj[i].image_data = []
             this.field_obj[i].image_url = ''
           }
@@ -1324,9 +1413,9 @@
           alert('메인 URL을 입력하세요!')
           document.getElementById('base_url').focus()
         } else {
-          if(this.form_obj.length > 0) {
+          if (this.form_obj.length > 0) {
             let flag = true
-            for(let i = 0; i < this.field_obj.length; i++) {
+            for (let i = 0; i < this.field_obj.length; i++) {
               if (this.field_obj[i].name == '') {
                 alert('폼 그룹 필드 이름을 모두 입력해주세요!')
                 document.getElementById('db_field').focus()
@@ -1334,7 +1423,7 @@
                 return flag
               }
             }
-            if(flag) {
+            if (flag) {
               this.landing_create()
             }
           } else {
@@ -1366,7 +1455,7 @@
         axios.post(this.$store.state.endpoints.baseUrl + 'landing/', formData, config)
           .then((response) => {
             let landing_id = response.data.id
-            if(landing_id) {
+            if (landing_id) {
               this.layout_create(landing_id)
               this.url_create(landing_id)
             } else {
@@ -1397,7 +1486,7 @@
         layoutFormData.append('image_term', this.layout_obj.image_term)
         layoutFormData.append('show_company', this.layout_obj.show_company)
         // // Banner image filter
-        if(this.layout_obj.is_banner && this.in_banner_file_flag){
+        if (this.layout_obj.is_banner && this.in_banner_file_flag) {
           let layout_image_data = new FormData()
           layout_image_data.append('image', this.in_banner_file[0])
           axios.post(this.$store.state.endpoints.baseUrl + 'image/', layout_image_data, config)
@@ -1434,7 +1523,7 @@
         }
         // // //
         // // Url create (for..?)
-        for(let i = 0; i < this.url_obj.length; i++) {
+        for (let i = 0; i < this.url_obj.length; i++) {
           this.url_obj[i].landing = landing_id
           let url_info = new FormData()
           url_info.append('landing', landing_id)
@@ -1459,7 +1548,7 @@
         term_data.append('layout', layout_id)
         term_data.append('title', this.term_obj.title)
         term_data.append('content', this.term_obj.content)
-        if(this.term_file_flag && this.layout_obj.image_term) {
+        if (this.term_file_flag && this.layout_obj.image_term) {
           let term_image = new FormData()
           term_image.append('image', this.term_file[0])
           axios.post(this.$store.state.endpoints.baseUrl + 'image/', term_image, config)
@@ -1484,7 +1573,7 @@
             'Content-Type': 'multipart/form-data'
           }
         }
-        for(let i = 0; i < this.form_obj.length; i ++) {
+        for (let i = 0; i < this.form_obj.length; i++) {
           let form_group_data = new FormData()
           form_group_data.append('layout', layout_id)
           form_group_data.append('name', this.form_obj[i].name)
@@ -1492,9 +1581,9 @@
           form_group_data.append('text_color', this.form_obj[i].tx_color)
           axios.post(this.$store.state.endpoints.baseUrl + 'form_group/', form_group_data, config)
             .then((response) => {
-              for(let j = 0; j < this.field_obj.length; j++) {
-                if(this.form_obj[i].sign == this.field_obj[j].sign) {
-                  if(this.field_obj[j].image_data[0]) {
+              for (let j = 0; j < this.field_obj.length; j++) {
+                if (this.form_obj[i].sign == this.field_obj[j].sign) {
+                  if (this.field_obj[j].image_data[0]) {
                     // // //
                     // // Put field image
                     let field_image = new FormData()
