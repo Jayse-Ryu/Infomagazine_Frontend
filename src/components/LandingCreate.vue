@@ -457,8 +457,7 @@
                   <img v-if="item.type == 1 && item.image_data.length !== 0" :src="item.image_url" alt="logo" style="width: 100%; height: 100%; object-fit: contain;">
 
                   <div v-if="item.type == 2" class="form_layout" v-for="form in form_obj">
-
-                    <div class="container form_layout_cont" v-if="form.sign == item.form_group" :style="'background:'+form.bg_color+';' + 'color:'+form.tx_color+';'">
+                    <div class="container form_layout_cont" v-if="form.sign == item.form_group" :style="'background:'+form.bg_color+';' + 'color:'+form.tx_color+';'+'z-index:10;'">
                       <div class="form-group row mb-1" v-for="field in field_obj">
                         <div class="w-100 row m-0" v-if="field.type != 7 && field.type != 8 && field.type != 9">
                           <label v-if="field.form_group_id == item.form_group" class="col-sm-3 col-form-label-sm mt-3 text-center font-weight-bold pr-0 pl-0 pt-2" :for="'label'+field.name">
@@ -497,24 +496,26 @@
 
                           </div>
                         </div>
-                        <div class="pl-3 pr-3 pt-1 pb-1 col" v-else>
-                          <!-- link -->
-                          <button v-if="field.type == 7 && field.image_data.length == 0" type="button" class="btn w-100" :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">{{ field.holder }}</button>
-                          <button v-else-if="field.type == 7 && field.image_data.length == 1" type="button" class="btn w-100 p-0" style="background: transparent;">
-                            <img :src="field.image_url" alt="button image" class="w-100" style="width: 100%; height: 100%; object-fit: contain;">
-                          </button>
+                        <div class="pl-3 pr-3 pt-1 pb-1 col" v-else-if="field.type == 7 || field.type == 8 || field.type == 9">
+                          <div v-if="field.form_group_id == item.form_group">
+                            <!-- link -->
+                            <button v-if="field.type == 7 && field.image_data.length == 0" type="button" class="btn w-100" :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">{{ field.holder }}</button>
+                            <button v-else-if="field.type == 7 && field.image_data.length == 1" type="button" class="btn w-100 p-0" style="background: transparent;">
+                              <img :src="field.image_url" alt="button image" class="w-100" style="width: 100%; height: 100%; object-fit: contain;">
+                            </button>
 
-                          <!-- tel -->
-                          <button v-if="field.type == 8 && field.image_data.length == 0" type="button" class="btn w-100" :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">{{ field.holder }}</button>
-                          <button v-else-if="field.type == 8 && field.image_data.length == 1" type="button" class="btn w-100 p-0" style="background: transparent;">
-                            <img :src="field.image_url" alt="button image" class="w-100" style="width: 100%; height: 100%; object-fit: contain;">
-                          </button>
+                            <!-- tel -->
+                            <button v-if="field.type == 8 && field.image_data.length == 0" type="button" class="btn w-100" :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">{{ field.holder }}</button>
+                            <button v-else-if="field.type == 8 && field.image_data.length == 1" type="button" class="btn w-100 p-0" style="background: transparent;">
+                              <img :src="field.image_url" alt="button image" class="w-100" style="width: 100%; height: 100%; object-fit: contain;">
+                            </button>
 
-                          <!-- submit -->
-                          <button v-if="field.type == 9 && field.image_data.length == 0" type="button" class="btn w-100" :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">{{ field.holder }}not f</button>
-                          <button v-else-if="field.type == 9 && field.image_data.length == 1" type="button" class="btn w-100 p-0" style="background: transparent;">
-                            <img :src="field.image_url" alt="button image" style="width: 100%; height: 100%; object-fit: contain;">
-                          </button>
+                            <!-- submit -->
+                            <button v-if="field.type == 9 && field.image_data.length == 0" type="button" class="btn w-100" :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">{{ field.holder }}</button>
+                            <button v-else-if="field.type == 9 && field.image_data.length == 1" type="button" class="btn w-100 p-0" style="background: transparent;">
+                              <img :src="field.image_url" alt="button image" style="width: 100%; height: 100%; object-fit: contain;">
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1802,11 +1803,13 @@
   }
 
   .form_layout {
-    /*width: 100%;
-    height: 100%;*/
+    position: absolute;
+    width: 100%;
+    height: 100%;
   }
 
   .form_layout_cont {
+    position: relative;
     width: 100%;
     height: 100%;
     /*max-width: 750px;*/
