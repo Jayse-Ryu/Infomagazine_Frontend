@@ -916,7 +916,7 @@
         form_group: 0
       },
       order_obj: [
-        {
+        /*{
           sign: 1,
           name: 'order1',
           position: {x: 400, y: 300, w: 450, h: 300, z: 1},
@@ -941,7 +941,7 @@
           form_group: 0,
           bg_color: '',
           tx_color: ''
-        }
+        }*/
       ],
       // // Form-group db
       // Form name for make one
@@ -1582,6 +1582,7 @@
           axios.post(this.$store.state.endpoints.baseUrl + 'form_group/', form_group_data, config)
             .then((response) => {
               for (let j = 0; j < this.field_obj.length; j++) {
+                console.log(j)
                 if (this.form_obj[i].sign == this.field_obj[j].sign) {
                   if (this.field_obj[j].image_data[0]) {
                     // // //
@@ -1605,6 +1606,9 @@
                         field_data.append('text_color', this.field_obj[j].text_color)
                         field_data.append('image', image_id)
                         axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
+                          .then((response) => {
+                            console.log('field create with image', response)
+                          })
                           .catch((error) => {
                             console.log('When create field with image', error)
                           })
@@ -1623,6 +1627,9 @@
                     field_data.append('back_color', this.field_obj[j].back_color)
                     field_data.append('text_color', this.field_obj[j].text_color)
                     axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
+                      .then((response) => {
+                        console.log('field create without image', response)
+                      })
                       .catch((error) => {
                         console.log('When create field without image', error)
                       })
