@@ -1581,66 +1581,67 @@
           form_group_data.append('text_color', this.form_obj[i].tx_color)
           axios.post(this.$store.state.endpoints.baseUrl + 'form_group/', form_group_data, config)
             .then((response) => {
-              for (let j = 0; j < this.field_obj.length; j++) {
-                console.log(j)
-                if (this.form_obj[i].sign == this.field_obj[j].sign) {
-                  if (this.field_obj[j].image_data[0]) {
-                    // // //
-                    // // Put field image
-                    let field_image = new FormData()
-                    field_image.append('image', this.field_obj[j].image_data[0])
-                    axios.post(this.$store.state.endpoints.baseUrl + 'image/', field_image, config)
-                      .then((response) => {
-                        let image_id = response.data.id
-                        let field_data = new FormData()
-                        field_data.append('form_group', response.data.id)
-                        field_data.append('type', this.field_obj[j].type)
-                        field_data.append('name', this.field_obj[j].name)
-                        field_data.append('holder', this.field_obj[j].holder)
-                        field_data.append('value', this.field_obj[j].value)
-                        field_data.append('url', this.field_obj[j].url)
-                        field_data.append('list', this.field_obj[j].list)
-                        // field_data.append('width', this.field_obj[j].width)
-                        field_data.append('width', '12')
-                        field_data.append('back_color', this.field_obj[j].back_color)
-                        field_data.append('text_color', this.field_obj[j].text_color)
-                        field_data.append('image', image_id)
-                        axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
-                          .then((response) => {
-                            console.log('field create with image', response)
-                          })
-                          .catch((error) => {
-                            console.log('When create field with image', error)
-                          })
-                      })
-                  } else {
-                    let field_data = new FormData()
-                    field_data.append('form_group', response.data.id)
-                    field_data.append('type', this.field_obj[j].type)
-                    field_data.append('name', this.field_obj[j].name)
-                    field_data.append('holder', this.field_obj[j].holder)
-                    field_data.append('value', this.field_obj[j].value)
-                    field_data.append('url', this.field_obj[j].url)
-                    field_data.append('list', this.field_obj[j].list)
-                    // field_data.append('width', this.field_obj[j].width)
-                    field_data.append('width', '12')
-                    field_data.append('back_color', this.field_obj[j].back_color)
-                    field_data.append('text_color', this.field_obj[j].text_color)
-                    axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
-                      .then((response) => {
-                        console.log('field create without image', response)
-                      })
-                      .catch((error) => {
-                        console.log('When create field without image', error)
-                      })
-                  }
-                }
-              }
+              this.field_create(this.form_obj[i].sign, response.data.id)
               this.order_create(layout_id)
             })
             .catch((error) => {
               console.log('When create form group', error)
             })
+        }
+      },
+      field_create(sign, form_id) {
+        let axios = this.$axios
+        const config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        // for with fields
+        for(let i = 0; i < this.field_obj.length; i++) {
+          // if field group is == form sign
+          if(sign == this.field_obj[i].form_group_id) {
+            // ready for form data
+            let field_data = new FormData()
+            if (this.field_obj[i].image_data.length > 0) {
+              // if field has image
+              let image_data = new FormData()
+              image_data.append('image', this.field_obj[i].image_data[0])
+              axios.post(this.$store.state.endpoints.baseUrl + 'image/', image_data, config)
+                .then((response) => {
+                  field_data.append('image', response.data.id)
+                  field_data.append('form_group', form_id)
+                  field_data.append('type', this.field_obj[i].type)
+                  field_data.append('name', this.field_obj[i].name)
+                  field_data.append('holder', this.field_obj[i].holder)
+                  field_data.append('value', this.field_obj[i].value)
+                  field_data.append('url', this.field_obj[i].url)
+                  field_data.append('list', this.field_obj[i].list)
+                  field_data.append('width', '12')
+                  field_data.append('back_color', this.field_obj[i].back_color)
+                  field_data.append('text_color', this.field_obj[i].text_color)
+                  return axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
+                })
+                .catch((error) => {
+                  console.log(error)
+                })
+            } else {
+              // when field not has image
+              field_data.append('form_group', form_id)
+              field_data.append('type', this.field_obj[i].type)
+              field_data.append('name', this.field_obj[i].name)
+              field_data.append('holder', this.field_obj[i].holder)
+              field_data.append('value', this.field_obj[i].value)
+              field_data.append('url', this.field_obj[i].url)
+              field_data.append('list', this.field_obj[i].list)
+              field_data.append('width', '12')
+              field_data.append('back_color', this.field_obj[i].back_color)
+              field_data.append('text_color', this.field_obj[i].text_color)
+              axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
+                .catch((error) => {
+                  console.log(error)
+                })
+            }
+          }
         }
       },
       order_create(layout_id) {
@@ -1906,6 +1907,8 @@
 
   .form_layout_cont {
     position: relative;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     /*max-width: 750px;*/

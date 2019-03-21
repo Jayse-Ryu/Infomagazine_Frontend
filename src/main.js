@@ -11,6 +11,7 @@ import Paginate from 'vuejs-paginate'
 import VueGrid from 'vue-grid-layout'
 import VTooltip from 'v-tooltip'
 import VueDraggableResizable from 'vue-draggable-resizable'
+// import module_auth from './store_modules/auth'
 
 // Routers
 import Header from './Header'
@@ -235,6 +236,9 @@ const store = new Vuex.Store({
         })
     }
   }
+  // modules: {
+  //   module_auth
+  // }
 })
 
 export default store
