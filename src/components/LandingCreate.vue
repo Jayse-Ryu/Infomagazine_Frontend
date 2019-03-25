@@ -1622,15 +1622,11 @@
                   // field_data.append('list', this.field_obj[i].list)
                   for(let k = 0; k < this.field_obj[i].list.length; k ++) {
                     field_data.append('list', this.field_obj[i].list[k])
-                    console.log('sub list', this.field_obj[i].list[k])
                   }
                   field_data.append('width', '12')
                   field_data.append('back_color', this.field_obj[i].back_color)
                   field_data.append('text_color', this.field_obj[i].text_color)
                   return axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
-                })
-                .then((response)=>{
-                  console.log(response)
                 })
                 .catch((error) => {
                   console.log(error)
@@ -1648,15 +1644,11 @@
               // field_data.append('list', this.field_obj[i].list)
               for(let k = 0; k < this.field_obj[i].list.length; k ++) {
                 field_data.append('list', this.field_obj[i].list[k])
-                console.log('sub list', this.field_obj[i].list[k])
               }
               field_data.append('width', '12')
               field_data.append('back_color', this.field_obj[i].back_color)
               field_data.append('text_color', this.field_obj[i].text_color)
               axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
-                .then((response)=> {
-                  console.log(response)
-                })
                 .catch((error) => {
                   console.log(error)
                 })
@@ -1728,16 +1720,37 @@
             let order_data = new FormData()
             for(let j = 0; j < this.form_obj.length; j ++) {
               if(this.form_obj[j].sign == this.order_obj[i].form_group) {
-                console.log('here is right form_group', this.form_obj[j], 'for order obj', this.order_obj[i])
+                order_data.append('form_group', (this.form_obj[j].id).toString())
               }
             }
-            // order_data.append('name', this.order_obj[i].name)
-            // order_data.append('type', this.order_obj[i].type)
-            // order_data.append('position', this.order_obj[i].position)
-            // order_data.append('form_group', this.order_obj[i].position)
+            order_data.append('layout', layout_id)
+            order_data.append('name', this.order_obj[i].name)
+            order_data.append('type', this.order_obj[i].type)
+            order_data.append('position', JSON.stringify(this.order_obj[i].position))
+            axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
+              .catch((error) => {
+                console.log(error)
+              })
           } else if (this.order_obj[i].type == 3) {
             console.log('order type is 3 (= video)')
             // let order_data = new FormData()
+            let video_data = new FormData()
+            let order_data = new FormData()
+            video_data.append('type', this.order_obj[i].video_type)
+            video_data.append('url', this.order_obj[i].video_data)
+            video_data.append('desc', this.order_obj[i].video_data)
+            axios.post(this.$store.state.endpoints.baseUrl + 'video/', video_data, config)
+              .then((response) => {
+                order_data.append('layout', layout_id)
+                order_data.append('video', response.data.id)
+                order_data.append('name', this.order_obj[i].name)
+                order_data.append('type', this.order_obj[i].type)
+                order_data.append('position', JSON.stringify(this.order_obj[i].position))
+                return axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
+              })
+              .catch((error) => {
+                console.log(error)
+              })
           }
         }
       }
