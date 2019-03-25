@@ -1581,13 +1581,15 @@
           form_group_data.append('text_color', this.form_obj[i].tx_color)
           axios.post(this.$store.state.endpoints.baseUrl + 'form_group/', form_group_data, config)
             .then((response) => {
+              this.form_obj[i].id = response.data.id
               this.field_create(this.form_obj[i].sign, response.data.id)
-              this.order_create(layout_id)
+              // this.order_create(layout_id, response.data.id, this.form_obj[i].sign)
             })
             .catch((error) => {
               console.log('When create form group', error)
             })
         }
+        this.order_create(layout_id)
       },
       field_create(sign, form_id) {
         let axios = this.$axios
@@ -1608,6 +1610,8 @@
               image_data.append('image', this.field_obj[i].image_data[0])
               axios.post(this.$store.state.endpoints.baseUrl + 'image/', image_data, config)
                 .then((response) => {
+                  // let list = (this.field_obj[i].list).split(',')
+                  // console.log(list)
                   field_data.append('image', response.data.id)
                   field_data.append('form_group', form_id)
                   field_data.append('type', this.field_obj[i].type)
@@ -1615,16 +1619,25 @@
                   field_data.append('holder', this.field_obj[i].holder)
                   field_data.append('value', this.field_obj[i].value)
                   field_data.append('url', this.field_obj[i].url)
-                  field_data.append('list', this.field_obj[i].list)
+                  // field_data.append('list', this.field_obj[i].list)
+                  for(let k = 0; k < this.field_obj[i].list.length; k ++) {
+                    field_data.append('list', this.field_obj[i].list[k])
+                    console.log('sub list', this.field_obj[i].list[k])
+                  }
                   field_data.append('width', '12')
                   field_data.append('back_color', this.field_obj[i].back_color)
                   field_data.append('text_color', this.field_obj[i].text_color)
                   return axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
                 })
+                .then((response)=>{
+                  console.log(response)
+                })
                 .catch((error) => {
                   console.log(error)
                 })
             } else {
+              // let list = (this.field_obj[i].list).split(',')
+              // console.log(list)
               // when field not has image
               field_data.append('form_group', form_id)
               field_data.append('type', this.field_obj[i].type)
@@ -1632,11 +1645,18 @@
               field_data.append('holder', this.field_obj[i].holder)
               field_data.append('value', this.field_obj[i].value)
               field_data.append('url', this.field_obj[i].url)
-              field_data.append('list', this.field_obj[i].list)
+              // field_data.append('list', this.field_obj[i].list)
+              for(let k = 0; k < this.field_obj[i].list.length; k ++) {
+                field_data.append('list', this.field_obj[i].list[k])
+                console.log('sub list', this.field_obj[i].list[k])
+              }
               field_data.append('width', '12')
               field_data.append('back_color', this.field_obj[i].back_color)
               field_data.append('text_color', this.field_obj[i].text_color)
               axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
+                .then((response)=> {
+                  console.log(response)
+                })
                 .catch((error) => {
                   console.log(error)
                 })
@@ -1649,6 +1669,75 @@
         const config = {
           headers: {
             'Content-Type': 'multipart/form-data'
+          }
+        }
+        for(let i = 0; i < this.order_obj.length; i++) {
+          /*
+            order is looks like
+            sign: 1,
+            name: 'order1',
+            position: {x: 400, y: 300, w: 450, h: 300, z: 1},
+            type: 1,
+            image_data: [],
+            image_url: '',
+            video_type: 1,
+            video_data: '',
+            form_group: 0,
+            bg_color: '',
+            tx_color: ''
+          */
+          if(this.order_obj[i].type == 1) {
+            console.log('order type is 1 (= image)', this.order_obj[i])
+            if(this.order_obj[i].image_data.length > 0) {
+              let image_data = new FormData()
+              image_data.append('image', this.order_obj[i].image_data[0])
+              axios.post(this.$store.state.endpoints.baseUrl + 'image/', image_data, config)
+                .then((response) => {
+                  console.log('order image posted', response)
+                  let image_id = response.data.id
+                  let order_data = new FormData()
+                  order_data.append('layout', layout_id)
+                  order_data.append('name', this.order_obj[i].name)
+                  order_data.append('type', this.order_obj[i].type)
+                  order_data.append('position', JSON.stringify(this.order_obj[i].position))
+                  order_data.append('image', image_id)
+                  return axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
+                })
+                .then((response) => {
+                  console.log('order image made', response.data)
+                })
+                .catch((error) => {
+                  console.log('Order make error with image', error)
+                })
+            } else {
+              let order_data = new FormData()
+              order_data.append('layout', layout_id)
+              order_data.append('name', this.order_obj[i].name)
+              order_data.append('type', this.order_obj[i].type)
+              order_data.append('position', JSON.stringify(this.order_obj[i].position))
+              axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
+                .then((response) => {
+                  console.log('order made type image without image', response.data)
+                })
+                .catch((error) => {
+                  console.log('Order make error without image', error)
+                })
+            }
+          } else if (this.order_obj[i].type == 2) {
+            console.log('order type is 2 (= form group)')
+            let order_data = new FormData()
+            for(let j = 0; j < this.form_obj.length; j ++) {
+              if(this.form_obj[j].sign == this.order_obj[i].form_group) {
+                console.log('here is right form_group', this.form_obj[j], 'for order obj', this.order_obj[i])
+              }
+            }
+            // order_data.append('name', this.order_obj[i].name)
+            // order_data.append('type', this.order_obj[i].type)
+            // order_data.append('position', this.order_obj[i].position)
+            // order_data.append('form_group', this.order_obj[i].position)
+          } else if (this.order_obj[i].type == 3) {
+            console.log('order type is 3 (= video)')
+            // let order_data = new FormData()
           }
         }
       }
