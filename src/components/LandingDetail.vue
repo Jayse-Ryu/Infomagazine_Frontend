@@ -915,34 +915,7 @@
           video_data: '',
           form_group: 0
         },
-        order_obj: [
-          /*{
-            sign: 1,
-            name: 'order1',
-            position: {x: 400, y: 300, w: 450, h: 300, z: 1},
-            type: 1,
-            image_data: [],
-            image_url: '',
-            video_type: 1,
-            video_data: '',
-            form_group: 0,
-            bg_color: '',
-            tx_color: ''
-          },
-          {
-            sign: 2,
-            name: 'order2',
-            position: {x: 100, y: 100, w: 200, h: 200, z: 2},
-            type: 1,
-            image_data: [],
-            image_url: '',
-            video_type: 1,
-            video_data: '',
-            form_group: 0,
-            bg_color: '',
-            tx_color: ''
-          }*/
-        ],
+        order_obj: [],
         // // Form-group db
         // Form name for make one
         form_temp: '',
@@ -975,6 +948,7 @@
         clicked: -1,
         len: 0,
         // is_group: 1,
+        collector: 0
       }),
       methods: {
         order_image_change(sign) {
@@ -985,20 +959,7 @@
               this.order_obj[i].image_url = URL.createObjectURL(file_data)
             }
           }
-          // this.in_banner_file_info = file_data
         },
-        /*
-         order_image_change(sign) {
-          let file_data = event.target.files[0]
-          for(let i = 0; i < this.order_obj.length; i ++) {
-            if(this.order_obj[i].sign == sign) {
-              this.order_obj[i].image_data = file_data
-              this.order_obj[i].image_url = URL.createObjectURL(file_data)
-            }
-          }
-          // this.in_banner_file_info = file_data
-        }
-        */
         order_name_change() {
           for (let i = 0; i < this.order_obj.length; i++) {
             if (this.order_obj[i].sign == this.order_selected) {
@@ -1432,6 +1393,7 @@
           }
         },
         landing_create() {
+          this.collector += 1
           let axios = this.$axios
           const config = {
             headers: {
@@ -1458,6 +1420,7 @@
               if (landing_id) {
                 this.layout_create(landing_id)
                 this.url_create(landing_id)
+                this.collector -= 1
               }
             })
             .catch((error) => {
@@ -1465,6 +1428,7 @@
             })
         },
         layout_create(landing_id) {
+          this.collector += 1
           let axios = this.$axios
           const config = {
             headers: {
@@ -1496,6 +1460,7 @@
                 let layout_id = response.data.id
                 this.term_create(layout_id)
                 this.form_group_create(layout_id)
+                this.collector -= 1
               })
               .catch((error) => {
                 console.log('When create layout with image', error)
@@ -1506,6 +1471,7 @@
                 let layout_id = response.data.id
                 this.term_create(layout_id)
                 this.form_group_create(layout_id)
+                this.collector -= 1
               })
               .catch((error) => {
                 console.log('When create layout without image', error)
@@ -1513,6 +1479,7 @@
           }
         },
         url_create(landing_id) {
+          this.collector += 1
           let axios = this.$axios
           const config = {
             headers: {
@@ -1528,12 +1495,19 @@
             url_info.append('url', this.url_obj[i].url)
             url_info.append('desc', this.url_obj[i].desc)
             axios.post(this.$store.state.endpoints.baseUrl + 'url/', url_info, config)
+              .then(() => {
+                if(i == this.url_obj.length - 1) {
+                  this.collector -= 1
+                  this.bye()
+                }
+              })
               .catch((error) => {
                 console.log('When create url', error)
               })
           }
         },
         term_create(layout_id) {
+          this.collector += 1
           let axios = this.$axios
           const config = {
             headers: {
@@ -1554,17 +1528,26 @@
                 term_data.append('image', response.data.id)
                 return axios.post(this.$store.state.endpoints.baseUrl + 'term/', term_data, config)
               })
+              .then(() => {
+                this.collector -= 1
+                this.bye()
+              })
               .catch((error) => {
                 console.log(error)
               })
           } else {
             axios.post(this.$store.state.endpoints.baseUrl + 'term/', term_data, config)
+              .then(() => {
+                this.collector -= 1
+                this.bye()
+              })
               .catch((error) => {
                 console.log(error)
               })
           }
         },
         form_group_create(layout_id) {
+          this.collector += 1
           let axios = this.$axios
           const config = {
             headers: {
@@ -1582,6 +1565,7 @@
                 this.form_obj[i].id = response.data.id
                 this.field_create(this.form_obj[i].sign, response.data.id)
                 if (i == this.form_obj.length - 1) {
+                  this.collector -= 1
                   this.order_create(layout_id)
                 }
               })
@@ -1592,6 +1576,7 @@
           // this.order_create(layout_id)
         },
         field_create(sign, form_id) {
+          this.collector += 1
           let axios = this.$axios
           const config = {
             headers: {
@@ -1628,6 +1613,12 @@
                     field_data.append('text_color', this.field_obj[i].text_color)
                     return axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
                   })
+                  .then(() => {
+                    if(i == this.field_obj.length - 1) {
+                      this.collector -= 1
+                      this.bye()
+                    }
+                  })
                   .catch((error) => {
                     console.log(error)
                   })
@@ -1649,6 +1640,12 @@
                 field_data.append('back_color', this.field_obj[i].back_color)
                 field_data.append('text_color', this.field_obj[i].text_color)
                 axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
+                  .then(() => {
+                    if (i == this.field_obj.length - 1) {
+                      this.collector -= 1
+                      this.bye()
+                    }
+                  })
                   .catch((error) => {
                     console.log(error)
                   })
@@ -1657,6 +1654,7 @@
           }
         },
         order_create(layout_id) {
+          this.collector += 1
           let axios = this.$axios
           const config = {
             headers: {
@@ -1679,6 +1677,12 @@
                     order_data.append('image', image_id)
                     return axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
                   })
+                  .then(() => {
+                    if(i == this.order_obj.length - 1) {
+                      this.collector -= 1
+                      this.bye()
+                    }
+                  })
                   .catch((error) => {
                     console.log('Order post error with image', error)
                   })
@@ -1689,6 +1693,12 @@
                 order_data.append('type', this.order_obj[i].type)
                 order_data.append('position', JSON.stringify(this.order_obj[i].position))
                 axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
+                  .then(() => {
+                    if(i == this.order_obj.length - 1) {
+                      this.collector -= 1
+                      this.bye()
+                    }
+                  })
                   .catch((error) => {
                     console.log('Order post error without image', error)
                   })
@@ -1706,6 +1716,12 @@
               order_data.append('type', this.order_obj[i].type)
               order_data.append('position', JSON.stringify(this.order_obj[i].position))
               axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
+                .then(() => {
+                  if(i == this.order_obj.length - 1) {
+                    this.collector -= 1
+                    this.bye()
+                  }
+                })
                 .catch((error) => {
                   console.log('Order post error with form group', error)
                 })
@@ -1725,10 +1741,27 @@
                   order_data.append('position', JSON.stringify(this.order_obj[i].position))
                   return axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
                 })
+                .then(() => {
+                  if(i == this.order_obj.length - 1) {
+                    this.collector -= 1
+                    this.bye()
+                  }
+                })
                 .catch((error) => {
                   console.log('order post error with video', error)
                 })
             }
+          }
+        },
+        bye() {
+          console.log('flag is (must be 0) = ', this.collector)
+          if(this.collector == 0) {
+            console.log('done! bye~')
+            alert('생성되었습니다.')
+            this.$router.currentRoute.meta.protect_leave = 'no'
+            this.$router.push({
+              name: 'landing_list'
+            })
           }
         }
       },
