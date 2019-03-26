@@ -987,6 +987,18 @@
         }
         // this.in_banner_file_info = file_data
       },
+      /*
+       order_image_change(sign) {
+        let file_data = event.target.files[0]
+        for(let i = 0; i < this.order_obj.length; i ++) {
+          if(this.order_obj[i].sign == sign) {
+            this.order_obj[i].image_data = file_data
+            this.order_obj[i].image_url = URL.createObjectURL(file_data)
+          }
+        }
+        // this.in_banner_file_info = file_data
+      }
+      */
       order_name_change() {
         for (let i = 0; i < this.order_obj.length; i++) {
           if (this.order_obj[i].sign == this.order_selected) {
@@ -1155,18 +1167,6 @@
         this.term_file_info = ''
         this.term_file_flag = 0
       },
-      /*
-       order_image_change(sign) {
-        let file_data = event.target.files[0]
-        for(let i = 0; i < this.order_obj.length; i ++) {
-          if(this.order_obj[i].sign == sign) {
-            this.order_obj[i].image_data = file_data
-            this.order_obj[i].image_url = URL.createObjectURL(file_data)
-          }
-        }
-        // this.in_banner_file_info = file_data
-      }
-      */
       field_file_add(sign) {
         let file_data = event.target.files[0]
         for (let i = 0; i < this.field_obj.length; i++) {
@@ -1458,8 +1458,6 @@
             if (landing_id) {
               this.layout_create(landing_id)
               this.url_create(landing_id)
-            } else {
-              console.log('create function launched before get landing id')
             }
           })
           .catch((error) => {
@@ -1583,13 +1581,15 @@
             .then((response) => {
               this.form_obj[i].id = response.data.id
               this.field_create(this.form_obj[i].sign, response.data.id)
-              // this.order_create(layout_id, response.data.id, this.form_obj[i].sign)
+              if (i == this.form_obj.length - 1) {
+                this.order_create(layout_id)
+              }
             })
             .catch((error) => {
               console.log('When create form group', error)
             })
         }
-        this.order_create(layout_id)
+        // this.order_create(layout_id)
       },
       field_create(sign, form_id) {
         let axios = this.$axios
@@ -1664,28 +1664,12 @@
           }
         }
         for(let i = 0; i < this.order_obj.length; i++) {
-          /*
-            order is looks like
-            sign: 1,
-            name: 'order1',
-            position: {x: 400, y: 300, w: 450, h: 300, z: 1},
-            type: 1,
-            image_data: [],
-            image_url: '',
-            video_type: 1,
-            video_data: '',
-            form_group: 0,
-            bg_color: '',
-            tx_color: ''
-          */
           if(this.order_obj[i].type == 1) {
-            console.log('order type is 1 (= image)', this.order_obj[i])
-            if(this.order_obj[i].image_data.length > 0) {
+            if(this.order_obj[i].image_url.length > 0) {
               let image_data = new FormData()
-              image_data.append('image', this.order_obj[i].image_data[0])
+              image_data.append('image', this.order_obj[i].image_data)
               axios.post(this.$store.state.endpoints.baseUrl + 'image/', image_data, config)
                 .then((response) => {
-                  console.log('order image posted', response)
                   let image_id = response.data.id
                   let order_data = new FormData()
                   order_data.append('layout', layout_id)
@@ -1695,11 +1679,8 @@
                   order_data.append('image', image_id)
                   return axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
                 })
-                .then((response) => {
-                  console.log('order image made', response.data)
-                })
                 .catch((error) => {
-                  console.log('Order make error with image', error)
+                  console.log('Order post error with image', error)
                 })
             } else {
               let order_data = new FormData()
@@ -1708,19 +1689,16 @@
               order_data.append('type', this.order_obj[i].type)
               order_data.append('position', JSON.stringify(this.order_obj[i].position))
               axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
-                .then((response) => {
-                  console.log('order made type image without image', response.data)
-                })
                 .catch((error) => {
-                  console.log('Order make error without image', error)
+                  console.log('Order post error without image', error)
                 })
             }
           } else if (this.order_obj[i].type == 2) {
-            console.log('order type is 2 (= form group)')
             let order_data = new FormData()
             for(let j = 0; j < this.form_obj.length; j ++) {
               if(this.form_obj[j].sign == this.order_obj[i].form_group) {
-                order_data.append('form_group', (this.form_obj[j].id).toString())
+                let num = (this.form_obj[j].id).toString()
+                order_data.append('form_group', num)
               }
             }
             order_data.append('layout', layout_id)
@@ -1729,10 +1707,9 @@
             order_data.append('position', JSON.stringify(this.order_obj[i].position))
             axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
               .catch((error) => {
-                console.log(error)
+                console.log('Order post error with form group', error)
               })
           } else if (this.order_obj[i].type == 3) {
-            console.log('order type is 3 (= video)')
             // let order_data = new FormData()
             let video_data = new FormData()
             let order_data = new FormData()
@@ -1749,7 +1726,7 @@
                 return axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
               })
               .catch((error) => {
-                console.log(error)
+                console.log('order post error with video', error)
               })
           }
         }
