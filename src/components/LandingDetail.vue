@@ -855,6 +855,7 @@
     export default {
       name: "landing_detail",
       data: () => ({
+        page_id: 0,
         window_width: window.innerWidth,
         // msg is Tooltip messages. Static name by api.
         msg: {
@@ -1772,6 +1773,8 @@
             this.window_width = window.innerWidth
           })
         })
+        this.page_id = this.$route.params.landing_id * 1
+        console.log('landing id is ', this.page_id)
         this.len = this.order_obj.length
         // Get company, manager
         let axios = this.$axios
