@@ -443,11 +443,14 @@
             <button type="button" class="btn btn-primary btn-sm p-1" @click.prevent="order_add">객체 추가</button>
             <button type="button" class="btn btn-danger btn-sm p-1" @click.prevent="order_delete">선택 삭제</button>
           </div>
+          {{ order_obj }}
+          <br/>
+          {{ order_obj[0].position }}
           <div class="col-sm-12">
             <div class="main_layout" id="main_layout">
               <div class="basket">
                 <vue-draggable-resizable v-for="item in order_obj"
-                                         @activated="order_activated(item.sign)"
+                                         @activated="order_activated(item.id)"
                                          @deactivated="order_deactivated"
                                          @dragging="order_move"
                                          @resizing="order_resize"
@@ -455,8 +458,8 @@
                                          class="drag_thing"
                                          class-name-dragging="drag_thing_drag"
                                          class-name-handle="drag_handle"
-                                         :key="item.sign"
-                                         :sign="item.sign"
+                                         :key="item.id"
+                                         :sign="item.id"
                                          :parent="false"
                                          :x="item.position.x"
                                          :y="item.position.y"
@@ -468,9 +471,9 @@
                                          :grid=[5,5]
                                          :lock-aspect-ratio="false">
 
-                  <img v-if="item.type == 1 && item.image_data.length == 0" src="../assets/logo1.png" alt="logo"
+                  <img v-if="item.type == 1 && item.image.length == 0" src="../assets/logo1.png" alt="logo"
                        style="width: 100%; height: 100%; object-fit: contain;">
-                  <img v-if="item.type == 1 && item.image_data.length !== 0" :src="item.image_url" alt="logo"
+                  <img v-if="item.type == 1 && item.image.length !== 0" :src="item.image_url" alt="logo"
                        style="width: 100%; height: 100%; object-fit: contain;">
 
                   <div v-if="item.type == 2" class="form_layout" v-for="form in form_obj">
@@ -856,6 +859,7 @@
       name: "landing_detail",
       data: () => ({
         page_id: 0,
+        layout_id: 0,
         window_width: window.innerWidth,
         // msg is Tooltip messages. Static name by api.
         msg: {
@@ -1764,6 +1768,51 @@
               name: 'landing_list'
             })
           }
+        },
+        get_others() {
+          let axios = this.$axios
+          axios.get(this.$store.state.endpoints.baseUrl + 'url/?landing=' + this.page_id)
+            .then((response) => {
+              console.log('url length is ', response.data.results.length)
+              for(let i = 0; i < response.data.results.length; i ++) {
+                this.url_obj.push(response.data.results[i])
+              }
+              // console.log('url obj', this.url_obj)
+              return axios.get(this.$store.state.endpoints.baseUrl + 'term/?layout=' + this.layout_id)
+            })
+            .then((response) => {
+              this.term_obj.push = response.data.results[0]
+              // console.log('term obj', this.term_obj)
+              return axios.get(this.$store.state.endpoints.baseUrl + 'order/?layout=' + this.layout_id)
+            })
+            .then((response) => {
+              console.log('order response', response)
+              let len = response.data.results.length
+              console.log(len)
+              for(let j = 0; j < len; j++) {
+                console.log(j)
+                let res = response.data.results[j].position
+                console.log('string', JSON.stringify(res))
+                console.log('normal', res.replace(/\'/g, ""))
+                this.order_obj.push(response.data.results[j])
+              }
+              // console.log('order obj', this.order_obj)
+            })
+          // axios.get(this.$store.state.endpoints.baseUrl + 'term/?layout=' + this.layout_id)
+          //   .then((response) => {
+          //     console.log('term response', response)
+          //     this.term_obj.push = response.data.results[0]
+          //     console.log('term obj', this.term_obj)
+          //   })
+          // axios.get(this.$store.state.endpoints.baseUrl + 'order/?layout=' + this.layout_id)
+          //   .then((response) => {
+          //     console.log('order resposne', response)
+          //     console.log('order length is ', response.data.results.length)
+          //     for(let i = 0; i < response.data.results.length; i ++) {
+          //       this.order_obj.push(response.data.results[i])
+          //     }
+          //     console.log('order obj', this.order_obj)
+          //   })
         }
       },
       mounted() {
@@ -1775,9 +1824,38 @@
         })
         this.page_id = this.$route.params.landing_id * 1
         console.log('landing id is ', this.page_id)
-        this.len = this.order_obj.length
-        // Get company, manager
         let axios = this.$axios
+        axios.get(this.$store.state.endpoints.baseUrl + 'landing/' + this.page_id)
+          .then((response) => {
+            console.log('this landing response', response)
+            this.landing_obj = response.data
+            return axios.get(this.$store.state.endpoints.baseUrl + 'layout/?landing=' + response.data.id)
+          })
+          .then((response) => {
+            console.log('layout response', response.data.results[0])
+            this.layout_obj = response.data.results[0]
+            this.layout_id = response.data.results[0].id
+            this.get_others()
+            return axios.get(this.$store.state.endpoints.baseUrl + 'form_group/?layout=' + response.data.results[0].id)
+          })
+          .then((response) => {
+            console.log('form group response', response)
+            console.log('form group length is ', response.data.results.length)
+            for (let i = 0; i < response.data.results.length; i ++) {
+              this.form_obj.push(response.data.results[i])
+              axios.get(this.$store.state.endpoints.baseUrl + 'field/?form_group=' + response.data.results[i].id)
+                .then((response) => {
+                  console.log('field response', response)
+                  console.log('field length is ', response.data.results.length)
+                  for (let j = 0; j < response.data.results.length; j ++) {
+                    this.field_obj.push(response.data.results[j])
+                  }
+                  console.log('field obj', this.field_obj)
+                })
+            }
+            console.log('form group obj', this.form_obj)
+          })
+        //
         // Get companies from logged in user's organization
         let this_url = 'company/'
         axios.get(this.$store.state.endpoints.baseUrl + this_url + '?organization=' + this.access_obj.organization)
