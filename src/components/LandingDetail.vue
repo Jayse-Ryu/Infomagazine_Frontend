@@ -1768,25 +1768,30 @@
           }
         },
         get_others() {
+          // what needs landing id or layout id only
           let axios = this.$axios
+          // get url
           axios.get(this.$store.state.endpoints.baseUrl + 'url/?landing=' + this.page_id)
             .then((response) => {
               for(let i = 0; i < response.data.results.length; i ++) {
                 this.url_obj.push(response.data.results[i])
               }
+              // get term
               return axios.get(this.$store.state.endpoints.baseUrl + 'term/?layout=' + this.layout_id)
             })
             .then((response) => {
               this.term_obj.push = response.data.results[0]
+              // get order
               return axios.get(this.$store.state.endpoints.baseUrl + 'order/?layout=' + this.layout_id)
             })
             .then((response) => {
-              console.log('order response', response)
+              // push order to order obj
               for(let j = 0; j < response.data.results.length; j++) {
                 this.order_obj.push(response.data.results[j])
               }
+              // position make as json
               for(let k = 0; k < this.order_obj.length; k ++) {
-                this.order_obj[k].position = this.order_obj[k].position.replace(/\'/g, "")
+                // get position, make clearly and split
                 let split = (this.order_obj[k].position.replace(/\'|\{|\}|\s/g, "")).split(',')
                 this.order_obj[k].position = {}
                 for(let p = 0; p < split.length; p++) {
@@ -1805,58 +1810,60 @@
             this.window_width = window.innerWidth
           })
         })
+        // landing obj is is!
         this.page_id = this.$route.params.landing_id * 1
-        console.log('landing id is ', this.page_id)
         let axios = this.$axios
+        // get landing
         axios.get(this.$store.state.endpoints.baseUrl + 'landing/' + this.page_id)
           .then((response) => {
-            console.log('this landing response', response)
             this.landing_obj = response.data
+            // get layout
             return axios.get(this.$store.state.endpoints.baseUrl + 'layout/?landing=' + response.data.id)
           })
           .then((response) => {
-            console.log('layout response', response.data.results[0])
             this.layout_obj = response.data.results[0]
             this.layout_id = response.data.results[0].id
+            // get other objects what need landing or layout id
             this.get_others()
+            // get form_group
             return axios.get(this.$store.state.endpoints.baseUrl + 'form_group/?layout=' + response.data.results[0].id)
           })
           .then((response) => {
-            console.log('form group response', response)
-            console.log('form group length is ', response.data.results.length)
+            // get field as form_group id
             for (let i = 0; i < response.data.results.length; i ++) {
               this.form_obj.push(response.data.results[i])
               axios.get(this.$store.state.endpoints.baseUrl + 'field/?form_group=' + response.data.results[i].id)
                 .then((response) => {
-                  console.log('field response', response)
-                  console.log('field length is ', response.data.results.length)
+                  // push fields in field object
                   for (let j = 0; j < response.data.results.length; j ++) {
                     this.field_obj.push(response.data.results[j])
                   }
-                  console.log('field obj', this.field_obj)
                 })
             }
-            console.log('form group obj', this.form_obj)
           })
         //
-        // Get companies from logged in user's organization
-        let this_url = 'company/'
-        axios.get(this.$store.state.endpoints.baseUrl + this_url + '?organization=' + this.access_obj.organization)
-          .then((response) => {
-            this.landing_company = response.data.results
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-        // Get manager from logged in user's organization
-        this_url = 'user_access/'
-        axios.get(this.$store.state.endpoints.baseUrl + this_url + '?organization=' + this.access_obj.organization)
-          .then((response) => {
-            this.landing_manager = response.data.results
-          })
-          .catch((error) => {
-            console.log(error)
-          })
+        // Get companies from logged in user's organization if logged user is manager or higher
+        if(this.access_obj.organization != 0 && this.access_obj.organization != null) {
+          let this_url = 'company/'
+          axios.get(this.$store.state.endpoints.baseUrl + this_url + '?organization=' + this.access_obj.organization)
+            .then((response) => {
+              this.landing_company = response.data.results
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+          // Get manager from logged in user's organization
+          this_url = 'user_access/'
+          axios.get(this.$store.state.endpoints.baseUrl + this_url + '?organization=' + this.access_obj.organization)
+            .then((response) => {
+              this.landing_manager = response.data.results
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        } else {
+          console.log('this user is not manager so i cant get manager, company lists')
+        }
       },
       computed: {
         user_obj() {
