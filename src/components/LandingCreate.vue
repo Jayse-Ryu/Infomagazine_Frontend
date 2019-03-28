@@ -1393,7 +1393,6 @@
         }
       },
       landing_create() {
-        this.collector += 1
         let axios = this.$axios
         const config = {
           headers: {
@@ -1420,7 +1419,7 @@
             if (landing_id) {
               this.layout_create(landing_id)
               this.url_create(landing_id)
-              this.collector -= 1
+              this.collector += 1
             }
           })
           .catch((error) => {
@@ -1428,7 +1427,6 @@
           })
       },
       layout_create(landing_id) {
-        this.collector += 1
         let axios = this.$axios
         const config = {
           headers: {
@@ -1460,7 +1458,7 @@
               let layout_id = response.data.id
               this.term_create(layout_id)
               this.form_group_create(layout_id)
-              this.collector -= 1
+              this.collector += 1
             })
             .catch((error) => {
               console.log('When create layout with image', error)
@@ -1471,7 +1469,7 @@
               let layout_id = response.data.id
               this.term_create(layout_id)
               this.form_group_create(layout_id)
-              this.collector -= 1
+              this.collector += 1
             })
             .catch((error) => {
               console.log('When create layout without image', error)
@@ -1479,7 +1477,6 @@
         }
       },
       url_create(landing_id) {
-        this.collector += 1
         let axios = this.$axios
         const config = {
           headers: {
@@ -1497,7 +1494,7 @@
           axios.post(this.$store.state.endpoints.baseUrl + 'url/', url_info, config)
             .then(() => {
               if(i == this.url_obj.length - 1) {
-                this.collector -= 1
+                this.collector += 1
                 this.bye()
               }
             })
@@ -1507,7 +1504,6 @@
         }
       },
       term_create(layout_id) {
-        this.collector += 1
         let axios = this.$axios
         const config = {
           headers: {
@@ -1529,7 +1525,7 @@
               return axios.post(this.$store.state.endpoints.baseUrl + 'term/', term_data, config)
             })
             .then(() => {
-              this.collector -= 1
+              this.collector += 1
               this.bye()
             })
             .catch((error) => {
@@ -1538,7 +1534,7 @@
         } else {
           axios.post(this.$store.state.endpoints.baseUrl + 'term/', term_data, config)
             .then(() => {
-              this.collector -= 1
+              this.collector += 1
               this.bye()
             })
             .catch((error) => {
@@ -1547,7 +1543,6 @@
         }
       },
       form_group_create(layout_id) {
-        this.collector += 1
         let axios = this.$axios
         const config = {
           headers: {
@@ -1565,7 +1560,7 @@
               this.form_obj[i].id = response.data.id
               this.field_create(this.form_obj[i].sign, response.data.id)
               if (i == this.form_obj.length - 1) {
-                this.collector -= 1
+                this.collector += 1
                 this.order_create(layout_id)
               }
             })
@@ -1576,7 +1571,6 @@
         // this.order_create(layout_id)
       },
       field_create(sign, form_id) {
-        this.collector += 1
         let axios = this.$axios
         const config = {
           headers: {
@@ -1615,7 +1609,7 @@
                 })
                 .then(() => {
                   if(i == this.field_obj.length - 1) {
-                    this.collector -= 1
+                    this.collector += 1
                     this.bye()
                   }
                 })
@@ -1642,7 +1636,7 @@
               axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
                 .then(() => {
                   if (i == this.field_obj.length - 1) {
-                    this.collector -= 1
+                    this.collector += 1
                     this.bye()
                   }
                 })
@@ -1654,7 +1648,6 @@
         }
       },
       order_create(layout_id) {
-        this.collector += 1
         let axios = this.$axios
         const config = {
           headers: {
@@ -1679,7 +1672,7 @@
                 })
                 .then(() => {
                   if(i == this.order_obj.length - 1) {
-                    this.collector -= 1
+                    this.collector += 1
                     this.bye()
                   }
                 })
@@ -1695,7 +1688,7 @@
               axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
                 .then(() => {
                   if(i == this.order_obj.length - 1) {
-                    this.collector -= 1
+                    this.collector += 1
                     this.bye()
                   }
                 })
@@ -1718,7 +1711,7 @@
             axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
               .then(() => {
                 if(i == this.order_obj.length - 1) {
-                  this.collector -= 1
+                  this.collector += 1
                   this.bye()
                 }
               })
@@ -1743,7 +1736,7 @@
               })
               .then(() => {
                 if(i == this.order_obj.length - 1) {
-                  this.collector -= 1
+                  this.collector += 1
                   this.bye()
                 }
               })
@@ -1754,8 +1747,8 @@
         }
       },
       bye() {
-        console.log('flag is (must be 0) = ', this.collector)
-        if(this.collector == 0) {
+        console.log(this.collector)
+        if(this.collector >= 6) {
           console.log('done! bye~')
           alert('생성되었습니다.')
           this.$router.currentRoute.meta.protect_leave = 'no'

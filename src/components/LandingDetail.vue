@@ -907,7 +907,6 @@
         in_banner_file: [],
         in_banner_file_info: '',
         // // Order db
-        // order_selected: 0,
         order_focus_flag: false,
         order_selected: 0,
         console_obj: {
@@ -952,14 +951,13 @@
         // Layout temporary
         clicked: -1,
         len: 0,
-        // is_group: 1,
         collector: 0
       }),
       methods: {
         order_image_change(sign) {
           let file_data = event.target.files[0]
           for (let i = 0; i < this.order_obj.length; i++) {
-            if (this.order_obj[i].sign == sign) {
+            if (this.order_obj[i].id == sign) {
               this.order_obj[i].image_data = file_data
               this.order_obj[i].image_url = URL.createObjectURL(file_data)
             }
@@ -967,35 +965,35 @@
         },
         order_name_change() {
           for (let i = 0; i < this.order_obj.length; i++) {
-            if (this.order_obj[i].sign == this.order_selected) {
+            if (this.order_obj[i].id == this.order_selected) {
               this.order_obj[i].name = this.console_obj.name
             }
           }
         },
         order_form_change() {
           for (let i = 0; i < this.order_obj.length; i++) {
-            if (this.order_obj[i].sign == this.order_selected) {
+            if (this.order_obj[i].id == this.order_selected) {
               this.order_obj[i].form_group = this.console_obj.form_group
             }
           }
         },
         order_video_type_change() {
           for (let i = 0; i < this.order_obj.length; i++) {
-            if (this.order_obj[i].sign == this.order_selected) {
+            if (this.order_obj[i].id == this.order_selected) {
               this.order_obj[i].video_type = this.console_obj.video_type
             }
           }
         },
         order_video_change() {
           for (let i = 0; i < this.order_obj.length; i++) {
-            if (this.order_obj[i].sign == this.order_selected) {
+            if (this.order_obj[i].id == this.order_selected) {
               this.order_obj[i].video_data = this.console_obj.video_data
             }
           }
         },
         order_type_change() {
           for (let i = 0; i < this.order_obj.length; i++) {
-            if (this.order_obj[i].sign == this.order_selected) {
+            if (this.order_obj[i].id == this.order_selected) {
               this.order_obj[i].type = this.console_obj.type
             }
           }
@@ -1003,8 +1001,8 @@
         order_activated(sign) {
           this.order_selected = sign
           for (let i = 0; i < this.order_obj.length; i++) {
-            if (this.order_obj[i].sign == sign) {
-              this.console_obj.sign = this.order_obj[i].sign
+            if (this.order_obj[i].id == sign) {
+              this.console_obj.sign = this.order_obj[i].id
               this.console_obj.name = this.order_obj[i].name
               this.console_obj.position = this.order_obj[i].position
               this.console_obj.type = this.order_obj[i].type
@@ -1022,7 +1020,7 @@
         },
         order_move(x, y) {
           for (let i = 0; i < this.order_obj.length; i++) {
-            if (this.order_obj[i].sign == this.order_selected) {
+            if (this.order_obj[i].id == this.order_selected) {
               this.order_obj[i].position.x = x
               this.order_obj[i].position.y = y
             }
@@ -1030,7 +1028,7 @@
         },
         order_resize(x, y, w, h) {
           for (let i = 0; i < this.order_obj.length; i++) {
-            if (this.order_obj[i].sign == this.order_selected) {
+            if (this.order_obj[i].id == this.order_selected) {
               this.order_obj[i].position.x = x
               this.order_obj[i].position.y = y
               this.order_obj[i].position.w = w
@@ -1189,7 +1187,7 @@
             alert('폼 그룹 이름을 입력하세요!')
           }
         },
-        // delete form group
+        // // delete form group
         form_group_delete(id) {
           if (id !== -1) {
             if (confirm('이 폼그룹을 삭제하시겠습니까?')) {
@@ -1202,7 +1200,7 @@
             alert('그룹을 먼저 선택하세요.')
           }
         },
-        // catch when form is changed
+        // // catch when form is changed
         form_changed(id) {
           if (id == -1) {
             this.form_selected = {sign: -1, tx_color: '#313131', bg_color: '#f0f0f0'}
@@ -1224,7 +1222,7 @@
             }
           }
         },
-        // // add field
+        // // // add field
         field_add() {
           // get form group sign
           if (this.form_selected.sign != -1) {
@@ -1318,7 +1316,7 @@
           }
         },
         field_option_close(that) {
-          //
+        //   //
         },
         // // // URL Functions
         url_add() {
@@ -1762,7 +1760,7 @@
           console.log('flag is (must be 0) = ', this.collector)
           if(this.collector == 0) {
             console.log('done! bye~')
-            alert('생성되었습니다.')
+            alert('수정되었습니다.')
             this.$router.currentRoute.meta.protect_leave = 'no'
             this.$router.push({
               name: 'landing_list'
@@ -1773,46 +1771,31 @@
           let axios = this.$axios
           axios.get(this.$store.state.endpoints.baseUrl + 'url/?landing=' + this.page_id)
             .then((response) => {
-              console.log('url length is ', response.data.results.length)
               for(let i = 0; i < response.data.results.length; i ++) {
                 this.url_obj.push(response.data.results[i])
               }
-              // console.log('url obj', this.url_obj)
               return axios.get(this.$store.state.endpoints.baseUrl + 'term/?layout=' + this.layout_id)
             })
             .then((response) => {
               this.term_obj.push = response.data.results[0]
-              // console.log('term obj', this.term_obj)
               return axios.get(this.$store.state.endpoints.baseUrl + 'order/?layout=' + this.layout_id)
             })
             .then((response) => {
               console.log('order response', response)
-              let len = response.data.results.length
-              console.log(len)
-              for(let j = 0; j < len; j++) {
-                console.log(j)
-                let res = response.data.results[j].position
-                console.log('string', JSON.stringify(res))
-                console.log('normal', res.replace(/\'/g, ""))
+              for(let j = 0; j < response.data.results.length; j++) {
                 this.order_obj.push(response.data.results[j])
               }
-              // console.log('order obj', this.order_obj)
+              for(let k = 0; k < this.order_obj.length; k ++) {
+                this.order_obj[k].position = this.order_obj[k].position.replace(/\'/g, "")
+                let split = (this.order_obj[k].position.replace(/\'|\{|\}|\s/g, "")).split(',')
+                this.order_obj[k].position = {}
+                for(let p = 0; p < split.length; p++) {
+                  let key = split[p].split(':')[0]
+                  let value = split[p].split(':')[1]
+                  this.order_obj[k].position[key] = value*1
+                }
+              }
             })
-          // axios.get(this.$store.state.endpoints.baseUrl + 'term/?layout=' + this.layout_id)
-          //   .then((response) => {
-          //     console.log('term response', response)
-          //     this.term_obj.push = response.data.results[0]
-          //     console.log('term obj', this.term_obj)
-          //   })
-          // axios.get(this.$store.state.endpoints.baseUrl + 'order/?layout=' + this.layout_id)
-          //   .then((response) => {
-          //     console.log('order resposne', response)
-          //     console.log('order length is ', response.data.results.length)
-          //     for(let i = 0; i < response.data.results.length; i ++) {
-          //       this.order_obj.push(response.data.results[i])
-          //     }
-          //     console.log('order obj', this.order_obj)
-          //   })
         }
       },
       mounted() {
