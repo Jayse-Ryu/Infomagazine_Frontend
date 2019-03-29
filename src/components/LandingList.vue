@@ -213,6 +213,7 @@
           }
           this.content_obj = response.data.results
         })
+
     },
     destroyed() {
       // Save values in the store

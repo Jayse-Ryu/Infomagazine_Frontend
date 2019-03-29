@@ -66,11 +66,28 @@
             <input type="text" class="form-control" id="base_url" maxlength="30" v-model="landing_obj.base_url">
           </div>
 
+          <label class="col-sm-3 col-form-label-sm mt-3" for="views">
+            <span>조회수</span>
+          </label>
+          <div class="col-sm-9 mt-sm-3">
+            <div class="form-control border-0" id="views">{{ landing_obj.view }}</div>
+          </div>
+
+          <label class="col-sm-3 col-form-label-sm mt-3" for="landing_db">
+            <span>수집 DB</span>
+          </label>
+          <div class="col-sm-9 mt-sm-3">
+            <div class="form-control border-0 text-primary" id="landing_db"><router-link to="/">{{ landing_obj.view }}</router-link></div>
+          </div>
+
         </div>
 
         <hr>
 
         <h5>DB 폼</h5>
+        <div v-for="form in form_obj">{{ form }}</div>
+        <p>++</p>
+        <div v-for="field in field_obj">{{ field }}</div>
         <div class="form-group row mb-0">
           <label class="col-sm-3 col-form-label-sm mt-3" for="form_group">DB 폼 그룹</label>
           <form class="col-sm-9 mt-sm-3 row ml-0" v-on:submit.prevent="form_group_add">
@@ -97,10 +114,10 @@
           </label>
           <div v-if="form_selected.sign != -1" class="col-sm-9 mt-sm-3 row ml-0">
             <div class="color_wrap form-control col-sm-2" id="form_group_bg">
-              <input type="color" v-model="form_selected.bg_color" class="color_picker">
+              <input type="color" v-model="form_selected.back_color" class="color_picker">
             </div>
             <div class="margin_div"></div>
-            <input type="text" v-model="form_selected.bg_color" class="form-control col-sm-3" maxlength="7">
+            <input type="text" v-model="form_selected.back_color" class="form-control col-sm-3" maxlength="7">
           </div>
 
           <label v-if="form_selected.sign != -1" class="col-sm-3 col-form-label-sm mt-3" for="form_group_col">
@@ -108,10 +125,10 @@
           </label>
           <div v-if="form_selected.sign != -1" class="col-sm-9 mt-sm-3 row ml-0">
             <div class="color_wrap form-control col-sm-2" id="form_group_col">
-              <input type="color" v-model="form_selected.tx_color" class="color_picker">
+              <input type="color" v-model="form_selected.text_color" class="color_picker">
             </div>
             <div class="margin_div"></div>
-            <input type="text" v-model="form_selected.tx_color" class="form-control col-sm-3" maxlength="7">
+            <input type="text" v-model="form_selected.text_color" class="form-control col-sm-3" maxlength="7">
           </div>
         </div>
 
@@ -303,6 +320,7 @@
         <hr>
 
         <h5>추가내용</h5>
+        <div v-for="url in url_obj">{{ url }}</div>
         <div class="form-group row mb-0">
           <label class="col-sm-3 col-form-label-sm mt-3" for="url_title">Url</label>
           <form class="col-sm-9 mt-sm-3 row ml-0" v-on:submit.prevent="url_add()">
@@ -842,7 +860,7 @@
 
         <div class="form-group row">
           <div class="col-12">
-            <button type="submit" class="btn btn-primary col-12">생성</button>
+            <button type="submit" class="btn btn-primary col-12">수정</button>
             <router-link to="/landing">
               <button type="button" class="btn btn-dark col-12 mt-2">취소</button>
             </router-link>
@@ -928,8 +946,8 @@
         form_arrow: -1,
         form_selected: {
           sign: -1,
-          bg_color: '#f9f9f9',
-          tx_color: '#313131'
+          back_color: '#f9f9f9',
+          text_color: '#313131'
         },
         // // Set fields for form group
         field_obj: [],
@@ -1002,7 +1020,11 @@
           this.order_selected = sign
           for (let i = 0; i < this.order_obj.length; i++) {
             if (this.order_obj[i].id == sign) {
-              this.console_obj.sign = this.order_obj[i].id
+              if(this.order_obj[i].id) {
+                this.console_obj.sign = this.order_obj[i].id
+              } else if (this.order_obj[i].sign) {
+                this.console_obj.sign = this.order_obj[i].sign
+              }
               this.console_obj.name = this.order_obj[i].name
               this.console_obj.position = this.order_obj[i].position
               this.console_obj.type = this.order_obj[i].type
@@ -1174,12 +1196,12 @@
                     highest = this.form_obj[i].sign
                   }
                 }
-                this.form_obj.push({sign: highest + 1, name: this.form_temp, bg_color: '#f0f0f0', tx_color: '#313131'})
+                this.form_obj.push({sign: highest + 1, name: this.form_temp, back_color: '#f0f0f0', text_color: '#313131'})
                 this.form_temp = ''
                 alert('폼 그룹이 생성되었습니다.')
               }
             } else {
-              this.form_obj.push({sign: 1, name: this.form_temp, bg_color: '#f0f0f0', tx_color: '#313131'})
+              this.form_obj.push({sign: 1, name: this.form_temp, back_color: '#f0f0f0', text_color: '#313131'})
               this.form_temp = ''
               alert('폼 그룹이 생성되었습니다.')
             }
@@ -1193,17 +1215,17 @@
             if (confirm('이 폼그룹을 삭제하시겠습니까?')) {
               this.form_obj = this.form_obj.filter(el => el.sign != id)
               this.form_arrow = -1
-              this.form_selected = {sign: -1, tx_color: '#313131', bg_color: '#f9f9f9'}
+              this.form_selected = {sign: -1, text_color: '#313131', back_color: '#f9f9f9'}
               this.field_obj = this.field_obj.filter(el => el.form_group_id != id)
             }
           } else {
             alert('그룹을 먼저 선택하세요.')
           }
         },
-        // // catch when form is changed
+        // // catch when form select is changed
         form_changed(id) {
           if (id == -1) {
-            this.form_selected = {sign: -1, tx_color: '#313131', bg_color: '#f0f0f0'}
+            this.form_selected = {sign: -1, text_color: '#313131', back_color: '#f0f0f0'}
           } else {
             for (let i = 0; i < this.form_obj.length; i++) {
               if (this.form_obj[i].sign == id) {
@@ -1216,7 +1238,7 @@
         filter_change() {
           this.filtered_fields = []
           for (let i = 0; i < this.field_obj.length; i++) {
-            if (this.field_obj[i].form_group_id == this.form_selected.sign) {
+            if (this.field_obj[i].form_group == this.form_selected.sign || this.field_obj[i].form_group == this.form_selected.id) {
               // this.filtered_fields
               this.filtered_fields.push(this.field_obj[i])
             }
@@ -1839,6 +1861,13 @@
                     this.field_obj.push(response.data.results[j])
                   }
                 })
+            }
+            for(let j = 0; j < this.form_obj.length; j ++) {
+              this.form_obj[j].sign = this.form_obj[j].id
+            }
+            for(let k = 0; k < this.field_obj.length; k ++) {
+              console.log('field_ list??', this.field_obj[k])
+              this.field_obj[k].sign = this.field_obj[k].id
             }
           })
         //
