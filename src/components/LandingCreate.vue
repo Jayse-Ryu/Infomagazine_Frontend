@@ -948,7 +948,8 @@
       clicked: -1,
       len: 0,
       // is_group: 1,
-      collector: 0
+      collector: 0,
+      dynamo_obj: {}
     }),
     methods: {
       order_image_change(sign) {
@@ -1385,10 +1386,12 @@
               }
             }
             if (flag) {
-              this.landing_create()
+              // this.landing_create()
+              this.collect_dynamo()
             }
           } else {
-            this.landing_create()
+            // this.landing_create()
+            this.collect_dynamo()
           }
         }
       },
@@ -1745,6 +1748,35 @@
               })
           }
         }
+      },
+      collect_dynamo() {
+        for(let key in this.landing_obj) {
+          if (this.landing_obj.hasOwnProperty(key)) {
+            this.dynamo_obj[key] = this.landing_obj[key]
+          }
+        }
+        for(let key in this.layout_obj) {
+          if (this.layout_obj.hasOwnProperty(key)) {
+            this.dynamo_obj[key] = this.layout_obj[key]
+          }
+        }
+        if (this.layout_obj.is_banner && this.in_banner_file_flag) {
+          this.dynamo_obj['banner_image'] = this.in_banner_file[0]
+        }
+        for(let key in this.url_obj) {
+          if (this.url_obj.hasOwnProperty(key)) {
+            this.dynamo_obj[key] = this.url_obj[key]
+          }
+        }
+        for(let key in this.term_obj) {
+          if (this.term_obj.hasOwnProperty(key)) {
+            this.dynamo_obj[key] = this.term_obj[key]
+          }
+        }
+        if (this.term_file_flag && this.layout_obj.image_term) {
+          this.dynamo_obj['term_image'] = this.term_file[0]
+        }
+        console.log(this.dynamo_obj)
       },
       bye() {
         console.log(this.collector)
