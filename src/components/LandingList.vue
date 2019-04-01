@@ -214,6 +214,8 @@
           this.content_obj = response.data.results
         })
 
+      console.log(process.env.NODE_ENV)
+      console.log(process.env.APP_NAME)
     },
     destroyed() {
       // Save values in the store
