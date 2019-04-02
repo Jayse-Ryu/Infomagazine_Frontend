@@ -468,10 +468,16 @@
                                          :grid=[5,5]
                                          :lock-aspect-ratio="false">
 
-                  <img v-if="item.type == 1 && item.image_data.length == 0" src="../assets/logo1.png" alt="logo"
+                  <!--<img v-if="item.type == 1 && item.image_data.length == 0" src="../assets/logo1.png" alt="logo"
                        style="width: 100%; height: 100%; object-fit: contain;">
                   <img v-if="item.type == 1 && item.image_data.length !== 0" :src="item.image_url" alt="logo"
+                       style="width: 100%; height: 100%; object-fit: contain;">-->
+
+                  <img v-if="item.type == 1 && !item.image_data.name" src="../assets/logo1.png" alt="logo_none"
                        style="width: 100%; height: 100%; object-fit: contain;">
+                  <img v-if="item.type == 1 && item.image_data.name" :src="item.image_url" alt="logo_in"
+                       style="width: 100%; height: 100%; object-fit: contain;">
+
 
                   <div v-if="item.type == 2" class="form_layout" v-for="form in form_obj">
                     <div class="container form_layout_cont" v-if="form.sign == item.form_group"
@@ -572,14 +578,14 @@
                     <span class="video_handler_2">비디오 드래그</span>
                     <div style="position: relative; width: 100%; max-width: 1000px; margin: auto;">
                       <div style=" position: relative; padding-bottom: 56.25%; height:0;">
-                        <iframe v-if="console_obj.video_type == 1"
+                        <iframe v-if="item.video_type == 1"
                                 style="width: 100%; height: 100%; top:0; left:0; position: absolute;" type="text/html"
                                 :src="'https://www.youtube.com/embed/'
                                 + item.video_data
                                 + '?&playlist=Ra8s0IHng6A&autoplay=0&loop=1&showinfo=0&fs=1&disablekb=1&vq=auto&controls=0&rel=0&iv_load_policy=3&mute=0&playsinline=1&modestbranding=1'"
                                 frameborder="0" volume="1" allowfullscreen webkitallowfullscreen
                                 mozallowfullscreen></iframe>
-                        <iframe v-if="console_obj.video_type == 2"
+                        <iframe v-if="item.video_type == 2"
                                 style="width: 100%; height: 100%; top:0; left:0; position: absolute;" type="text/html"
                                 :src="'https://player.vimeo.com/video/' + item.video_data + '?&loop=1'" frameborder="0"
                                 volume="1" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
@@ -591,86 +597,88 @@
 
               </div>
 
-              <div class="console" v-if="console_obj.sign != 0">
-                <div class="form-group row p-4">
-                  <label for="console_name" class="col-sm-3 col-form-label-sm mt-3">이름</label>
-                  <div class="col-sm-9 mt-sm-3">
-                    <input type="text" id="console_name" v-model="console_obj.name" class="form-control" step="5"
-                           maxlength="30" @keyup.prevent="order_name_change">
-                  </div>
 
-                  <label for="console_type" class="col-sm-3 col-form-label-sm mt-3">타입</label>
-                  <div class="col-sm-9 mt-sm-3">
-                    <select class="form-control" id="console_type" v-model.number="console_obj.type"
-                            @change.prevent="order_type_change">
-                      <option value="1">이미지</option>
-                      <option value="2">폼그룹</option>
-                      <option value="3">비디오</option>
-                    </select>
-                  </div>
+              <div class="console" v-if="order_focus_flag && order_selected != 0">
+                <div v-for="info in order_obj">
+                  <div class="form-group row p-4" v-if="info.sign == order_selected">
+                    <label for="console_name" class="col-sm-3 col-form-label-sm mt-3">이름</label>
+                    <div class="col-sm-9 mt-sm-3">
+                      <input type="text" id="console_name" v-model="info.name" class="form-control" step="5"
+                             maxlength="30">
+                    </div>
 
-                  <label v-if="console_obj.type == 3" for="video_type" class="col-sm-3 col-form-label-sm mt-3">
-                    비디오 타입
-                  </label>
-                  <div v-if="console_obj.type == 3" class="col-sm-9 mt-sm-3">
-                    <select id="video_type" class="form-control" v-model="console_obj.video_type"
-                            @change="order_video_type_change">
-                      <option value="1">Youtube</option>
-                      <option value="2">Vimeo</option>
-                    </select>
-                  </div>
-                  <label v-if="console_obj.type == 1" class="col-sm-3 col-form-label-sm mt-3" for="image_set">
-                    이미지 첨부
-                  </label>
-                  <label v-if="console_obj.type == 2" class="col-sm-3 col-form-label-sm mt-3" for="form_set">
-                    폼 그룹 선택
-                  </label>
-                  <label v-if="console_obj.type == 3" class="col-sm-3 col-form-label-sm mt-3" for="video_set">
-                    동영상 값
-                  </label>
-                  <div class="col-sm-9 mt-sm-3" id="choose_set">
-                    <input v-if="console_obj.type == 1" type="file" class="form-control p-1" id="image_set"
-                           @change="order_image_change(console_obj.sign)" accept="image/*">
-                    <select v-if="console_obj.type == 2" class="form-control" id="form_set"
-                            v-model="console_obj.form_group" @change="order_form_change">
-                      <option value="0">폼 그룹을 선택하세요</option>
-                      <option v-for="content in form_obj" :value="content.sign">{{ content.name }}</option>
-                    </select>
-                    <input v-if="console_obj.type == 3" type="text" class="form-control" id="video_set"
-                           v-model="console_obj.video_data" @keyup.prevent="order_video_change">
-                  </div>
+                    <label for="console_type" class="col-sm-3 col-form-label-sm mt-3">타입</label>
+                    <div class="col-sm-9 mt-sm-3">
+                      <select class="form-control" id="console_type" v-model.number="info.type">
+                        <option value="1">이미지</option>
+                        <option value="2">폼그룹</option>
+                        <option value="3">비디오</option>
+                      </select>
+                    </div>
 
-                  <label for="console_x" class="col-sm-3 col-form-label-sm mt-3">X 좌표</label>
-                  <div class="col-sm-9 mt-sm-3">
-                    <input type="number" id="console_x" v-model.number="console_obj.position.x" class="form-control"
-                           step="5">
-                  </div>
+                    <label v-if="info.type == 3" for="video_type" class="col-sm-3 col-form-label-sm mt-3">
+                      비디오 타입
+                    </label>
+                    <div v-if="info.type == 3" class="col-sm-9 mt-sm-3">
+                      <select id="video_type" class="form-control" v-model="info.video_type">
+                        <option value="1">Youtube</option>
+                        <option value="2">Vimeo</option>
+                      </select>
+                    </div>
+                    <label v-if="info.type == 1" class="col-sm-3 col-form-label-sm mt-3" for="image_set">
+                      이미지 첨부
+                    </label>
+                    <label v-if="info.type == 2" class="col-sm-3 col-form-label-sm mt-3" for="form_set">
+                      폼 그룹 선택
+                    </label>
+                    <label v-if="info.type == 3" class="col-sm-3 col-form-label-sm mt-3" for="video_set">
+                      동영상 값
+                    </label>
+                    <div class="col-sm-9 mt-sm-3" id="choose_set">
+                      <input v-if="info.type == 1" type="file" class="form-control p-1" id="image_set" accept="image/*"
+                             @change="order_image_change(info.sign)">
+                      <select v-if="info.type == 2" class="form-control" id="form_set" v-model="info.form_group">
+                        <option value="0">폼 그룹을 선택하세요</option>
+                        <option v-for="content in form_obj" :value="content.sign">{{ content.name }}</option>
+                      </select>
+                      <input v-if="info.type == 3" type="text" class="form-control" id="video_set"
+                             v-model="info.video_data">
+                    </div>
 
-                  <label for="console_y" class="col-sm-3 col-form-label-sm mt-3">Y 좌표</label>
-                  <div class="col-sm-9 mt-sm-3">
-                    <input type="number" id="console_y" v-model.number="console_obj.position.y" class="form-control"
-                           step="5">
-                  </div>
+                    <label for="console_x" class="col-sm-3 col-form-label-sm mt-3">X 좌표</label>
+                    <div class="col-sm-9 mt-sm-3">
+                      <input type="number" id="console_x" v-model.number="info.position.x" class="form-control"
+                             step="5">
+                    </div>
 
-                  <label for="console_w" class="col-sm-3 col-form-label-sm mt-3">너비</label>
-                  <div class="col-sm-9 mt-sm-3">
-                    <input type="number" id="console_w" v-model.number="console_obj.position.w" class="form-control"
-                           step="5">
-                  </div>
+                    <label for="console_y" class="col-sm-3 col-form-label-sm mt-3">Y 좌표</label>
+                    <div class="col-sm-9 mt-sm-3">
+                      <input type="number" id="console_y" v-model.number="info.position.y" class="form-control"
+                             step="5">
+                    </div>
 
-                  <label for="console_h" class="col-sm-3 col-form-label-sm mt-3">높이</label>
-                  <div class="col-sm-9 mt-sm-3">
-                    <input type="number" id="console_h" v-model.number="console_obj.position.h" class="form-control"
-                           step="5">
-                  </div>
+                    <label for="console_w" class="col-sm-3 col-form-label-sm mt-3">너비</label>
+                    <div class="col-sm-9 mt-sm-3">
+                      <input type="number" id="console_w" v-model.number="info.position.w" class="form-control"
+                             step="5">
+                    </div>
 
-                  <label for="console_z" class="col-sm-3 col-form-label-sm mt-3">우선순위</label>
-                  <div class="col-sm-9 mt-sm-3">
-                    <input type="number" id="console_z" v-model.number="console_obj.position.z" class="form-control">
+                    <label for="console_h" class="col-sm-3 col-form-label-sm mt-3">높이</label>
+                    <div class="col-sm-9 mt-sm-3">
+                      <input type="number" id="console_h" v-model.number="info.position.h" class="form-control"
+                             step="5">
+                    </div>
+
+                    <label for="console_z" class="col-sm-3 col-form-label-sm mt-3">우선순위</label>
+                    <div class="col-sm-9 mt-sm-3">
+                      <input type="number" id="console_z" v-model.number="info.position.z" class="form-control">
+                    </div>
                   </div>
                 </div>
               </div>
+
             </div>
+
             <div class="preview">
               <button type="button" class="btn btn-info w-100">미리보기</button>
             </div>
@@ -730,12 +738,11 @@
                       }">?</span>
               </label>
               <div class="col-sm-9 mt-sm-3">
-                <label class="switch" for="in_company" v-model="layout_obj.show_company">
-                  <input type="checkbox" id="in_company">
+                <label class="switch" for="in_company">
+                  <input type="checkbox" id="in_company" v-model="layout_obj.show_company">
                   <span class="slider round"></span>
                 </label>
               </div>
-
 
               <label class="col-sm-3 col-form-label-sm mt-3" for="is_hijack">
                 <span>후팝업</span>
@@ -905,16 +912,6 @@
       // order_selected: 0,
       order_focus_flag: false,
       order_selected: 0,
-      console_obj: {
-        sign: 0,
-        name: '',
-        position: {x: 0, y: 0, w: 0, h: 0, z: 0},
-        type: 0,
-        image_data: [],
-        video_type: 1,
-        video_data: '',
-        form_group: 0
-      },
       order_obj: [],
       // // Form-group db
       // Form name for make one
@@ -998,23 +995,11 @@
       },
       order_activated(sign) {
         this.order_selected = sign
-        for (let i = 0; i < this.order_obj.length; i++) {
-          if (this.order_obj[i].sign == sign) {
-            this.console_obj.sign = this.order_obj[i].sign
-            this.console_obj.name = this.order_obj[i].name
-            this.console_obj.position = this.order_obj[i].position
-            this.console_obj.type = this.order_obj[i].type
-            this.console_obj.image_data = this.order_obj[i].image_data
-            this.console_obj.image_url = this.order_obj[i].image_url
-            this.console_obj.video_type = this.order_obj[i].video_type
-            this.console_obj.video_data = this.order_obj[i].video_data
-            this.console_obj.form_group = this.order_obj[i].form_group
-          }
-        }
+        this.order_focus_flag = true
       },
       order_deactivated() {
         // this.order_selected = 0
-        // this.console_obj = {}
+        // this.order_focus_flag = false
       },
       order_move(x, y) {
         for (let i = 0; i < this.order_obj.length; i++) {
@@ -1750,33 +1735,78 @@
         }
       },
       collect_dynamo() {
+        let axios = this.$axios
+        const config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        // Get landing objs
+        this.dynamo_obj.landing = {}
         for(let key in this.landing_obj) {
           if (this.landing_obj.hasOwnProperty(key)) {
-            this.dynamo_obj[key] = this.landing_obj[key]
+            this.dynamo_obj.landing[key] = this.landing_obj[key]
           }
         }
+        // Get layout objs
         for(let key in this.layout_obj) {
           if (this.layout_obj.hasOwnProperty(key)) {
-            this.dynamo_obj[key] = this.layout_obj[key]
+            this.dynamo_obj.landing[key] = this.layout_obj[key]
           }
         }
+        // If banner needs image file
         if (this.layout_obj.is_banner && this.in_banner_file_flag) {
-          this.dynamo_obj['banner_image'] = this.in_banner_file[0]
+          this.dynamo_obj.landing['banner_image'] = this.in_banner_file[0]
         }
+        // Get Url objs
+        this.dynamo_obj.url = {}
         for(let key in this.url_obj) {
           if (this.url_obj.hasOwnProperty(key)) {
-            this.dynamo_obj[key] = this.url_obj[key]
+            this.dynamo_obj.url[key] = this.url_obj[key]
           }
         }
+        // Get term objs
+        this.dynamo_obj.term = {}
         for(let key in this.term_obj) {
           if (this.term_obj.hasOwnProperty(key)) {
-            this.dynamo_obj[key] = this.term_obj[key]
+            this.dynamo_obj.term[key] = this.term_obj[key]
           }
         }
+        // If term needs image file
         if (this.term_file_flag && this.layout_obj.image_term) {
-          this.dynamo_obj['term_image'] = this.term_file[0]
+          this.dynamo_obj.term['term_image'] = this.term_file[0]
         }
-        console.log(this.dynamo_obj)
+        // Get form group objs
+        this.dynamo_obj.form = []
+        for(let key in this.form_obj) {
+          if (this.form_obj.hasOwnProperty(key)) {
+            this.dynamo_obj.form[key] = this.form_obj[key]
+          }
+        }
+        // Get field objs
+        this.dynamo_obj.field = []
+        for(let key in this.field_obj) {
+          if (this.field_obj.hasOwnProperty(key)) {
+            this.dynamo_obj.field[key] = this.field_obj[key]
+          }
+        }
+        // Get order objs
+        this.dynamo_obj.order = []
+        for(let key in this.order_obj) {
+          if (this.order_obj.hasOwnProperty(key)) {
+            this.dynamo_obj.order[key] = this.order_obj[key]
+            // if(this.order_obj[i].image_url.length > 0) {
+            //image_data.append('image', this.order_obj[i].image_data)
+          }
+        }
+        console.log('dynamo obj result is = ', this.dynamo_obj)
+        axios.post(this.$store.state.endpoints.baseUrl + 'landing/', this.dynamo_obj, config)
+          .then((response) => {
+            console.log(response)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       },
       bye() {
         console.log(this.collector)

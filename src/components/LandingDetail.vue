@@ -593,14 +593,14 @@
                     <span class="video_handler_2">비디오 드래그</span>
                     <div style="position: relative; width: 100%; max-width: 1000px; margin: auto;">
                       <div style=" position: relative; padding-bottom: 56.25%; height:0;">
-                        <iframe v-if="console_obj.video_type == 1"
+                        <iframe v-if="item.video_type == 1"
                                 style="width: 100%; height: 100%; top:0; left:0; position: absolute;" type="text/html"
                                 :src="'https://www.youtube.com/embed/'
                                 + item.video_data
                                 + '?&playlist=Ra8s0IHng6A&autoplay=0&loop=1&showinfo=0&fs=1&disablekb=1&vq=auto&controls=0&rel=0&iv_load_policy=3&mute=0&playsinline=1&modestbranding=1'"
                                 frameborder="0" volume="1" allowfullscreen webkitallowfullscreen
                                 mozallowfullscreen></iframe>
-                        <iframe v-if="console_obj.video_type == 2"
+                        <iframe v-if="item.video_type == 2"
                                 style="width: 100%; height: 100%; top:0; left:0; position: absolute;" type="text/html"
                                 :src="'https://player.vimeo.com/video/' + item.video_data + '?&loop=1'" frameborder="0"
                                 volume="1" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
@@ -612,7 +612,7 @@
 
               </div>
 
-              <div class="console" v-if="console_obj.sign != 0">
+              <!--<div class="console" v-if="console_obj.sign != 0">
                 <div class="form-group row p-4">
                   <label for="console_name" class="col-sm-3 col-form-label-sm mt-3">이름</label>
                   <div class="col-sm-9 mt-sm-3">
@@ -690,7 +690,88 @@
                     <input type="number" id="console_z" v-model.number="console_obj.position.z" class="form-control">
                   </div>
                 </div>
+              </div>-->
+
+              {{ order_obj }}
+              <div class="console" v-if="order_focus_flag && order_selected != 0">
+                <div class="form-group row p-4" v-for="info in order_obj">
+                  <div v-if="info.sign == order_selected">
+                    <label for="console_name" class="col-sm-3 col-form-label-sm mt-3">이름</label>
+                    <div class="col-sm-9 mt-sm-3">
+                      <input type="text" id="console_name" v-model="info.name" class="form-control" step="5"
+                             maxlength="30">
+                    </div>
+
+                    <label for="console_type" class="col-sm-3 col-form-label-sm mt-3">타입</label>
+                    <div class="col-sm-9 mt-sm-3">
+                      <select class="form-control" id="console_type" v-model.number="info.type">
+                        <option value="1">이미지</option>
+                        <option value="2">폼그룹</option>
+                        <option value="3">비디오</option>
+                      </select>
+                    </div>
+
+                    <label v-if="info.type == 3" for="video_type" class="col-sm-3 col-form-label-sm mt-3">
+                      비디오 타입
+                    </label>
+                    <div v-if="info.type == 3" class="col-sm-9 mt-sm-3">
+                      <select id="video_type" class="form-control" v-model="info.video_type">
+                        <option value="1">Youtube</option>
+                        <option value="2">Vimeo</option>
+                      </select>
+                    </div>
+                    <label v-if="info.type == 1" class="col-sm-3 col-form-label-sm mt-3" for="image_set">
+                      이미지 첨부
+                    </label>
+                    <label v-if="info.type == 2" class="col-sm-3 col-form-label-sm mt-3" for="form_set">
+                      폼 그룹 선택
+                    </label>
+                    <label v-if="info.type == 3" class="col-sm-3 col-form-label-sm mt-3" for="video_set">
+                      동영상 값
+                    </label>
+                    <div class="col-sm-9 mt-sm-3" id="choose_set">
+                      <input v-if="info.type == 1" type="file" class="form-control p-1" id="image_set" accept="image/*">
+                      <select v-if="info.type == 2" class="form-control" id="form_set" v-model="info.form_group">
+                        <option value="0">폼 그룹을 선택하세요</option>
+                        <option v-for="content in form_obj" :value="content.sign">{{ content.name }}</option>
+                      </select>
+                      <input v-if="info.type == 3" type="text" class="form-control" id="video_set"
+                             v-model="info.video_data">
+                    </div>
+
+                    <label for="console_x" class="col-sm-3 col-form-label-sm mt-3">X 좌표</label>
+                    <div class="col-sm-9 mt-sm-3">
+                      <input type="number" id="console_x" v-model.number="info.position.x" class="form-control"
+                             step="5">
+                    </div>
+
+                    <label for="console_y" class="col-sm-3 col-form-label-sm mt-3">Y 좌표</label>
+                    <div class="col-sm-9 mt-sm-3">
+                      <input type="number" id="console_y" v-model.number="info.position.y" class="form-control"
+                             step="5">
+                    </div>
+
+                    <label for="console_w" class="col-sm-3 col-form-label-sm mt-3">너비</label>
+                    <div class="col-sm-9 mt-sm-3">
+                      <input type="number" id="console_w" v-model.number="info.position.w" class="form-control"
+                             step="5">
+                    </div>
+
+                    <label for="console_h" class="col-sm-3 col-form-label-sm mt-3">높이</label>
+                    <div class="col-sm-9 mt-sm-3">
+                      <input type="number" id="console_h" v-model.number="info.position.h" class="form-control"
+                             step="5">
+                    </div>
+
+                    <label for="console_z" class="col-sm-3 col-form-label-sm mt-3">우선순위</label>
+                    <div class="col-sm-9 mt-sm-3">
+                      <input type="number" id="console_z" v-model.number="info.position.z" class="form-control">
+                    </div>
+                  </div>
+                </div>
               </div>
+
+
             </div>
             <div class="preview">
               <button type="button" class="btn btn-info w-100">미리보기</button>
@@ -1018,7 +1099,7 @@
         },
         order_activated(sign) {
           this.order_selected = sign
-          for (let i = 0; i < this.order_obj.length; i++) {
+          /*for (let i = 0; i < this.order_obj.length; i++) {
             if (this.order_obj[i].id == sign) {
               if(this.order_obj[i].id) {
                 this.console_obj.sign = this.order_obj[i].id
@@ -1034,11 +1115,14 @@
               this.console_obj.video_data = this.order_obj[i].video_data
               this.console_obj.form_group = this.order_obj[i].form_group
             }
-          }
+          }*/
+          this.order_focus_flag = true
         },
         order_deactivated() {
           // this.order_selected = 0
           // this.console_obj = {}
+          this.order_selected = 0
+          this.order_focus_flag = false
         },
         order_move(x, y) {
           for (let i = 0; i < this.order_obj.length; i++) {
