@@ -888,21 +888,21 @@
         header_script: '',
         body_script: '',
         base_url: '',
-        is_hijack: 0,
+        is_hijack: false,
         hijack_url: '',
-        is_active: 1,
-        is_mobile: 0
+        is_active: true,
+        is_mobile: false
       },
       // // Layout db
       layout_obj: {
-        is_banner: 0,
+        is_banner: false,
         banner_url: '',
         banner_image: '',
-        inner_db: 1,
+        inner_db: true,
         font: -1,
-        is_term: 0,
-        image_term: 0,
-        show_company: 0
+        is_term: false,
+        image_term: false,
+        show_company: false
       },
       // // in_banner obj
       in_banner_file_flag: 0,
@@ -1738,69 +1738,108 @@
         let axios = this.$axios
         const config = {
           headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'application/json'
           }
         }
         // Get landing objs
-        this.dynamo_obj.landing = {}
+        // "LandingName": req['LandingName']
+        // "LadingInfo": req['LadingInfo']
+        this.dynamo_obj.LandingName = this.landing_obj.name
+        this.dynamo_obj.LandingInfo = {}
+
+        this.dynamo_obj.LandingInfo.landing = {}
         for(let key in this.landing_obj) {
           if (this.landing_obj.hasOwnProperty(key)) {
-            this.dynamo_obj.landing[key] = this.landing_obj[key]
+            if(this.landing_obj[key] == '' && typeof(this.landing_obj[key]) != 'boolean') {
+              this.dynamo_obj.LandingInfo.landing[key] = null
+            } else {
+              this.dynamo_obj.LandingInfo.landing[key] = this.landing_obj[key]
+            }
           }
         }
         // Get layout objs
         for(let key in this.layout_obj) {
           if (this.layout_obj.hasOwnProperty(key)) {
-            this.dynamo_obj.landing[key] = this.layout_obj[key]
+            if(this.layout_obj[key] == '' && typeof(this.layout_obj[key]) != 'boolean') {
+              this.dynamo_obj.LandingInfo.landing[key] = null
+            } else {
+              this.dynamo_obj.LandingInfo.landing[key] = this.layout_obj[key]
+            }
           }
         }
         // If banner needs image file
         if (this.layout_obj.is_banner && this.in_banner_file_flag) {
-          this.dynamo_obj.landing['banner_image'] = this.in_banner_file[0]
+          if (this.in_banner_file[0] == '' && typeof(this.in_banner_file[0]) != 'boolean') {
+            this.dynamo_obj.LandingInfo.landing['banner_image'] = null
+          } else {
+            this.dynamo_obj.LandingInfo.landing['banner_image'] = this.in_banner_file[0]
+          }
         }
         // Get Url objs
-        this.dynamo_obj.url = {}
+        this.dynamo_obj.LandingInfo.url = []
         for(let key in this.url_obj) {
           if (this.url_obj.hasOwnProperty(key)) {
-            this.dynamo_obj.url[key] = this.url_obj[key]
+            if(this.url_obj[key] == '' && typeof(this.url_obj[key]) != 'boolean') {
+              this.dynamo_obj.LandingInfo.url[key] = null
+            } else {
+              this.dynamo_obj.LandingInfo.url[key] = this.url_obj[key]
+            }
           }
         }
         // Get term objs
-        this.dynamo_obj.term = {}
+        this.dynamo_obj.LandingInfo.term = {}
         for(let key in this.term_obj) {
           if (this.term_obj.hasOwnProperty(key)) {
-            this.dynamo_obj.term[key] = this.term_obj[key]
+            if(this.term_obj[key] == '' && typeof(this.term_obj[key]) != 'boolean') {
+              this.dynamo_obj.LandingInfo.term[key] = null
+            } else {
+              this.dynamo_obj.LandingInfo.term[key] = this.term_obj[key]
+            }
           }
         }
         // If term needs image file
         if (this.term_file_flag && this.layout_obj.image_term) {
-          this.dynamo_obj.term['term_image'] = this.term_file[0]
+          if (this.term_file[0] == '' && typeof(this.term_file[0]) != 'boolean') {
+            this.dynamo_obj.LandingInfo.term['term_image'] = null
+          } else {
+            this.dynamo_obj.LandingInfo.term['term_image'] = this.term_file[0]
+          }
         }
         // Get form group objs
-        this.dynamo_obj.form = []
+        this.dynamo_obj.LandingInfo.form = []
         for(let key in this.form_obj) {
           if (this.form_obj.hasOwnProperty(key)) {
-            this.dynamo_obj.form[key] = this.form_obj[key]
+            if (this.form_obj[key] == '' && typeof(this.form_obj[key]) != 'boolean') {
+              this.dynamo_obj.LandingInfo.form[key] = null
+            } else {
+              this.dynamo_obj.LandingInfo.form[key] = this.form_obj[key]
+            }
           }
         }
         // Get field objs
-        this.dynamo_obj.field = []
+        this.dynamo_obj.LandingInfo.field = []
         for(let key in this.field_obj) {
           if (this.field_obj.hasOwnProperty(key)) {
-            this.dynamo_obj.field[key] = this.field_obj[key]
+            if (this.field_obj[key] == '' && typeof(this.field_obj[key]) != 'boolean') {
+              this.dynamo_obj.LandingInfo.field[key] = null
+            } else {
+              this.dynamo_obj.LandingInfo.field[key] = this.field_obj[key]
+            }
           }
         }
         // Get order objs
-        this.dynamo_obj.order = []
+        this.dynamo_obj.LandingInfo.order = []
         for(let key in this.order_obj) {
           if (this.order_obj.hasOwnProperty(key)) {
-            this.dynamo_obj.order[key] = this.order_obj[key]
-            // if(this.order_obj[i].image_url.length > 0) {
-            //image_data.append('image', this.order_obj[i].image_data)
+            if (this.order_obj[key] == '' && typeof(this.order_obj[key]) != 'boolean') {
+              this.dynamo_obj.LandingInfo.order[key] = null
+            } else {
+              this.dynamo_obj.LandingInfo.order[key] = this.order_obj[key]
+            }
           }
         }
         console.log('dynamo obj result is = ', this.dynamo_obj)
-        axios.post(this.$store.state.endpoints.baseUrl + 'landing/', this.dynamo_obj, config)
+        axios.post(this.$store.state.endpoints.baseUrl + 'landing/api', this.dynamo_obj)
           .then((response) => {
             console.log(response)
           })
