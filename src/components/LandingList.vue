@@ -50,7 +50,7 @@
             <div class="col-1 p-0 col-sm-1">{{ content.id }}</div>
             <div class="col-3 p-0 col-sm-2">{{ content.company_name }}</div>
             <div class="col-3 p-0 col-sm-4">
-              <router-link :to="'/landing/detail/' + content.id">{{ content.name }}</router-link>
+              <router-link :to="'/landing/detail/' + content.id">{{ content.LandingName }}</router-link>
             </div>
             <div class="col-3 p-0">{{ content.manager_name }}</div>
             <div class="col-1 p-0 board_centre">{{ content.view }}</div>
@@ -154,16 +154,16 @@
         let axios = this.$axios
         let this_url = 'landing/'
         let offset = page
-        axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
-          .then((response) => {
-            // Calculation for page_max
-            if (response.data.count % this.page_chunk === 0) {
-              this.page_max = Math.floor(response.data.count / this.page_chunk)
-            } else {
-              this.page_max = Math.floor(response.data.count / this.page_chunk) + 1
-            }
-            this.content_obj = response.data.results
-          })
+        // axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
+        //   .then((response) => {
+        //     // Calculation for page_max
+        //     if (response.data.count % this.page_chunk === 0) {
+        //       this.page_max = Math.floor(response.data.count / this.page_chunk)
+        //     } else {
+        //       this.page_max = Math.floor(response.data.count / this.page_chunk) + 1
+        //     }
+        //     this.content_obj = response.data.results
+        //   })
       }
     },
     mounted() {
@@ -202,66 +202,26 @@
       } else if (this.search_option == 'manager') {
         this.temp_option = 3
       }
-      // Axios get landings
-      axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
-        .then((response) => {
-          // Calculation for page_max
-          if (response.data.count % this.page_chunk === 0) {
-            this.page_max = Math.floor(response.data.count / this.page_chunk)
-          } else {
-            this.page_max = Math.floor(response.data.count / this.page_chunk) + 1
-          }
-          this.content_obj = response.data.results
-        })
+      // // Axios get landings
+      // axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
+      //   .then((response) => {
+      //     // Calculation for page_max
+      //     if (response.data.count % this.page_chunk === 0) {
+      //       this.page_max = Math.floor(response.data.count / this.page_chunk)
+      //     } else {
+      //       this.page_max = Math.floor(response.data.count / this.page_chunk) + 1
+      //     }
+      //     this.content_obj = response.data.results
+      //   })
 
-      // console.log(process.env.NODE_ENV)
-      // console.log(process.env.Access)
-      // let AWS = require('aws-sdk')
-      // AWS.config.update({region: 'ap-northeast-2'})
-      // console.log('AWS object', AWS)
-      // let end = new AWS.MediaConvert({endpoint: 'https"//'})
-      // let ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'})
-      //
-      // let params = {
-      //   AttributeDefinitions: [
-      //     {
-      //       AttributeName: 'CUSTOMER_ID',
-      //       AttributeType: 'N'
-      //     },
-      //     {
-      //       AttributeName: 'CUSTOMER_NAME',
-      //       AttributeType: 'S'
-      //     }
-      //   ],
-      //   KeySchema: [
-      //     {
-      //       AttributeName: 'CUSTOMER_ID',
-      //       KeyType: 'HASH'
-      //     },
-      //     {
-      //       AttributeName: 'CUSTOMER_NAME',
-      //       KeyType: 'RANGE'
-      //     }
-      //   ],
-      //   ProvisionedThroughput: {
-      //     ReadCapacityUnits: 1,
-      //     WriteCapacityUnits: 1
-      //   },
-      //   TableName: 'CUSTOMER_LIST',
-      //   StreamSpecification: {
-      //     StreamEnabled: false
-      //   }
-      // }
-      //
-      // Call DynamoDB to create the table
-      // ddb.createTable(params, function(err, data) {
-      //   if (err) {
-      //     console.log("Error", err);
-      //   } else {
-      //     console.log("Table Created", data)
-      //   }
-      // })
-      //
+      axios.get(this.$store.state.endpoints.baseUrl + 'landing/api', this.search_text)
+        .then((response) => {
+          console.log('response api', response.data.Items)
+          this.content_obj = response.data.Items
+        })
+        .catch((error) => {
+          console.log('api error', error)
+        })
     },
     destroyed() {
       // Save values in the store
