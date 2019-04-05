@@ -27,13 +27,12 @@
     </form>
 
     <div class="container">
-
       <div v-if="window_width > 1000" class="list_area">
         <div class="list_header">
           <div class="list-group-item text-center d-inline-flex justify-content-between p-1 pt-2 pb-2 text-center"
                style="border-radius: 0; border-bottom: 0; width:100%;">
-            <div class="col-1 p-0">번호</div>
-            <div class="col-2 p-0">업체</div>
+            <!--<div class="col-1 p-0">번호</div>-->
+            <div class="col-3 p-0">업체</div>
             <div class="col-4 p-0">페이지</div>
             <div class="col-3 p-0">담당자</div>
             <div class="col-1 p-0 board_centre">조회수</div>
@@ -47,13 +46,13 @@
           </li>
           <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
               v-for="content in content_obj">
-            <div class="col-1 p-0 col-sm-1">{{ content.id }}</div>
-            <div class="col-3 p-0 col-sm-2">{{ content.company_name }}</div>
+            <!--<div class="col-1 p-0 col-sm-1">{{ content.id }}</div>-->
+            <div class="col-3 p-0 col-sm-3">{{ content.LandingInfo.landing.company_name }}</div>
             <div class="col-3 p-0 col-sm-4">
               <router-link :to="'/landing/detail/' + content.id">{{ content.LandingName }}</router-link>
             </div>
-            <div class="col-3 p-0">{{ content.manager_name }}</div>
-            <div class="col-1 p-0 board_centre">{{ content.view }}</div>
+            <div class="col-3 p-0">{{ content.LandingInfo.landing.manager_name }}</div>
+            <div class="col-1 p-0 board_centre">{{ content.LandingInfo.landing.views }}</div>
             <div class="col-1 p-0 board_centre">{{ content.hit }}</div>
           </li>
         </ul>
@@ -149,6 +148,26 @@
           this.calling_all_unit()
         }
       },
+      add_company(id) {
+        let axios = this.$axios
+        axios.get(this.$store.state.endpoints.baseUrl + 'company/' + id)
+          .then((response) => {
+            console.log('print company name', response.data.name)
+            let res = response.data.name
+            console.log('res', res)
+            return res
+          })
+      },
+      add_manager(id) {
+        let axios = this.$axios
+        axios.get(this.$store.state.endpoints.baseUrl + 'user_access/' + id)
+          .then((response) => {
+            console.log('print user access name', response.data.user_name)
+            let res = response.data.user_name
+            console.log('res', res)
+            return res
+          })
+      },
       calling_all_unit: function (page) {
         // Calling landings with new values
         let axios = this.$axios
@@ -177,35 +196,27 @@
           }
         }
 
-        let test = new FormData()
-        test.append('opt', this.search_option)
-        test.append('text', this.search_text)
-        test.append('yap', 'light')
-
-        const axiosInstance = axios.create(base)
-        axiosInstance({
-          url: '/landing/api',
-          method: 'get',
-          params: {
-            text: this.search_text,
-            option: this.search_option
-          }
-        })
+        axios.get(this.$store.state.endpoints.baseUrl + 'landing/api')
           .then((response) => {
-            console.log('axios instance response', response)
+            let list = response.data.Items
+            for (let i = 0; i < list.length; i ++) {
+              let data = list[i].LandingInfo.landing
+              axios.get(this.$store.state.endpoints.baseUrl + 'company/' + data.company + '/')
+                .then((response) => {
+                  data['company_name'] = response.data.name
+                  return axios.get(this.$store.state.endpoints.baseUrl + 'user_access/' + data.manager + '/')
+                })
+                .then((response) => {
+                  data['manager_name'] = response.data.account
+                  if (i == list.length - 1) {
+                    this.content_obj = list
+                  }
+                })
+            }
           })
           .catch((error) => {
-            console.log('axios instance error', error)
+            console.log('api error', error)
           })
-
-        // axios.get(this.$store.state.endpoints.baseUrl + 'landing/api')
-        //   .then((response) => {
-        //     console.log('response api', response.data.Items)
-        //     this.content_obj = response.data.Items
-        //   })
-        //   .catch((error) => {
-        //     console.log('api error', error)
-        //   })
       }
     },
     mounted() {
@@ -256,16 +267,23 @@
       //     this.content_obj = response.data.results
       //   })
 
-      axios.get(this.$store.state.endpoints.baseUrl + 'landing/api', this.search_text)
+      axios.get(this.$store.state.endpoints.baseUrl + 'landing/api')
         .then((response) => {
-          console.log('response api', response.data.Items)
-          this.content_obj = response.data.Items
-          let bas = {}
-          for (let i = 0; i < response.data.Items.length; i ++) {
-            console.log(response.data.Items[i].LandingName)
-            bas.push(response.data.Items[i])
+          let list = response.data.Items
+          for (let i = 0; i < list.length; i ++) {
+            let data = list[i].LandingInfo.landing
+            axios.get(this.$store.state.endpoints.baseUrl + 'company/' + data.company + '/')
+              .then((response) => {
+                data['company_name'] = response.data.name
+                return axios.get(this.$store.state.endpoints.baseUrl + 'user_access/' + data.manager + '/')
+              })
+              .then((response) => {
+                data['manager_name'] = response.data.account
+                if (i >= list.length - 1) {
+                  this.content_obj = list
+                }
+              })
           }
-          console.log(bas)
         })
         .catch((error) => {
           console.log('api error', error)

@@ -305,7 +305,7 @@
 
         <h5>추가내용</h5>
         <div class="form-group row mb-0">
-          <label class="col-sm-3 col-form-label-sm mt-3" for="url_title">Url</label>
+          <!--<label class="col-sm-3 col-form-label-sm mt-3" for="url_title">Url</label>
           <form class="col-sm-9 mt-sm-3 row ml-0" v-on:submit.prevent="url_add()">
             <input type="text" class="form-control col-sm-5 col-md-5" id="url_title" placeholder="Url 주소"
                    v-model="url_temp.url">
@@ -338,7 +338,7 @@
             </ul>
           </div>
 
-          <hr>
+          <hr> -->
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="term_status">약관</label>
 
@@ -892,7 +892,9 @@
         is_hijack: false,
         hijack_url: '',
         is_active: true,
-        is_mobile: false
+        is_mobile: false,
+        views: 0,
+        collections: []
       },
       // Layout
       layout_obj: {
@@ -937,8 +939,8 @@
       term_file: [],
       term_file_info: '',
       // URL
-      url_temp: {},
-      url_obj: [],
+      /*url_temp: {},
+      url_obj: [],*/
       // Name check
       duplicated_class: 'form-control',
       duplicated: false,
@@ -1316,7 +1318,7 @@
       // URL Functions
       // URL Functions
       // URL Functions
-      url_add() {
+      /*url_add() {
         if (this.url_temp.url && this.url_temp.desc) {
           let len = this.url_obj.length
           let flag = true
@@ -1355,7 +1357,7 @@
             return true
           }
         }
-      },
+      },*/
       /* e */
       /* n */
       /* d */
