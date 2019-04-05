@@ -1363,7 +1363,6 @@
       // Check duplicated Name
       // Check duplicated Name
       check_name() {
-        console.log(this.landing_obj.name)
         let axios = this.$axios
         if (this.landing_obj.name == '') {
           this.duplicated_class = 'form-control'
@@ -1532,12 +1531,13 @@
             }
           }
         }
-        console.log('dynamo obj result is = ', this.dynamo_obj)
         axios.post(this.$store.state.endpoints.baseUrl + 'landing/api', this.dynamo_obj)
-          .then((response) => {
-            console.log(response)
+          .then(() => {
+            alert('랜딩이 생성되었습니다.')
+            this.bye()
           })
           .catch((error) => {
+            alert('랜딩 생성이 실패하였습니다.')
             console.log(error)
           })
       },
@@ -1548,7 +1548,10 @@
       // After Create
       // After Create
       bye() {
-        console.log('done')
+        this.$router.currentRoute.meta.protect_leave = 'no'
+        this.$router.push({
+          name: 'landing_list',
+        })
       },
       /* e */
       /* n */
