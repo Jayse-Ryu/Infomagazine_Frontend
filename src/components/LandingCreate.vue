@@ -42,7 +42,8 @@
             <span>랜딩페이지 이름*</span>
           </label>
           <div class="col-sm-9 mt-sm-3">
-            <input type="text" class="form-control" id="landing" maxlength="50" v-model="landing_obj.name">
+            <input type="text" :class="duplicated_class" id="landing" maxlength="50" v-model="landing_obj.name"
+                   @keyup="check_name">
           </div>
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="base_url">
@@ -835,7 +836,7 @@
           <label class="col-sm-3 col-form-label-sm mt-3" for="mobile">모바일 전용</label>
           <div class="col-sm-9 mt-sm-3">
             <label class="switch" for="mobile">
-              <input type="checkbox" id="mobile" v-model="landing_obj.mobile_only">
+              <input type="checkbox" id="mobile" v-model="landing_obj.is_mobile">
               <span class="slider round"></span>
             </label>
           </div>
@@ -875,11 +876,11 @@
         holder: 'Place holder입니다. 텍스트 입력 전 설명이 필요하거나 전화, 링크의 버튼에 표시할 글을 지정합니다.',
         list: '선택 옵션을 선택하고 제공할 수 있습니다.'
       },
-      // Get org's companies and managers
+      // Get org's companies and managers lists
       landing_company: [],
       landing_manager: [],
       // // // Actual obj data what will be saved
-      // // Landing db
+      // Landing
       landing_obj: {
         company: -1,
         manager: -1,
@@ -893,7 +894,7 @@
         is_active: true,
         is_mobile: false
       },
-      // // Layout db
+      // Layout
       layout_obj: {
         is_banner: false,
         banner_url: '',
@@ -904,27 +905,24 @@
         image_term: false,
         show_company: false
       },
-      // // in_banner obj
+      // in_banner obj
       in_banner_file_flag: 0,
       in_banner_file: [],
       in_banner_file_info: '',
-      // // Order db
-      // order_selected: 0,
+      // Order
       order_focus_flag: false,
       order_selected: 0,
       order_obj: [],
-      // // Form-group db
-      // Form name for make one
-      form_temp: '',
-      // Form colors, fields
+      // Form obj
       form_obj: [],
+      form_temp: '',
       form_arrow: -1,
       form_selected: {
         sign: -1,
         bg_color: '#f9f9f9',
         tx_color: '#313131'
       },
-      // // Set fields for form group
+      // Field obj
       field_obj: [],
       filtered_fields: [],
       field_selected: -1,
@@ -938,17 +936,19 @@
       term_file_flag: 0,
       term_file: [],
       term_file_info: '',
-      // // // URL
+      // URL
       url_temp: {},
       url_obj: [],
-      // Layout temporary
-      clicked: -1,
-      len: 0,
-      // is_group: 1,
-      collector: 0,
+      // Name check
+      duplicated_class: 'form-control',
+      duplicated: false,
+      // Result obj
       dynamo_obj: {}
     }),
     methods: {
+      // Order handle
+      // Order handle
+      // Order handle
       order_image_change(sign) {
         let file_data = event.target.files[0]
         for (let i = 0; i < this.order_obj.length; i++) {
@@ -1066,10 +1066,8 @@
               if (this.order_obj[i].sign == this.order_selected) {
                 if (i === 0) {
                   this.order_obj.shift()
-                  this.clicked = -1
                 } else {
                   this.order_obj.splice(i, 1)
-                  this.clicked = -1
                 }
               }
             }
@@ -1081,7 +1079,13 @@
         } else {
           alert('먼저 레이아웃을 선택하세요.')
         }
-      }, // temp grid system ended
+      },
+      /* e */
+      /* n */
+      /* d */
+      // File handle
+      // File handle
+      // File handle
       in_banner_file_add() {
         /* When file data changed */
         let file_data = event.target.files[0]
@@ -1133,11 +1137,12 @@
           }
         }
       },
-      back_to_list() {
-        this.$router.push({name: 'landing_list'})
-      },
-      // // // Form groups
-      // add form group
+      /* e */
+      /* n */
+      /* d */
+      // Form groups Handle
+      // Form groups Handle
+      // Form groups Handle
       form_group_add() {
         if (this.form_temp) {
           let len = this.form_obj.length
@@ -1170,7 +1175,6 @@
           alert('폼 그룹 이름을 입력하세요!')
         }
       },
-      // delete form group
       form_group_delete(id) {
         if (id !== -1) {
           if (confirm('이 폼그룹을 삭제하시겠습니까?')) {
@@ -1183,7 +1187,6 @@
           alert('그룹을 먼저 선택하세요.')
         }
       },
-      // catch when form is changed
       form_changed(id) {
         if (id == -1) {
           this.form_selected = {sign: -1, tx_color: '#313131', bg_color: '#f0f0f0'}
@@ -1196,6 +1199,7 @@
           }
         }
       },
+      // Filtered fields by form group
       filter_change() {
         this.filtered_fields = []
         for (let i = 0; i < this.field_obj.length; i++) {
@@ -1205,7 +1209,12 @@
           }
         }
       },
-      // // add field
+      /* e */
+      /* n */
+      /* d */
+      // Field handle
+      // Field handle
+      // Field handle
       field_add() {
         // get form group sign
         if (this.form_selected.sign != -1) {
@@ -1301,7 +1310,12 @@
       field_option_close(that) {
         //
       },
-      // // // URL Functions
+      /* e */
+      /* n */
+      /* d */
+      // URL Functions
+      // URL Functions
+      // URL Functions
       url_add() {
         if (this.url_temp.url && this.url_temp.desc) {
           let len = this.url_obj.length
@@ -1342,7 +1356,39 @@
           }
         }
       },
-      // // // Check for make landing obj
+      /* e */
+      /* n */
+      /* d */
+      // Check duplicated Name
+      // Check duplicated Name
+      // Check duplicated Name
+      check_name() {
+        console.log(this.landing_obj.name)
+        let axios = this.$axios
+        if (this.landing_obj.name == '') {
+          this.duplicated_class = 'form-control'
+          this.duplicated = false
+        } else {
+          axios.get(this.$store.state.endpoints.baseUrl + 'landing/api')
+            .then((response) => {
+              for (let i = 0; i < response.data.Items.length; i ++) {
+                if ((this.landing_obj.name).toLowerCase() == (response.data.Items[i].LandingName).toLowerCase()) {
+                  this.duplicated = true
+                  this.duplicated_class = 'form-control alert-danger'
+                  return false
+                }
+              }
+              this.duplicated_class = 'form-control alert-success'
+              this.duplicated = false
+            })
+        }
+      },
+      /* e */
+      /* n */
+      /* d */
+      // Create Landing Start
+      // Create Landing Start
+      // Create Landing Start
       landing_check() {
         // Start validate before create
         this.$validator.validateAll()
@@ -1355,6 +1401,9 @@
           document.getElementById('manager').focus()
         } else if (!this.landing_obj.name) {
           alert('랜딩페이지 이름을 입력하세요!')
+          document.getElementById('landing').focus()
+        } else if (this.duplicated) {
+          alert('랜딩페이지 이름이 이미 존재합니다!')
           document.getElementById('landing').focus()
         } else if (!this.landing_obj.base_url) {
           alert('메인 URL을 입력하세요!')
@@ -1371,366 +1420,10 @@
               }
             }
             if (flag) {
-              // this.landing_create()
               this.collect_dynamo()
             }
           } else {
-            // this.landing_create()
             this.collect_dynamo()
-          }
-        }
-      },
-      landing_create() {
-        let axios = this.$axios
-        const config = {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-        // // //
-        // // Axios landing
-        let formData = new FormData()
-        formData.append('company', this.landing_obj.company)
-        formData.append('manager', this.landing_obj.manager)
-        formData.append('name', this.landing_obj.name)
-        formData.append('title', this.landing_obj.title)
-        formData.append('header_script', this.landing_obj.header_script)
-        formData.append('body_script', this.landing_obj.body_script)
-        formData.append('base_url', this.landing_obj.base_url)
-        formData.append('is_hijack', this.landing_obj.is_hijack)
-        formData.append('hijack_url', this.landing_obj.hijack_url)
-        formData.append('is_active', this.landing_obj.is_active)
-        formData.append('is_mobile', this.landing_obj.is_mobile)
-        axios.post(this.$store.state.endpoints.baseUrl + 'landing/', formData, config)
-          .then((response) => {
-            let landing_id = response.data.id
-            if (landing_id) {
-              this.layout_create(landing_id)
-              this.url_create(landing_id)
-              this.collector += 1
-            }
-          })
-          .catch((error) => {
-            console.log('When create landing page', error)
-          })
-      },
-      layout_create(landing_id) {
-        let axios = this.$axios
-        const config = {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-        // // //
-        // // Axios landing - layout
-        let layoutFormData = new FormData()
-        // Form Data inject
-        layoutFormData.append('landing', landing_id)
-        layoutFormData.append('is_banner', this.layout_obj.is_banner)
-        layoutFormData.append('banner_url', this.layout_obj.banner_url)
-        layoutFormData.append('inner_db', this.layout_obj.inner_db)
-        layoutFormData.append('font', this.layout_obj.font)
-        layoutFormData.append('is_term', this.layout_obj.is_term)
-        layoutFormData.append('image_term', this.layout_obj.image_term)
-        layoutFormData.append('show_company', this.layout_obj.show_company)
-        // // Banner image filter
-        if (this.layout_obj.is_banner && this.in_banner_file_flag) {
-          let layout_image_data = new FormData()
-          layout_image_data.append('image', this.in_banner_file[0])
-          axios.post(this.$store.state.endpoints.baseUrl + 'image/', layout_image_data, config)
-            .then((response) => {
-              layoutFormData.append('banner_image', response.data.id)
-              return axios.patch(this.$store.state.endpoints.baseUrl + 'layout/' + landing_id + '/', layoutFormData, config)
-            })
-            .then((response) => {
-              let layout_id = response.data.id
-              this.term_create(layout_id)
-              this.form_group_create(layout_id)
-              this.collector += 1
-            })
-            .catch((error) => {
-              console.log('When create layout with image', error)
-            })
-        } else {
-          return axios.patch(this.$store.state.endpoints.baseUrl + 'layout/' + landing_id + '/', layoutFormData, config)
-            .then((response) => {
-              let layout_id = response.data.id
-              this.term_create(layout_id)
-              this.form_group_create(layout_id)
-              this.collector += 1
-            })
-            .catch((error) => {
-              console.log('When create layout without image', error)
-            })
-        }
-      },
-      url_create(landing_id) {
-        let axios = this.$axios
-        const config = {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-        // // //
-        // // Url create (for..?)
-        for (let i = 0; i < this.url_obj.length; i++) {
-          this.url_obj[i].landing = landing_id
-          let url_info = new FormData()
-          url_info.append('landing', landing_id)
-          url_info.append('url', this.url_obj[i].url)
-          url_info.append('desc', this.url_obj[i].desc)
-          axios.post(this.$store.state.endpoints.baseUrl + 'url/', url_info, config)
-            .then(() => {
-              if(i == this.url_obj.length - 1) {
-                this.collector += 1
-                this.bye()
-              }
-            })
-            .catch((error) => {
-              console.log('When create url', error)
-            })
-        }
-      },
-      term_create(layout_id) {
-        let axios = this.$axios
-        const config = {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-        // // //
-        // // Axios landing - term
-        let term_data = new FormData()
-        term_data.append('layout', layout_id)
-        term_data.append('title', this.term_obj.title)
-        term_data.append('content', this.term_obj.content)
-        if (this.term_file_flag && this.layout_obj.image_term) {
-          let term_image = new FormData()
-          term_image.append('image', this.term_file[0])
-          axios.post(this.$store.state.endpoints.baseUrl + 'image/', term_image, config)
-            .then((response) => {
-              term_data.append('image', response.data.id)
-              return axios.post(this.$store.state.endpoints.baseUrl + 'term/', term_data, config)
-            })
-            .then(() => {
-              this.collector += 1
-              this.bye()
-            })
-            .catch((error) => {
-              console.log(error)
-            })
-        } else {
-          axios.post(this.$store.state.endpoints.baseUrl + 'term/', term_data, config)
-            .then(() => {
-              this.collector += 1
-              this.bye()
-            })
-            .catch((error) => {
-              console.log(error)
-            })
-        }
-      },
-      form_group_create(layout_id) {
-        let axios = this.$axios
-        const config = {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-        for (let i = 0; i < this.form_obj.length; i++) {
-          let form_group_data = new FormData()
-          form_group_data.append('layout', layout_id)
-          form_group_data.append('name', this.form_obj[i].name)
-          form_group_data.append('back_color', this.form_obj[i].bg_color)
-          form_group_data.append('text_color', this.form_obj[i].tx_color)
-          axios.post(this.$store.state.endpoints.baseUrl + 'form_group/', form_group_data, config)
-            .then((response) => {
-              this.form_obj[i].id = response.data.id
-              this.field_create(this.form_obj[i].sign, response.data.id)
-              if (i == this.form_obj.length - 1) {
-                this.collector += 1
-                this.order_create(layout_id)
-              }
-            })
-            .catch((error) => {
-              console.log('When create form group', error)
-            })
-        }
-        // this.order_create(layout_id)
-      },
-      field_create(sign, form_id) {
-        let axios = this.$axios
-        const config = {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-        // for with fields
-        for(let i = 0; i < this.field_obj.length; i++) {
-          // if field group is == form sign
-          if(sign == this.field_obj[i].form_group_id) {
-            // ready for form data
-            let field_data = new FormData()
-            if (this.field_obj[i].image_data.length > 0) {
-              // if field has image
-              let image_data = new FormData()
-              image_data.append('image', this.field_obj[i].image_data[0])
-              axios.post(this.$store.state.endpoints.baseUrl + 'image/', image_data, config)
-                .then((response) => {
-                  // let list = (this.field_obj[i].list).split(',')
-                  // console.log(list)
-                  field_data.append('image', response.data.id)
-                  field_data.append('form_group', form_id)
-                  field_data.append('type', this.field_obj[i].type)
-                  field_data.append('name', this.field_obj[i].name)
-                  field_data.append('holder', this.field_obj[i].holder)
-                  field_data.append('value', this.field_obj[i].value)
-                  field_data.append('url', this.field_obj[i].url)
-                  // field_data.append('list', this.field_obj[i].list)
-                  for(let k = 0; k < this.field_obj[i].list.length; k ++) {
-                    field_data.append('list', this.field_obj[i].list[k])
-                  }
-                  field_data.append('width', '12')
-                  field_data.append('back_color', this.field_obj[i].back_color)
-                  field_data.append('text_color', this.field_obj[i].text_color)
-                  return axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
-                })
-                .then(() => {
-                  if(i == this.field_obj.length - 1) {
-                    this.collector += 1
-                    this.bye()
-                  }
-                })
-                .catch((error) => {
-                  console.log(error)
-                })
-            } else {
-              // let list = (this.field_obj[i].list).split(',')
-              // console.log(list)
-              // when field not has image
-              field_data.append('form_group', form_id)
-              field_data.append('type', this.field_obj[i].type)
-              field_data.append('name', this.field_obj[i].name)
-              field_data.append('holder', this.field_obj[i].holder)
-              field_data.append('value', this.field_obj[i].value)
-              field_data.append('url', this.field_obj[i].url)
-              // field_data.append('list', this.field_obj[i].list)
-              for(let k = 0; k < this.field_obj[i].list.length; k ++) {
-                field_data.append('list', this.field_obj[i].list[k])
-              }
-              field_data.append('width', '12')
-              field_data.append('back_color', this.field_obj[i].back_color)
-              field_data.append('text_color', this.field_obj[i].text_color)
-              axios.post(this.$store.state.endpoints.baseUrl + 'field/', field_data, config)
-                .then(() => {
-                  if (i == this.field_obj.length - 1) {
-                    this.collector += 1
-                    this.bye()
-                  }
-                })
-                .catch((error) => {
-                  console.log(error)
-                })
-            }
-          }
-        }
-      },
-      order_create(layout_id) {
-        let axios = this.$axios
-        const config = {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-        for(let i = 0; i < this.order_obj.length; i++) {
-          if(this.order_obj[i].type == 1) {
-            if(this.order_obj[i].image_url.length > 0) {
-              let image_data = new FormData()
-              image_data.append('image', this.order_obj[i].image_data)
-              axios.post(this.$store.state.endpoints.baseUrl + 'image/', image_data, config)
-                .then((response) => {
-                  let image_id = response.data.id
-                  let order_data = new FormData()
-                  order_data.append('layout', layout_id)
-                  order_data.append('name', this.order_obj[i].name)
-                  order_data.append('type', this.order_obj[i].type)
-                  order_data.append('position', JSON.stringify(this.order_obj[i].position))
-                  order_data.append('image', image_id)
-                  return axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
-                })
-                .then(() => {
-                  if(i == this.order_obj.length - 1) {
-                    this.collector += 1
-                    this.bye()
-                  }
-                })
-                .catch((error) => {
-                  console.log('Order post error with image', error)
-                })
-            } else {
-              let order_data = new FormData()
-              order_data.append('layout', layout_id)
-              order_data.append('name', this.order_obj[i].name)
-              order_data.append('type', this.order_obj[i].type)
-              order_data.append('position', JSON.stringify(this.order_obj[i].position))
-              axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
-                .then(() => {
-                  if(i == this.order_obj.length - 1) {
-                    this.collector += 1
-                    this.bye()
-                  }
-                })
-                .catch((error) => {
-                  console.log('Order post error without image', error)
-                })
-            }
-          } else if (this.order_obj[i].type == 2) {
-            let order_data = new FormData()
-            for(let j = 0; j < this.form_obj.length; j ++) {
-              if(this.form_obj[j].sign == this.order_obj[i].form_group) {
-                let num = (this.form_obj[j].id).toString()
-                order_data.append('form_group', num)
-              }
-            }
-            order_data.append('layout', layout_id)
-            order_data.append('name', this.order_obj[i].name)
-            order_data.append('type', this.order_obj[i].type)
-            order_data.append('position', JSON.stringify(this.order_obj[i].position))
-            axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
-              .then(() => {
-                if(i == this.order_obj.length - 1) {
-                  this.collector += 1
-                  this.bye()
-                }
-              })
-              .catch((error) => {
-                console.log('Order post error with form group', error)
-              })
-          } else if (this.order_obj[i].type == 3) {
-            // let order_data = new FormData()
-            let video_data = new FormData()
-            let order_data = new FormData()
-            video_data.append('type', this.order_obj[i].video_type)
-            video_data.append('url', this.order_obj[i].video_data)
-            video_data.append('desc', this.order_obj[i].video_data)
-            axios.post(this.$store.state.endpoints.baseUrl + 'video/', video_data, config)
-              .then((response) => {
-                order_data.append('layout', layout_id)
-                order_data.append('video', response.data.id)
-                order_data.append('name', this.order_obj[i].name)
-                order_data.append('type', this.order_obj[i].type)
-                order_data.append('position', JSON.stringify(this.order_obj[i].position))
-                return axios.post(this.$store.state.endpoints.baseUrl + 'order/', order_data, config)
-              })
-              .then(() => {
-                if(i == this.order_obj.length - 1) {
-                  this.collector += 1
-                  this.bye()
-                }
-              })
-              .catch((error) => {
-                console.log('order post error with video', error)
-              })
           }
         }
       },
@@ -1746,6 +1439,7 @@
         // "LadingInfo": req['LadingInfo']
         this.dynamo_obj.LandingName = this.landing_obj.name
         this.dynamo_obj.LandingInfo = {}
+        this.dynamo_obj.LandingInfo.date = Date.now()
 
         this.dynamo_obj.LandingInfo.landing = {}
         for(let key in this.landing_obj) {
@@ -1847,17 +1541,21 @@
             console.log(error)
           })
       },
+      /* e */
+      /* n */
+      /* d */
+      // After Create
+      // After Create
+      // After Create
       bye() {
-        console.log(this.collector)
-        if(this.collector >= 6) {
-          console.log('done! bye~')
-          alert('생성되었습니다.')
-          this.$router.currentRoute.meta.protect_leave = 'no'
-          this.$router.push({
-            name: 'landing_list'
-          })
-        }
-      }
+        console.log('done')
+      },
+      /* e */
+      /* n */
+      /* d */
+      back_to_list() {
+        this.$router.push({name: 'landing_list'})
+      },
     },
     mounted() {
       // Window width calculator
@@ -1866,7 +1564,6 @@
           this.window_width = window.innerWidth
         })
       })
-      this.len = this.order_obj.length
       // Get company, manager
       let axios = this.$axios
       // Get companies from logged in user's organization

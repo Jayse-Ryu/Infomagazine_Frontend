@@ -164,6 +164,48 @@
         //     }
         //     this.content_obj = response.data.results
         //   })
+
+        const base = {
+          baseURL: this.$store.state.endpoints.baseUrl,
+          headers: {
+            // Set your Authorization to 'JWT', not Bearer!!!
+            // Authorization: `JWT ${this.state.jwt}`,
+            'Content-Type': 'application/json'
+          },
+          xhrFields: {
+            withCredentials: true
+          }
+        }
+
+        let test = new FormData()
+        test.append('opt', this.search_option)
+        test.append('text', this.search_text)
+        test.append('yap', 'light')
+
+        const axiosInstance = axios.create(base)
+        axiosInstance({
+          url: '/landing/api',
+          method: 'get',
+          params: {
+            text: this.search_text,
+            option: this.search_option
+          }
+        })
+          .then((response) => {
+            console.log('axios instance response', response)
+          })
+          .catch((error) => {
+            console.log('axios instance error', error)
+          })
+
+        // axios.get(this.$store.state.endpoints.baseUrl + 'landing/api')
+        //   .then((response) => {
+        //     console.log('response api', response.data.Items)
+        //     this.content_obj = response.data.Items
+        //   })
+        //   .catch((error) => {
+        //     console.log('api error', error)
+        //   })
       }
     },
     mounted() {
@@ -218,6 +260,12 @@
         .then((response) => {
           console.log('response api', response.data.Items)
           this.content_obj = response.data.Items
+          let bas = {}
+          for (let i = 0; i < response.data.Items.length; i ++) {
+            console.log(response.data.Items[i].LandingName)
+            bas.push(response.data.Items[i])
+          }
+          console.log(bas)
         })
         .catch((error) => {
           console.log('api error', error)

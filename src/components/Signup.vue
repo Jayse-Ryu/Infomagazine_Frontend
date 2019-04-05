@@ -17,7 +17,7 @@
               <div class="error_label" v-if="errors.has('username')">{{errors.first('id_username')}}</div>
             </label>
             <div class="col-sm-12">
-              <input class="form-control"
+              <input :class="duplicated_class"
                      required
                      v-model="account"
                      type="text"
@@ -26,7 +26,8 @@
                      maxlength="20"
                      v-validate="'required'"
                      name="id_username"
-                     id="id_username">
+                     id="id_username"
+                     @keyup="check_duplicate">
             </div>
           </div>
 
@@ -36,7 +37,7 @@
                 <div class="error_label" v-if="errors.has('password')">{{errors.first('id_password')}}</div>
               </label>
               <div>
-                <input class="form-control"
+                <input :class="matched_class"
                        required
                        v-model="password"
                        type="password"
@@ -44,7 +45,8 @@
                        maxlength="20"
                        v-validate="'required'"
                        name="id_password"
-                       id="id_password">
+                       id="id_password"
+                       @keyup="check_matched">
               </div>
             </div>
 
@@ -53,7 +55,7 @@
                 <div class="error_label" v-if="errors.has('re_pass')">{{errors.first('re_password')}}</div>
               </label>
               <div>
-                <input class="form-control"
+                <input :class="matched_class"
                        required
                        v-model="re_pass"
                        type="password"
@@ -61,7 +63,8 @@
                        maxlength="20"
                        v-validate="'required'"
                        name="re_password"
-                       id="re_password">
+                       id="re_password"
+                       @keyup="check_matched">
               </div>
             </div>
           </div>
@@ -179,6 +182,10 @@
   export default {
     name: 'sign_up',
     data: () => ({
+      duplicated: false,
+      duplicated_class: 'form-control',
+      matched: false,
+      matched_class: 'form-control',
       account: '',
       password: '',
       re_pass: '',
@@ -191,11 +198,48 @@
       select_options: [],
     }),
     methods: {
+      check_duplicate() {
+        let axios = this.$axios
+        if(this.account == '') {
+          this.duplicated_class = 'form-control'
+          this.duplicated = false
+        } else {
+          axios.get(this.$store.state.endpoints.baseUrl + 'user/')
+            .then((response) => {
+              for (let i = 0; i < response.data.results.length; i++) {
+                if ((this.account).toLowerCase() == (response.data.results[i].account).toLowerCase()) {
+                  this.duplicated_class = 'form-control alert-danger'
+                  this.duplicated = true
+                  return false
+                }
+              }
+              this.duplicated_class = 'form-control alert-success'
+              this.duplicated = false
+            })
+        }
+      },
+      check_matched() {
+        if (this.password == '' || this.re_pass == '') {
+          this.matched = false
+          this.matched_class = 'form-control'
+        } else {
+          if (this.password === this.re_pass) {
+            this.matched = true
+            this.matched_class = 'form-control alert-success'
+          } else {
+            this.matched = false
+            this.matched_class = 'form-control alert-danger'
+          }
+        }
+      },
       sign_up() {
         this.$validator.validateAll()
-        if (this.password !== this.re_pass) {
+        if (this.matched != true) {
           alert('비밀번호를 확인해주세요.')
           document.getElementById('re_password').focus()
+        } else if (this.duplicated == true) {
+          alert('이미 존재하는 아이디입니다.')
+          document.getElementById('id_username').focus()
         } else if (this.access === 0 || this.organization === -1 && this.company === -1) {
           alert('소속을 확인해주세요.')
         } else {
@@ -229,7 +273,7 @@
               }
               return axios.patch(`${baseURI}user_access/` + get_id + '/', formData, config)
             })
-            .then((response) => {
+            .then(() => {
               alert('회원가입 되었습니다.')
               this.$router.currentRoute.meta.protect_leave = 'no'
               this.$router.push({
