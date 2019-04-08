@@ -1440,7 +1440,7 @@
         // "LadingInfo": req['LadingInfo']
         this.dynamo_obj.LandingName = this.landing_obj.name
         this.dynamo_obj.LandingInfo = {}
-        this.dynamo_obj.LandingInfo.date = Date.now()
+        this.dynamo_obj.LandingTime = Date.now()
 
         this.dynamo_obj.LandingInfo.landing = {}
         for(let key in this.landing_obj) {
@@ -1471,16 +1471,16 @@
           }
         }
         // Get Url objs
-        this.dynamo_obj.LandingInfo.url = []
-        for(let key in this.url_obj) {
-          if (this.url_obj.hasOwnProperty(key)) {
-            if(this.url_obj[key] == '' && typeof(this.url_obj[key]) != 'boolean') {
-              this.dynamo_obj.LandingInfo.url[key] = null
-            } else {
-              this.dynamo_obj.LandingInfo.url[key] = this.url_obj[key]
-            }
-          }
-        }
+        // this.dynamo_obj.LandingInfo.url = []
+        // for(let key in this.url_obj) {
+        //   if (this.url_obj.hasOwnProperty(key)) {
+        //     if(this.url_obj[key] == '' && typeof(this.url_obj[key]) != 'boolean') {
+        //       this.dynamo_obj.LandingInfo.url[key] = null
+        //     } else {
+        //       this.dynamo_obj.LandingInfo.url[key] = this.url_obj[key]
+        //     }
+        //   }
+        // }
         // Get term objs
         this.dynamo_obj.LandingInfo.term = {}
         for(let key in this.term_obj) {

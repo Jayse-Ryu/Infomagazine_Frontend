@@ -196,7 +196,19 @@
           }
         }
 
-        axios.get(this.$store.state.endpoints.baseUrl + 'landing/api')
+        let searcher = ''
+        if (this.search_text != '') {
+          if(this.temp_option == 1) {
+            searcher = '?name=' + this.search_text
+          } else if (this.temp_option == 2) {
+            searcher = '?company=' + this.search_text
+          } else if (this.temp_option == 3) {
+            searcher = '?manager=' + this.search_text
+          }
+        } else {
+          searcher = ''
+        }
+        axios.get(this.$store.state.endpoints.baseUrl + 'landing/api' + searcher)
           .then((response) => {
             let list = response.data.Items
             for (let i = 0; i < list.length; i ++) {
@@ -207,7 +219,7 @@
                   return axios.get(this.$store.state.endpoints.baseUrl + 'user_access/' + data.manager + '/')
                 })
                 .then((response) => {
-                  data['manager_name'] = response.data.account
+                  data['manager_name'] = response.data.user_name
                   if (i == list.length - 1) {
                     this.content_obj = list
                   }
@@ -267,7 +279,19 @@
       //     this.content_obj = response.data.results
       //   })
 
-      axios.get(this.$store.state.endpoints.baseUrl + 'landing/api')
+      let searcher = ''
+      if (this.search_text != '') {
+        if(this.temp_option == 1) {
+          searcher = '?name=' + this.search_text
+        } else if (this.temp_option == 2) {
+          searcher = '?company=' + this.search_text
+        } else if (this.temp_option == 3) {
+          searcher = '?manager=' + this.search_text
+        }
+      } else {
+        searcher = ''
+      }
+      axios.get(this.$store.state.endpoints.baseUrl + 'landing/api' + searcher)
         .then((response) => {
           let list = response.data.Items
           for (let i = 0; i < list.length; i ++) {
@@ -278,7 +302,7 @@
                 return axios.get(this.$store.state.endpoints.baseUrl + 'user_access/' + data.manager + '/')
               })
               .then((response) => {
-                data['manager_name'] = response.data.account
+                data['manager_name'] = response.data.user_name
                 if (i >= list.length - 1) {
                   this.content_obj = list
                 }
