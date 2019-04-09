@@ -893,7 +893,7 @@
         hijack_url: '',
         is_active: true,
         is_mobile: false,
-        views: 0,
+        views: 0*1,
         collections: []
       },
       // Layout

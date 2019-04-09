@@ -210,21 +210,7 @@
         }
         axios.get(this.$store.state.endpoints.baseUrl + 'landing/api' + searcher)
           .then((response) => {
-            let list = response.data.Items
-            for (let i = 0; i < list.length; i ++) {
-              let data = list[i].LandingInfo.landing
-              axios.get(this.$store.state.endpoints.baseUrl + 'company/' + data.company + '/')
-                .then((response) => {
-                  data['company_name'] = response.data.name
-                  return axios.get(this.$store.state.endpoints.baseUrl + 'user_access/' + data.manager + '/')
-                })
-                .then((response) => {
-                  data['manager_name'] = response.data.user_name
-                  if (i == list.length - 1) {
-                    this.content_obj = list
-                  }
-                })
-            }
+            this.content_obj = response.data.Items
           })
           .catch((error) => {
             console.log('api error', error)
@@ -293,21 +279,7 @@
       }
       axios.get(this.$store.state.endpoints.baseUrl + 'landing/api' + searcher)
         .then((response) => {
-          let list = response.data.Items
-          for (let i = 0; i < list.length; i ++) {
-            let data = list[i].LandingInfo.landing
-            axios.get(this.$store.state.endpoints.baseUrl + 'company/' + data.company + '/')
-              .then((response) => {
-                data['company_name'] = response.data.name
-                return axios.get(this.$store.state.endpoints.baseUrl + 'user_access/' + data.manager + '/')
-              })
-              .then((response) => {
-                data['manager_name'] = response.data.user_name
-                if (i >= list.length - 1) {
-                  this.content_obj = list
-                }
-              })
-          }
+          this.content_obj = response.data.Items
         })
         .catch((error) => {
           console.log('api error', error)
