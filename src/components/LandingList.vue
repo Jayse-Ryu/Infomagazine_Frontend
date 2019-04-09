@@ -133,11 +133,11 @@
         if (option !== 0 || text !== '') {
           let option_val
           this.page_current = 1
-          if (option === '1') {
+          if (option == 1) {
             option_val = 'name'
-          } else if (option === '2') {
+          } else if (option == 2) {
             option_val = 'company'
-          } else if (option === '3') {
+          } else if (option == 3) {
             option_val = 'manager'
           } else {
             // console.log('Option not catched')

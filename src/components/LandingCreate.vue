@@ -893,7 +893,7 @@
         hijack_url: '',
         is_active: true,
         is_mobile: false,
-        views: 0*1,
+        views: 0,
         collections: []
       },
       // Layout
@@ -1244,7 +1244,7 @@
               }
               this.field_obj.push({
                 sign: highest + 1,
-                type: this.field_selected,
+                type: this.field_selected * 1,
                 name: this.field_temp_name,
                 holder: this.field_temp_name,
                 form_group_id: this.form_selected.sign,
@@ -1258,7 +1258,7 @@
             } else {
               this.field_obj.push({
                 sign: 1,
-                type: this.field_selected,
+                type: this.field_selected * 1,
                 name: this.field_temp_name,
                 holder: this.field_temp_name,
                 form_group_id: this.form_selected.sign,
@@ -1445,7 +1445,7 @@
         this.dynamo_obj.LandingInfo.landing = {}
         for(let key in this.landing_obj) {
           if (this.landing_obj.hasOwnProperty(key)) {
-            if(this.landing_obj[key] == '' && typeof(this.landing_obj[key]) != 'boolean') {
+            if(this.landing_obj[key] === '' && typeof(this.landing_obj[key]) != 'boolean') {
               this.dynamo_obj.LandingInfo.landing[key] = null
             } else {
               this.dynamo_obj.LandingInfo.landing[key] = this.landing_obj[key]
@@ -1463,7 +1463,7 @@
           }
         }
         // If banner needs image file
-        if (this.layout_obj.is_banner && this.in_banner_file_flag) {
+        if (this.layout_obj.is_banner    && this.in_banner_file_flag) {
           if (this.in_banner_file[0] == '' && typeof(this.in_banner_file[0]) != 'boolean') {
             this.dynamo_obj.LandingInfo.landing['banner_image'] = null
           } else {
@@ -1512,6 +1512,9 @@
           }
         }
         // Get field objs
+        for(let i = 0; i < this.field_obj.length; i ++) {
+          this.field_obj[i].type = this.field_obj[i].type * 1
+        }
         this.dynamo_obj.LandingInfo.field = []
         for(let key in this.field_obj) {
           if (this.field_obj.hasOwnProperty(key)) {
@@ -1533,6 +1536,7 @@
             }
           }
         }
+        console.log(this.dynamo_obj)
         axios.post(this.$store.state.endpoints.baseUrl + 'landing/api', this.dynamo_obj)
           .then(() => {
             alert('랜딩이 생성되었습니다.')
