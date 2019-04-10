@@ -1433,6 +1433,7 @@
         const config = {
           headers: {
             'Content-Type': 'application/json'
+            // 'Content-Type': 'multipart/form-data'
           }
         }
         // Get landing objs
@@ -1537,7 +1538,7 @@
           }
         }
         console.log(this.dynamo_obj)
-        axios.post(this.$store.state.endpoints.baseUrl + 'landing/api', this.dynamo_obj)
+        axios.post(this.$store.state.endpoints.baseUrl + 'landing/api', this.dynamo_obj, config)
           .then(() => {
             alert('랜딩이 생성되었습니다.')
             this.bye()
