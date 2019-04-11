@@ -49,7 +49,7 @@
             <!--<div class="col-1 p-0 col-sm-1">{{ content.id }}</div>-->
             <div class="col-3 p-0 col-sm-3">{{ content.LandingInfo.landing.company_name }}</div>
             <div class="col-3 p-0 col-sm-4">
-              <router-link :to="'/landing/detail/' + content.id">{{ content.LandingName }}</router-link>
+              <router-link :to="'/landing/detail/' + content.LandingNum">{{ content.LandingName }}</router-link>
             </div>
             <div class="col-3 p-0">{{ content.LandingInfo.landing.manager_name }}</div>
             <div class="col-1 p-0 board_centre">{{ content.LandingInfo.landing.views }}</div>
@@ -78,7 +78,7 @@
             <div class="col-2 p-0">{{ content.id }}</div>
             <div class="col-3 p-0">{{ content.company_name }}</div>
             <div class="col-5 p-0">
-              <router-link :to="'/landing/detail/' + content.id">{{ content.name }}</router-link>
+              <router-link :to="'/landing/detail/' + content.LandingNum">{{ content.name }}</router-link>
             </div>
             <div class="col-2 p-0">{{ content.hit }}</div>
           </li>

@@ -1441,7 +1441,6 @@
             }
           }
         }
-        console.log(this.dynamo_obj)
         axios.post(this.$store.state.endpoints.baseUrl + 'landing/api', this.dynamo_obj, config)
           .then(() => {
             if(option == 'checked') {
@@ -1487,7 +1486,9 @@
       while(this.access_obj.user) {
         if(this.access_obj.user) {
           this.landing_obj.manager = this.access_obj.user
-          this.epoch_time = Date.now()
+          if (this.epoch_time === 0) {
+            this.epoch_time = Date.now()
+          }
           this.collect_dynamo('first')
           break
         }
