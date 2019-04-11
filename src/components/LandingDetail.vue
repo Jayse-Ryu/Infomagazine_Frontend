@@ -15,7 +15,7 @@
         <div class="form-group row">
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="company_id">
-            <span>업체*</span>
+            <span>고객업체*</span>
           </label>
           <div class="col-sm-9 mt-sm-3">
             <select class="form-control" name="company" id="company_id" v-model="landing_obj.company">

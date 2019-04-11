@@ -15,25 +15,13 @@
         <div class="form-group row">
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="company_id">
-            <span>업체*</span>
+            <span>고객업체*</span>
           </label>
           <div class="col-sm-9 mt-sm-3">
             <select class="form-control" name="company" id="company_id" v-model="landing_obj.company">
               <option value="-1">선택하세요</option>
               <option v-for="content in landing_company" :value="content.id">
                 {{content.name }} - {{ content.sub_name }}
-              </option>
-            </select>
-          </div>
-
-          <label class="col-sm-3 col-form-label-sm mt-3" for="manager">
-            <span>관리자*</span>
-          </label>
-          <div class="col-sm-9 mt-sm-3">
-            <select class="form-control" name="sel" id="manager" v-model="landing_obj.manager">
-              <option value="-1">선택하세요</option>
-              <option v-for="content in landing_manager" :value="content.user">
-                {{content.account }} - {{ content.user_name }}
               </option>
             </select>
           </div>
@@ -305,40 +293,6 @@
 
         <h5>추가내용</h5>
         <div class="form-group row mb-0">
-          <!--<label class="col-sm-3 col-form-label-sm mt-3" for="url_title">Url</label>
-          <form class="col-sm-9 mt-sm-3 row ml-0" v-on:submit.prevent="url_add()">
-            <input type="text" class="form-control col-sm-5 col-md-5" id="url_title" placeholder="Url 주소"
-                   v-model="url_temp.url">
-            <div class="margin_div"></div>
-            <input type="text" class="form-control col-sm-7 col-md-5" id="url_desc" placeholder="Url 설명"
-                   v-model="url_temp.desc">
-            <div class="margin_div"></div>
-            <button type="submit" class="btn btn-primary col-md-1 p-0">추가</button>
-          </form>
-
-          <label class="col-sm-3 col-form-label-sm mt-3" for="url_list">Url 리스트</label>
-          <div class="col-sm-9 mt-sm-3 row ml-0">
-            <ul class="list-group list-group-flush col-12 pr-0" id="url_list">
-              <li class="list-group-item list-group-item-action d-inline-flex p-1 font-weight-bold">
-                <div class="col-5 p-2 text-center">Url 주소</div>
-                <div class="col-5 p-2 text-center">Url 설명</div>
-                <div class="col-2 p-2 text-center">옵션</div>
-              </li>
-              <li class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
-                  v-for="url in url_obj">
-                <div class="col-5 p-2 text-center">{{ url.url }}</div>
-                <div class="col-5 p-2 text-center">{{ url.desc }}</div>
-                <button type="button" class="btn btn-outline-danger p-0 col-2" @click.prevent="url_delete(url.sign)">
-                  삭제
-                </button>
-              </li>
-              <li v-if="url_obj.length == 0" class="d-inline-flex justify-content-between p-1">
-                <div class="col p-2 text-center bg-light">데이터 없음</div>
-              </li>
-            </ul>
-          </div>
-
-          <hr> -->
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="term_status">약관</label>
 
@@ -876,9 +830,10 @@
         holder: 'Place holder입니다. 텍스트 입력 전 설명이 필요하거나 전화, 링크의 버튼에 표시할 글을 지정합니다.',
         list: '선택 옵션을 선택하고 제공할 수 있습니다.'
       },
+      epoch_time: 0,
       // Get org's companies and managers lists
       landing_company: [],
-      landing_manager: [],
+      // landing_manager: [],
       // // // Actual obj data what will be saved
       // Landing
       landing_obj: {
@@ -1315,52 +1270,6 @@
       /* e */
       /* n */
       /* d */
-      // URL Functions
-      // URL Functions
-      // URL Functions
-      /*url_add() {
-        if (this.url_temp.url && this.url_temp.desc) {
-          let len = this.url_obj.length
-          let flag = true
-          if (len) {
-            for (let i = 0; i < len; i++) {
-              if (this.url_obj[i].url === this.url_temp.url) {
-                alert('URL 주소가 이미 존재합니다.')
-                flag = false
-                return flag
-              }
-            }
-            if (flag) {
-              let highest = 0
-              for (let i = 0; i < len; i++) {
-                if (this.url_obj[i].sign > highest) {
-                  highest = this.url_obj[i].sign
-                }
-              }
-              this.url_obj.push({sign: highest + 1, url: this.url_temp.url, desc: this.url_temp.desc})
-              this.url_temp = {}
-              alert('URL이 생성되었습니다.')
-            }
-          } else {
-            this.url_obj.push({sign: 1, url: this.url_temp.url, desc: this.url_temp.desc})
-            this.url_temp = {}
-            alert('URL이 생성되었습니다.')
-          }
-        } else {
-          alert('URL 정보를 입력하세요!')
-        }
-      },
-      url_delete(id) {
-        for (let i = 0; i < this.url_obj.length; i++) {
-          if (this.url_obj[i].sign == id) {
-            this.url_obj.splice(i, 1)
-            return true
-          }
-        }
-      },*/
-      /* e */
-      /* n */
-      /* d */
       // Check duplicated Name
       // Check duplicated Name
       // Check duplicated Name
@@ -1421,14 +1330,15 @@
               }
             }
             if (flag) {
-              this.collect_dynamo()
+              this.collect_dynamo('checked')
             }
           } else {
-            this.collect_dynamo()
+            this.collect_dynamo('checked')
           }
         }
       },
-      collect_dynamo() {
+      collect_dynamo(option) {
+        // option first(mounted) or checked(button clicked)
         let axios = this.$axios
         const config = {
           headers: {
@@ -1439,9 +1349,14 @@
         // Get landing objs
         // "LandingName": req['LandingName']
         // "LadingInfo": req['LadingInfo']
-        this.dynamo_obj.LandingName = this.landing_obj.name
+        // "LadingNum": req['LadingNum']
+        if (this.landing_obj.name == '') {
+          this.dynamo_obj.LandingName = '없음(None)'
+        } else {
+          this.dynamo_obj.LandingName = this.landing_obj.name
+        }
         this.dynamo_obj.LandingInfo = {}
-        this.dynamo_obj.LandingTime = Date.now()
+        this.dynamo_obj.LandingNum = this.epoch_time
 
         this.dynamo_obj.LandingInfo.landing = {}
         for(let key in this.landing_obj) {
@@ -1471,17 +1386,6 @@
             this.dynamo_obj.LandingInfo.landing['banner_image'] = this.in_banner_file[0]
           }
         }
-        // Get Url objs
-        // this.dynamo_obj.LandingInfo.url = []
-        // for(let key in this.url_obj) {
-        //   if (this.url_obj.hasOwnProperty(key)) {
-        //     if(this.url_obj[key] == '' && typeof(this.url_obj[key]) != 'boolean') {
-        //       this.dynamo_obj.LandingInfo.url[key] = null
-        //     } else {
-        //       this.dynamo_obj.LandingInfo.url[key] = this.url_obj[key]
-        //     }
-        //   }
-        // }
         // Get term objs
         this.dynamo_obj.LandingInfo.term = {}
         for(let key in this.term_obj) {
@@ -1540,11 +1444,17 @@
         console.log(this.dynamo_obj)
         axios.post(this.$store.state.endpoints.baseUrl + 'landing/api', this.dynamo_obj, config)
           .then(() => {
-            alert('랜딩이 생성되었습니다.')
-            this.bye()
+            if(option == 'checked') {
+              alert('랜딩이 생성되었습니다.')
+              this.bye()
+            } else {
+              console.log('first axios activated')
+            }
           })
           .catch((error) => {
-            alert('랜딩 생성이 실패하였습니다.')
+            if(option == 'checked') {
+              alert('랜딩 생성이 실패하였습니다.')
+            }
             console.log(error)
           })
       },
@@ -1574,6 +1484,14 @@
           this.window_width = window.innerWidth
         })
       })
+      while(this.access_obj.user) {
+        if(this.access_obj.user) {
+          this.landing_obj.manager = this.access_obj.user
+          this.epoch_time = Date.now()
+          this.collect_dynamo('first')
+          break
+        }
+      }
       // Get company, manager
       let axios = this.$axios
       // Get companies from logged in user's organization
@@ -1581,15 +1499,6 @@
       axios.get(this.$store.state.endpoints.baseUrl + this_url + '?organization=' + this.access_obj.organization)
         .then((response) => {
           this.landing_company = response.data.results
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-      // Get manager from logged in user's organization
-      this_url = 'user_access/'
-      axios.get(this.$store.state.endpoints.baseUrl + this_url + '?organization=' + this.access_obj.organization)
-        .then((response) => {
-          this.landing_manager = response.data.results
         })
         .catch((error) => {
           console.log(error)
