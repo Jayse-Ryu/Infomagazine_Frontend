@@ -1441,7 +1441,7 @@
             }
           }
         }
-        axios.post(this.$store.state.endpoints.baseUrl + 'landing/api', this.dynamo_obj, config)
+        axios.post(this.$store.state.endpoints.baseUrl + 'landing/api/', this.dynamo_obj, config)
           .then(() => {
             if(option == 'checked') {
               alert('랜딩이 생성되었습니다.')

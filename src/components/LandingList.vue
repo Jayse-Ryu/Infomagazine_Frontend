@@ -208,7 +208,7 @@
         } else {
           searcher = ''
         }
-        axios.get(this.$store.state.endpoints.baseUrl + 'landing/api' + searcher)
+        axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + searcher)
           .then((response) => {
             this.content_obj = response.data.Items
           })
@@ -277,7 +277,7 @@
       } else {
         searcher = ''
       }
-      axios.get(this.$store.state.endpoints.baseUrl + 'landing/api' + searcher)
+      axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + searcher)
         .then((response) => {
           this.content_obj = response.data.Items
         })

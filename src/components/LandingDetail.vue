@@ -1485,7 +1485,7 @@
         })
       })
       this.epoch_time = this.$route.params.landing_id
-      axios.get(this.$store.state.endpoints.baseUrl + 'landing/api' + '/?sign=' + this.epoch_time)
+      axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + '?sign=' + this.epoch_time)
         .then((response) => {
           console.log('get this db response?', response)
         })
