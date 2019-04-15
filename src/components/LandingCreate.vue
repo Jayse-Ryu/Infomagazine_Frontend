@@ -14,16 +14,19 @@
         <h5>기본정보</h5>
         <div class="form-group row">
 
-          <label class="col-sm-3 col-form-label-sm mt-3" for="company_id">
+          <label class="col-sm-3 col-form-label-sm mt-3" for="company_name">
             <span>고객업체*</span>
           </label>
-          <div class="col-sm-9 mt-sm-3">
-            <select class="form-control" name="company" id="company_id" v-model="landing_obj.company">
-              <option value="-1">선택하세요</option>
-              <option v-for="content in landing_company" :value="content.id">
+
+          <div class="col-sm-9 mt-sm-3" id="company_name">
+            <div v-if="landing_obj.company == -1">
+              <div class="form-control">업체를 선택하세요</div>
+            </div>
+            <div v-for="content in landing_company">
+              <div v-if="content.id == landing_obj.company" class="form-control">
                 {{content.name }} - {{ content.sub_name }}
-              </option>
-            </select>
+              </div>
+            </div>
           </div>
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="landing">
@@ -31,7 +34,7 @@
           </label>
           <div class="col-sm-9 mt-sm-3">
             <input type="text" :class="duplicated_class" id="landing" maxlength="50" v-model="landing_obj.name"
-                   @keyup="check_name">
+                   @change="check_name">
           </div>
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="base_url">
@@ -810,6 +813,37 @@
       </form>
 
     </div>
+
+    <transition name="fade" mode="out-in">
+    <div class="select_company_wrap" v-show="!company_flag">
+      <div class="container company_list_box">
+
+        <h4>고객업체를 먼저 선택해주세요.</h4>
+
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label-sm mt-3" for="company_id">
+            <span>고객업체*</span>
+          </label>
+
+          <div class="col-sm-9 mt-sm-3">
+            <select class="form-control" name="company" id="company_id" v-model="landing_obj.company">
+              <option value="-1">선택하세요</option>
+              <option v-for="content in landing_company" :value="content.id">
+                {{content.name }} - {{ content.sub_name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <button class="col btn btn-info mt-3" @click="first_check">선택</button>
+        <router-link to="/landing">
+          <button class="col btn btn-dark mt-1">취소</button>
+        </router-link>
+
+      </div>
+    </div>
+    </transition>
+
   </div>
 </template>
 
@@ -817,6 +851,7 @@
   export default {
     name: "landing_create",
     data: () => ({
+      company_flag: false,
       window_width: window.innerWidth,
       // msg is Tooltip messages. Static name by api.
       msg: {
@@ -1281,11 +1316,13 @@
         } else {
           axios.get(this.$store.state.endpoints.baseUrl + 'landing/api')
             .then((response) => {
-              for (let i = 0; i < response.data.Items.length; i ++) {
-                if ((this.landing_obj.name).toLowerCase() == (response.data.Items[i].LandingName).toLowerCase()) {
-                  this.duplicated = true
-                  this.duplicated_class = 'form-control alert-danger'
-                  return false
+              for (let i = 0; i < response.data.Items.length; i++) {
+                if (response.data.Items[i].LandingInfo['landing']['name'] !== null) {
+                  if ((this.landing_obj.name).toLowerCase() == (response.data.Items[i].LandingInfo.landing.name).toLowerCase()) {
+                    this.duplicated = true
+                    this.duplicated_class = 'form-control alert-danger'
+                    return false
+                  }
                 }
               }
               this.duplicated_class = 'form-control alert-success'
@@ -1299,6 +1336,25 @@
       // Create Landing Start
       // Create Landing Start
       // Create Landing Start
+      first_check() {
+        // Empty filtering first
+        if (this.landing_obj.company == -1) {
+          alert('업체를 선택하세요!')
+          document.getElementById('company_id').focus()
+        } else {
+          this.company_flag = true
+          while (this.access_obj.user) {
+            if (this.access_obj.user) {
+              this.landing_obj.manager = this.access_obj.user
+              if (this.epoch_time === 0) {
+                this.epoch_time = Date.now()
+              }
+              this.collect_dynamo('first')
+              break
+            }
+          }
+        }
+      },
       landing_check() {
         // Start validate before create
         this.$validator.validateAll()
@@ -1350,18 +1406,21 @@
         // "LandingName": req['LandingName']
         // "LadingInfo": req['LadingInfo']
         // "LadingNum": req['LadingNum']
-        if (this.landing_obj.name == '') {
-          this.dynamo_obj.LandingName = '없음(None)'
-        } else {
-          this.dynamo_obj.LandingName = this.landing_obj.name
-        }
+
+        // if (this.landing_obj.name == '') {
+        //   this.dynamo_obj.LandingName = '없음(None)'
+        // } else {
+        //   this.dynamo_obj.LandingName = this.landing_obj.name
+        // }
+        this.dynamo_obj.CompanyNum = this.landing_obj.company.toString()
+        this.dynamo_obj.LandingNum = this.epoch_time.toString()
+        this.dynamo_obj.UpdatedTime = (Date.now()).toString()
         this.dynamo_obj.LandingInfo = {}
-        this.dynamo_obj.LandingNum = this.epoch_time
 
         this.dynamo_obj.LandingInfo.landing = {}
-        for(let key in this.landing_obj) {
+        for (let key in this.landing_obj) {
           if (this.landing_obj.hasOwnProperty(key)) {
-            if(this.landing_obj[key] === '' && typeof(this.landing_obj[key]) != 'boolean') {
+            if (this.landing_obj[key] === '' && typeof (this.landing_obj[key]) != 'boolean') {
               this.dynamo_obj.LandingInfo.landing[key] = null
             } else {
               this.dynamo_obj.LandingInfo.landing[key] = this.landing_obj[key]
@@ -1369,9 +1428,9 @@
           }
         }
         // Get layout objs
-        for(let key in this.layout_obj) {
+        for (let key in this.layout_obj) {
           if (this.layout_obj.hasOwnProperty(key)) {
-            if(this.layout_obj[key] == '' && typeof(this.layout_obj[key]) != 'boolean') {
+            if (this.layout_obj[key] == '' && typeof (this.layout_obj[key]) != 'boolean') {
               this.dynamo_obj.LandingInfo.landing[key] = null
             } else {
               this.dynamo_obj.LandingInfo.landing[key] = this.layout_obj[key]
@@ -1379,8 +1438,8 @@
           }
         }
         // If banner needs image file
-        if (this.layout_obj.is_banner    && this.in_banner_file_flag) {
-          if (this.in_banner_file[0] == '' && typeof(this.in_banner_file[0]) != 'boolean') {
+        if (this.layout_obj.is_banner && this.in_banner_file_flag) {
+          if (this.in_banner_file[0] == '' && typeof (this.in_banner_file[0]) != 'boolean') {
             this.dynamo_obj.LandingInfo.landing['banner_image'] = null
           } else {
             this.dynamo_obj.LandingInfo.landing['banner_image'] = this.in_banner_file[0]
@@ -1388,9 +1447,9 @@
         }
         // Get term objs
         this.dynamo_obj.LandingInfo.term = {}
-        for(let key in this.term_obj) {
+        for (let key in this.term_obj) {
           if (this.term_obj.hasOwnProperty(key)) {
-            if(this.term_obj[key] == '' && typeof(this.term_obj[key]) != 'boolean') {
+            if (this.term_obj[key] == '' && typeof (this.term_obj[key]) != 'boolean') {
               this.dynamo_obj.LandingInfo.term[key] = null
             } else {
               this.dynamo_obj.LandingInfo.term[key] = this.term_obj[key]
@@ -1399,7 +1458,7 @@
         }
         // If term needs image file
         if (this.term_file_flag && this.layout_obj.image_term) {
-          if (this.term_file[0] == '' && typeof(this.term_file[0]) != 'boolean') {
+          if (this.term_file[0] == '' && typeof (this.term_file[0]) != 'boolean') {
             this.dynamo_obj.LandingInfo.term['term_image'] = null
           } else {
             this.dynamo_obj.LandingInfo.term['term_image'] = this.term_file[0]
@@ -1407,9 +1466,9 @@
         }
         // Get form group objs
         this.dynamo_obj.LandingInfo.form = []
-        for(let key in this.form_obj) {
+        for (let key in this.form_obj) {
           if (this.form_obj.hasOwnProperty(key)) {
-            if (this.form_obj[key] == '' && typeof(this.form_obj[key]) != 'boolean') {
+            if (this.form_obj[key] == '' && typeof (this.form_obj[key]) != 'boolean') {
               this.dynamo_obj.LandingInfo.form[key] = null
             } else {
               this.dynamo_obj.LandingInfo.form[key] = this.form_obj[key]
@@ -1417,13 +1476,13 @@
           }
         }
         // Get field objs
-        for(let i = 0; i < this.field_obj.length; i ++) {
+        for (let i = 0; i < this.field_obj.length; i++) {
           this.field_obj[i].type = this.field_obj[i].type * 1
         }
         this.dynamo_obj.LandingInfo.field = []
-        for(let key in this.field_obj) {
+        for (let key in this.field_obj) {
           if (this.field_obj.hasOwnProperty(key)) {
-            if (this.field_obj[key] == '' && typeof(this.field_obj[key]) != 'boolean') {
+            if (this.field_obj[key] == '' && typeof (this.field_obj[key]) != 'boolean') {
               this.dynamo_obj.LandingInfo.field[key] = null
             } else {
               this.dynamo_obj.LandingInfo.field[key] = this.field_obj[key]
@@ -1432,9 +1491,9 @@
         }
         // Get order objs
         this.dynamo_obj.LandingInfo.order = []
-        for(let key in this.order_obj) {
+        for (let key in this.order_obj) {
           if (this.order_obj.hasOwnProperty(key)) {
-            if (this.order_obj[key] == '' && typeof(this.order_obj[key]) != 'boolean') {
+            if (this.order_obj[key] == '' && typeof (this.order_obj[key]) != 'boolean') {
               this.dynamo_obj.LandingInfo.order[key] = null
             } else {
               this.dynamo_obj.LandingInfo.order[key] = this.order_obj[key]
@@ -1443,15 +1502,13 @@
         }
         axios.post(this.$store.state.endpoints.baseUrl + 'landing/api/', this.dynamo_obj, config)
           .then(() => {
-            if(option == 'checked') {
+            if (option == 'checked') {
               alert('랜딩이 생성되었습니다.')
               this.bye()
-            } else {
-              console.log('first axios activated')
             }
           })
           .catch((error) => {
-            if(option == 'checked') {
+            if (option == 'checked') {
               alert('랜딩 생성이 실패하였습니다.')
             }
             console.log(error)
@@ -1483,16 +1540,6 @@
           this.window_width = window.innerWidth
         })
       })
-      while(this.access_obj.user) {
-        if(this.access_obj.user) {
-          this.landing_obj.manager = this.access_obj.user
-          if (this.epoch_time === 0) {
-            this.epoch_time = Date.now()
-          }
-          this.collect_dynamo('first')
-          break
-        }
-      }
       // Get company, manager
       let axios = this.$axios
       // Get companies from logged in user's organization
@@ -1735,5 +1782,26 @@
     width: 100%;
     height: 100%;
     /*max-width: 750px;*/
+  }
+
+  .select_company_wrap {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.3);
+    transition: 200ms visibility ease-in-out;
+  }
+
+  .company_list_box {
+    background: #fff;
+    padding: 25px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
   }
 </style>

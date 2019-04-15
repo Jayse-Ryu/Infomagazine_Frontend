@@ -528,6 +528,21 @@ export default {
     appearance: none;
   }
 
+  .main {
+    max-width: 1600px;
+    margin: auto;
+  }
+
+  .nav_king {
+    width: 100%;
+    background: #f8f9fa;
+  }
+
+  .nav_wrap {
+    max-width: 1600px;
+    margin: auto;
+  }
+
   .create_btn_text {
     font-size: 0.9em;
     line-height: 1.9em;

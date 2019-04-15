@@ -49,11 +49,13 @@
             <!--<div class="col-1 p-0 col-sm-1">{{ content.id }}</div>-->
             <div class="col-3 p-0 col-sm-3">{{ content.LandingInfo.landing.company_name }}</div>
             <div class="col-3 p-0 col-sm-4">
-              <router-link :to="'/landing/detail/' + content.LandingNum">{{ content.LandingName }}</router-link>
+              <router-link :to="'/landing/detail/' + content.LandingNum">{{ content.LandingInfo.landing.name }}</router-link>
             </div>
             <div class="col-3 p-0">{{ content.LandingInfo.landing.manager_name }}</div>
             <div class="col-1 p-0 board_centre">{{ content.LandingInfo.landing.views }}</div>
-            <div class="col-1 p-0 board_centre">{{ content.hit }}</div>
+            <div class="col-1 p-0 board_centre">
+              <router-link :to="'/landing/detail/' + content.LandingNum">{{ content.LandingInfo.landing.collection_amount }}</router-link>
+            </div>
           </li>
         </ul>
       </div>
@@ -62,9 +64,9 @@
         <div class="list_header">
           <div class="list-group-item text-center d-inline-flex justify-content-between p-1 pt-2 pb-2"
                style="border-radius: 0; border-bottom: 0; width:100%;">
-            <div class="col-2 p-0">번호</div>
-            <div class="col-3 p-0">업체</div>
+            <div class="col-2 p-0">업체</div>
             <div class="col-5 p-0">페이지</div>
+            <div class="col-3 p-0">담당자</div>
             <div class="col-2 p-0">DB</div>
           </div>
         </div>
@@ -75,12 +77,14 @@
           </li>
           <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
               v-for="content in content_obj">
-            <div class="col-2 p-0">{{ content.id }}</div>
-            <div class="col-3 p-0">{{ content.company_name }}</div>
+            <div class="col-2 p-0">{{ content.LandingInfo.landing.company_name }}</div>
             <div class="col-5 p-0">
-              <router-link :to="'/landing/detail/' + content.LandingNum">{{ content.name }}</router-link>
+              <router-link :to="'/landing/detail/' + content.LandingNum">{{ content.LandingInfo.landing.name }}</router-link>
             </div>
-            <div class="col-2 p-0">{{ content.hit }}</div>
+            <div class="col-3 p-0">{{ content.LandingInfo.landing.manager_name }}</div>
+            <div class="col-2 p-0">
+              <router-link :to="'/landing/detail/' + content.LandingNum">{{ content.LandingInfo.landing.collection_amount }}</router-link>
+            </div>
           </li>
         </ul>
       </div>
