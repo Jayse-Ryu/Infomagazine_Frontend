@@ -152,31 +152,32 @@
           this.calling_all_unit()
         }
       },
-      add_company(id) {
-        let axios = this.$axios
-        axios.get(this.$store.state.endpoints.baseUrl + 'company/' + id)
-          .then((response) => {
-            console.log('print company name', response.data.name)
-            let res = response.data.name
-            console.log('res', res)
-            return res
-          })
-      },
-      add_manager(id) {
-        let axios = this.$axios
-        axios.get(this.$store.state.endpoints.baseUrl + 'user_access/' + id)
-          .then((response) => {
-            console.log('print user access name', response.data.user_name)
-            let res = response.data.user_name
-            console.log('res', res)
-            return res
-          })
-      },
-      calling_all_unit: function (page) {
+      // add_company(id) {
+      //   let axios = this.$axios
+      //   axios.get(this.$store.state.endpoints.baseUrl + 'company/' + id)
+      //     .then((response) => {
+      //       console.log('print company name', response.data.name)
+      //       let res = response.data.name
+      //       console.log('res', res)
+      //       return res
+      //     })
+      // },
+      // add_manager(id) {
+      //   let axios = this.$axios
+      //   axios.get(this.$store.state.endpoints.baseUrl + 'user_access/' + id)
+      //     .then((response) => {
+      //       console.log('print user access name', response.data.user_name)
+      //       let res = response.data.user_name
+      //       console.log('res', res)
+      //       return res
+      //     })
+      // },
+      calling_all_unit(page) {
         // Calling landings with new values
         let axios = this.$axios
-        let this_url = 'landing/'
+        let this_url = 'landing/api/'
         let offset = page
+        // (For Pagination check)
         // axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
         //   .then((response) => {
         //     // Calculation for page_max
@@ -188,8 +189,7 @@
         //     this.content_obj = response.data.results
         //   })
 
-        const base = {
-          baseURL: this.$store.state.endpoints.baseUrl,
+        const config = {
           headers: {
             // Set your Authorization to 'JWT', not Bearer!!!
             // Authorization: `JWT ${this.state.jwt}`,
@@ -200,6 +200,21 @@
           }
         }
 
+        let auth = ''
+        let auth_code = ''
+        //
+        if (this.access_obj.user_staff == true) {
+          auth = '?auth=staff'
+        } else if (this.access_obj.access == 1) {
+          auth = '?auth=manager'
+          auth_code = '&auth_code=' + this.access_obj.organization
+        } else if (this.access_obj.access == 2) {
+          auth = '?auth=customer'
+          auth_code = '&auth_code=' + this.access_obj.company
+        } else {
+          auth = '?auth=none'
+        }
+        //
         let searcher = ''
         if (this.search_text != '') {
           if(this.temp_option == 1) {
@@ -212,7 +227,7 @@
         } else {
           searcher = ''
         }
-        axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + searcher)
+        axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + auth + auth_code + searcher)
           .then((response) => {
             this.content_obj = response.data.Items
           })
@@ -241,9 +256,6 @@
         })
       })
 
-      // Calling contents at first with store
-      let axios = this.$axios
-      let this_url = 'landing/'
       // Check store values
       this.page_current = this.$store.state.pageOptions.landing.page
       this.search_option = this.$store.state.pageOptions.landing.option
@@ -257,37 +269,18 @@
       } else if (this.search_option == 'manager') {
         this.temp_option = 3
       }
-      // // Axios get landings
-      // axios.get(this.$store.state.endpoints.baseUrl + this_url + '?offset=' + offset + '&' + this.search_option + '=' + this.search_text)
-      //   .then((response) => {
-      //     // Calculation for page_max
-      //     if (response.data.count % this.page_chunk === 0) {
-      //       this.page_max = Math.floor(response.data.count / this.page_chunk)
-      //     } else {
-      //       this.page_max = Math.floor(response.data.count / this.page_chunk) + 1
-      //     }
-      //     this.content_obj = response.data.results
-      //   })
-
-      let searcher = ''
-      if (this.search_text != '') {
-        if(this.temp_option == 1) {
-          searcher = '?name=' + this.search_text
-        } else if (this.temp_option == 2) {
-          searcher = '?company=' + this.search_text
-        } else if (this.temp_option == 3) {
-          searcher = '?manager=' + this.search_text
+      if(this.access_obj.access != 1 || this.access_obj.access != 2) {
+        // If access obj not called before mounted
+        while(true) {
+          if (this.access_obj.access == 1 || this.access_obj.access == 2) {
+            this.calling_all_unit()
+            break
+          }
         }
       } else {
-        searcher = ''
+        console.log('else!')
+        this.calling_all_unit()
       }
-      axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + searcher)
-        .then((response) => {
-          this.content_obj = response.data.Items
-        })
-        .catch((error) => {
-          console.log('api error', error)
-        })
     },
     destroyed() {
       // Save values in the store
