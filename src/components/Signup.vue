@@ -343,6 +343,7 @@
     width: 100%;
     min-height: 100%;
     overflow: auto;
+    max-width: none !important;
     top: 0;
     z-index: -1;
     background: linear-gradient(217deg, rgba(2, 0, 36, .8), rgba(255, 0, 0, 0) 70.71%),
