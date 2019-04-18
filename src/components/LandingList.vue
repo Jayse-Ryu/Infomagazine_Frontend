@@ -218,17 +218,18 @@
         let searcher = ''
         if (this.search_text != '') {
           if(this.temp_option == 1) {
-            searcher = '?name=' + this.search_text
+            searcher = '&name=' + this.search_text
           } else if (this.temp_option == 2) {
-            searcher = '?company=' + this.search_text
+            searcher = '&company=' + this.search_text
           } else if (this.temp_option == 3) {
-            searcher = '?manager=' + this.search_text
+            searcher = '&manager=' + this.search_text
           }
         } else {
           searcher = ''
         }
         axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + auth + auth_code + searcher)
           .then((response) => {
+            console.log('response', response)
             this.content_obj = response.data.Items
           })
           .catch((error) => {
