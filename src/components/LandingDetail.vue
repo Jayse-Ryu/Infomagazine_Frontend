@@ -831,6 +831,7 @@
         list: '선택 옵션을 선택하고 제공할 수 있습니다.'
       },
       epoch_time: 0,
+      detail_obj: {},
       // Get org's companies and managers lists
       landing_company: [],
       // landing_manager: [],
@@ -1485,23 +1486,15 @@
         })
       })
       this.epoch_time = this.$route.params.landing_id
-      axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + '?sign=' + this.epoch_time)
+      axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + this.$route.params.landing_id)
         .then((response) => {
           console.log('get this db response?', response)
+          this.detail_obj = response.data
+          console.log('detail obj is ', this.detail_obj)
         })
         .catch((error) => {
           console.log(error)
         })
-      /*while(this.access_obj.user) {
-        if(this.access_obj.user) {
-          this.landing_obj.manager = this.access_obj.user
-          if (this.epoch_time === 0) {
-            this.epoch_time = Date.now()
-          }
-          this.collect_dynamo('first')
-          break
-        }
-      }*/
       // Get company, manager
       // Get companies from logged in user's organization
       let this_url = 'company/'

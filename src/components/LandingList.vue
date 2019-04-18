@@ -152,26 +152,6 @@
           this.calling_all_unit()
         }
       },
-      // add_company(id) {
-      //   let axios = this.$axios
-      //   axios.get(this.$store.state.endpoints.baseUrl + 'company/' + id)
-      //     .then((response) => {
-      //       console.log('print company name', response.data.name)
-      //       let res = response.data.name
-      //       console.log('res', res)
-      //       return res
-      //     })
-      // },
-      // add_manager(id) {
-      //   let axios = this.$axios
-      //   axios.get(this.$store.state.endpoints.baseUrl + 'user_access/' + id)
-      //     .then((response) => {
-      //       console.log('print user access name', response.data.user_name)
-      //       let res = response.data.user_name
-      //       console.log('res', res)
-      //       return res
-      //     })
-      // },
       calling_all_unit(page) {
         // Calling landings with new values
         let axios = this.$axios
@@ -230,7 +210,7 @@
         axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + auth + auth_code + searcher)
           .then((response) => {
             console.log('response', response)
-            this.content_obj = response.data.Items
+            this.content_obj = response.data
           })
           .catch((error) => {
             console.log('api error', error)
