@@ -33,8 +33,8 @@
             <span>랜딩페이지 이름*</span>
           </label>
           <div class="col-sm-9 mt-sm-3">
-            <input type="text" :class="duplicated_name_class" id="landing" maxlength="50" v-model="dynamo_obj.LandingInfo.landing.name"
-                   @change="check_name">
+            <input type="text" :class="duplicated_name_class" id="landing" maxlength="50"
+                   v-model="dynamo_obj.LandingInfo.landing.name" @change="check_name">
           </div>
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="base_url">
@@ -55,8 +55,8 @@
                   }">?</span>
           </label>
           <div class="col-sm-9 mt-sm-3">
-            <input type="text" :class="duplicated_url_class" id="base_url" maxlength="30" v-model="dynamo_obj.LandingInfo.base_url"
-                   @change="check_url">
+            <input type="text" :class="duplicated_url_class" id="base_url" maxlength="30"
+                   v-model="dynamo_obj.LandingInfo.landing.base_url" @change="check_url">
           </div>
 
         </div>
@@ -271,7 +271,7 @@
                       <div v-if="content.type == 7 || content.type == 8 || content.type == 9" class="col-sm-9 mt-sm-3">
                         <input type="file" class="input_one_btn form-control col-md-11 pt-1" id="f_img"
                                placeholder="이미지" :id="'field_file_input'+content.sign"
-                               ref="field_file_input" @change="field_file_add(content.sign)" :value="content.image"
+                               :ref="'field_file_input_' + content.type" @change="field_file_add(content.sign)" :value="content.image"
                                accept="image/*">
                         <button type="button" class="btn btn-danger w-100 mt-1" id="f_imgg"
                                 @click.prevent="field_file_delete(content.sign)">
@@ -307,18 +307,23 @@
             </label>
           </div>
 
-          <label v-if="dynamo_obj.LandingInfo.landing.is_term" class="col-sm-3 col-form-label-sm mt-3" for="term_switch">약관 이미지</label>
+          <label v-if="dynamo_obj.LandingInfo.landing.is_term" class="col-sm-3 col-form-label-sm mt-3"
+                 for="term_switch">
+            약관 이미지
+          </label>
 
           <div v-if="dynamo_obj.LandingInfo.landing.is_term" class="col-sm-9 mt-sm-3">
             <label class="switch" for="term_switch">
-              <input type="checkbox" id="term_switch" v-model="dynamo_obj.LandingInfo.landing.image_term" @change="term_file_delete()">
+              <input type="checkbox" id="term_switch" v-model="dynamo_obj.LandingInfo.landing.image_term"
+                     @change="term_file_delete()">
               <span class="slider round"></span>
             </label>
           </div>
 
         </div>
 
-        <div class="form-group row" v-if="dynamo_obj.LandingInfo.landing.is_term && dynamo_obj.LandingInfo.landing.image_term">
+        <div class="form-group row"
+             v-if="dynamo_obj.LandingInfo.landing.is_term && dynamo_obj.LandingInfo.landing.image_term">
           <label class="col-sm-3 col-form-label-sm mt-3" for="term_img">약관 이미지 파일</label>
           <div class="col-sm-9 mt-sm-3 row ml-0">
             <input type="file" class="input_one_btn form-control col-md-11 pt-1" id="term_img" placeholder="이미지"
@@ -327,10 +332,12 @@
           </div>
         </div>
 
-        <div class="form-group row" v-if="dynamo_obj.LandingInfo.landing.is_term && !dynamo_obj.LandingInfo.landing.image_term">
+        <div class="form-group row"
+             v-if="dynamo_obj.LandingInfo.landing.is_term && !dynamo_obj.LandingInfo.landing.image_term">
           <label class="col-sm-3 col-form-label-sm mt-3" for="term_title">약관 제목</label>
           <div class="col-sm-9 mt-sm-3">
-            <input type="text" class="form-control" id="term_title" placeholder="title" v-model="dynamo_obj.LandingInfo.term.title">
+            <input type="text" class="form-control" id="term_title" placeholder="title"
+                   v-model="dynamo_obj.LandingInfo.term.title">
           </div>
           <label class="col-sm-3 col-form-label-sm mt-3" for="term_cont">약관 내용</label>
           <div class="col-sm-9 mt-sm-3">
@@ -362,7 +369,7 @@
                   }">?</span>
           </label>
           <div class="col-sm-12">
-            <input type="text" class="form-control" id="page_title" maxlength="50" v-model="landing_obj.title">
+            <input type="text" class="form-control" id="page_title" maxlength="50" v-model="dynamo_obj.LandingInfo.landing.title">
           </div>
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="header_script">
@@ -370,7 +377,7 @@
           </label>
           <div class="col-sm-12">
             <textarea type="text" class="form-control" id="header_script" rows="4"
-                      v-model="landing_obj.header_script"></textarea>
+                      v-model="dynamo_obj.LandingInfo.landing.header_script"></textarea>
           </div>
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="body_script">
@@ -378,7 +385,7 @@
           </label>
           <div class="col-sm-12">
             <textarea type="text" class="form-control" id="body_script" rows="4"
-                      v-model="landing_obj.body_script"></textarea>
+                      v-model="dynamo_obj.LandingInfo.landing.body_script"></textarea>
           </div>
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="main_layout">
@@ -405,7 +412,7 @@
           <div class="col-sm-12">
             <div class="main_layout" id="main_layout">
               <div class="basket">
-                <vue-draggable-resizable v-for="item in order_obj"
+                <vue-draggable-resizable v-for="item in dynamo_obj.LandingInfo.order"
                                          @activated="order_activated(item.sign)"
                                          @deactivated="order_deactivated"
                                          @dragging="order_move"
@@ -438,10 +445,10 @@
                        style="width: 100%; height: 100%; object-fit: contain;">
 
 
-                  <div v-if="item.type == 2" class="form_layout" v-for="form in form_obj">
+                  <div v-if="item.type == 2" class="form_layout" v-for="form in dynamo_obj.LandingInfo.form">
                     <div class="container form_layout_cont" v-if="form.sign == item.form_group"
                          :style="'background:'+form.bg_color+';' + 'color:'+form.tx_color+';'+'z-index:10;'">
-                      <div class="form-group row mb-1" v-for="field in field_obj">
+                      <div class="form-group row mb-1" v-for="field in dynamo_obj.LandingInfo.field">
                         <div class="w-100 row m-0" v-if="field.type != 7 && field.type != 8 && field.type != 9">
                           <label v-if="field.form_group_id == item.form_group"
                                  class="col-sm-3 col-form-label-sm mt-3 text-center font-weight-bold pr-0 pl-0 pt-2"
@@ -492,36 +499,36 @@
                              v-else-if="field.type == 7 || field.type == 8 || field.type == 9">
                           <div v-if="field.form_group_id == item.form_group">
                             <!-- link -->
-                            <button v-if="field.type == 7 && field.image_data.length == 0" type="button"
+                            <button v-if="field.type == 7 && field.image_url.length == 0" type="button"
                                     class="btn w-100"
                                     :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">
                               {{ field.holder }}
                             </button>
-                            <button v-else-if="field.type == 7 && field.image_data.length == 1" type="button"
+                            <button v-else-if="field.type == 7 && field.image_url.length >= 1" type="button"
                                     class="btn w-100 p-0" style="background: transparent;">
                               <img :src="field.image_url" alt="button image" class="w-100"
                                    style="width: 100%; height: 100%; max-height: 50px; object-fit: contain;">
                             </button>
 
                             <!-- tel -->
-                            <button v-if="field.type == 8 && field.image_data.length == 0" type="button"
+                            <button v-if="field.type == 8 && field.image_url.length == 0" type="button"
                                     class="btn w-100"
                                     :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">
                               {{ field.holder }}
                             </button>
-                            <button v-else-if="field.type == 8 && field.image_data.length == 1" type="button"
+                            <button v-else-if="field.type == 8 && field.image_url.length >= 1" type="button"
                                     class="btn w-100 p-0" style="background: transparent;">
                               <img :src="field.image_url" alt="button image" class="w-100"
                                    style="width: 100%; height: 100%; max-height: 50px; object-fit: contain;">
                             </button>
 
                             <!-- submit -->
-                            <button v-if="field.type == 9 && field.image_data.length == 0" type="button"
+                            <button v-if="field.type == 9 && field.image_url.length == 0" type="button"
                                     class="btn w-100"
                                     :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">
                               {{ field.holder }}
                             </button>
-                            <button v-else-if="field.type == 9 && field.image_data.length == 1" type="button"
+                            <button v-else-if="field.type == 9 && field.image_url.length >= 1" type="button"
                                     class="btn w-100 p-0" style="background: transparent;">
                               <img :src="field.image_url" alt="button image"
                                    style="width: 100%; height: 100%; max-height: 50px; object-fit: contain;">
@@ -556,9 +563,8 @@
 
               </div>
 
-
               <div class="console" v-if="order_focus_flag && order_selected != 0">
-                <div v-for="info in order_obj">
+                <div v-for="info in dynamo_obj.LandingInfo.order">
                   <div class="form-group row p-4" v-if="info.sign == order_selected">
                     <label for="console_name" class="col-sm-3 col-form-label-sm mt-3">이름</label>
                     <div class="col-sm-9 mt-sm-3">
@@ -598,7 +604,7 @@
                              @change="order_image_change(info.sign)">
                       <select v-if="info.type == 2" class="form-control" id="form_set" v-model="info.form_group">
                         <option value="0">폼 그룹을 선택하세요</option>
-                        <option v-for="content in form_obj" :value="content.sign">{{ content.name }}</option>
+                        <option v-for="content in dynamo_obj.LandingInfo.form" :value="content.sign">{{ content.name }}</option>
                       </select>
                       <input v-if="info.type == 3" type="text" class="form-control" id="video_set"
                              v-model="info.video_data">
@@ -816,33 +822,34 @@
     </div>
 
     <transition name="fade" mode="out-in">
-    <div class="select_company_wrap" v-show="!company_flag">
-      <div class="container company_list_box">
+      <div class="select_company_wrap" v-show="!company_flag">
+        <div class="container company_list_box">
 
-        <h4>고객업체를 먼저 선택해주세요.</h4>
+          <h4>고객업체를 먼저 선택해주세요.</h4>
 
-        <div class="form-group row">
-          <label class="col-sm-3 col-form-label-sm mt-3" for="company_id">
-            <span>고객업체*</span>
-          </label>
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label-sm mt-3" for="company_id">
+              <span>고객업체*</span>
+            </label>
 
-          <div class="col-sm-9 mt-sm-3">
-            <select class="form-control" name="company" id="company_id" v-model="dynamo_obj.LandingInfo.landing.company">
-              <option value="-1">선택하세요</option>
-              <option v-for="content in landing_company" :value="content.id">
-                {{content.name }} - {{ content.sub_name }}
-              </option>
-            </select>
+            <div class="col-sm-9 mt-sm-3">
+              <select class="form-control" name="company" id="company_id"
+                      v-model="dynamo_obj.LandingInfo.landing.company">
+                <option value="-1">선택하세요</option>
+                <option v-for="content in landing_company" :value="content.id">
+                  {{content.name }} - {{ content.sub_name }}
+                </option>
+              </select>
+            </div>
           </div>
+
+          <button class="col btn btn-info mt-3" @click="first_check">선택</button>
+          <router-link to="/landing">
+            <button class="col btn btn-dark mt-1">취소</button>
+          </router-link>
+
         </div>
-
-        <button class="col btn btn-info mt-3" @click="first_check">선택</button>
-        <router-link to="/landing">
-          <button class="col btn btn-dark mt-1">취소</button>
-        </router-link>
-
       </div>
-    </div>
     </transition>
 
   </div>
@@ -997,12 +1004,22 @@
                   highest = this.dynamo_obj.LandingInfo.form[i].sign
                 }
               }
-              this.dynamo_obj.LandingInfo.form.push({sign: highest + 1, name: this.form_temp, bg_color: '#fafafa', tx_color: '#313131'})
+              this.dynamo_obj.LandingInfo.form.push({
+                sign: highest + 1,
+                name: this.form_temp,
+                bg_color: '#fafafa',
+                tx_color: '#313131'
+              })
               this.form_temp = ''
               alert('폼 그룹이 생성되었습니다.')
             }
           } else {
-            this.dynamo_obj.LandingInfo.form.push({sign: 1, name: this.form_temp, bg_color: '#fafafa', tx_color: '#313131'})
+            this.dynamo_obj.LandingInfo.form.push({
+              sign: 1,
+              name: this.form_temp,
+              bg_color: '#fafafa',
+              tx_color: '#313131'
+            })
             this.form_temp = ''
             alert('폼 그룹이 생성되었습니다.')
           }
@@ -1153,18 +1170,18 @@
       // Order handle
       // Order handle
       order_add() {
-        let len = this.order_obj.length
+        let len = this.dynamo_obj.LandingInfo.order.length
         if (len) {
           let highest = 0
           let z = 1
           for (let i = 0; i < len; i++) {
-            if (this.order_obj[i].sign > highest) {
-              highest = this.order_obj[i].sign
+            if (this.dynamo_obj.LandingInfo.order[i].sign > highest) {
+              highest = this.dynamo_obj.LandingInfo.order[i].sign
             }
           }
           for (let j = 0; j < len; j++) {
-            if (this.order_obj[j].position.z > z) {
-              z = this.order_obj[j].position.z
+            if (this.dynamo_obj.LandingInfo.order[j].position.z > z) {
+              z = this.dynamo_obj.LandingInfo.order[j].position.z
             }
           }
           let order_ready = {
@@ -1176,7 +1193,7 @@
             image_url: '',
             video_type: 1
           }
-          this.order_obj.push(order_ready)
+          this.dynamo_obj.LandingInfo.order.push(order_ready)
           alert('레이아웃이 생성되었습니다.')
         } else {
           let order_ready = {
@@ -1188,19 +1205,19 @@
             image_url: '',
             video_type: 1
           }
-          this.order_obj.push(order_ready)
+          this.dynamo_obj.LandingInfo.order.push(order_ready)
           alert('레이아웃이 생성되었습니다.')
         }
       },
       order_delete() {
         if (this.order_selected) {
           if (confirm('선택한 레이아웃을 삭제하시겠습니까?')) {
-            for (let i = 0; i < this.order_obj.length; i++) {
-              if (this.order_obj[i].sign == this.order_selected) {
+            for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i++) {
+              if (this.dynamo_obj.LandingInfo.order[i].sign == this.order_selected) {
                 if (i === 0) {
-                  this.order_obj.shift()
+                  this.dynamo_obj.LandingInfo.order.shift()
                 } else {
-                  this.order_obj.splice(i, 1)
+                  this.dynamo_obj.LandingInfo.order.splice(i, 1)
                 }
               }
             }
@@ -1222,64 +1239,64 @@
         // this.order_focus_flag = false
       },
       order_move(x, y) {
-        for (let i = 0; i < this.order_obj.length; i++) {
-          if (this.order_obj[i].sign == this.order_selected) {
-            this.order_obj[i].position.x = x
-            this.order_obj[i].position.y = y
+        for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i++) {
+          if (this.dynamo_obj.LandingInfo.order[i].sign == this.order_selected) {
+            this.dynamo_obj.LandingInfo.order[i].position.x = x
+            this.dynamo_obj.LandingInfo.order[i].position.y = y
           }
         }
       },
       order_resize(x, y, w, h) {
-        for (let i = 0; i < this.order_obj.length; i++) {
-          if (this.order_obj[i].sign == this.order_selected) {
-            this.order_obj[i].position.x = x
-            this.order_obj[i].position.y = y
-            this.order_obj[i].position.w = w
-            this.order_obj[i].position.h = h
+        for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i++) {
+          if (this.dynamo_obj.LandingInfo.order[i].sign == this.order_selected) {
+            this.dynamo_obj.LandingInfo.order[i].position.x = x
+            this.dynamo_obj.LandingInfo.order[i].position.y = y
+            this.dynamo_obj.LandingInfo.order[i].position.w = w
+            this.dynamo_obj.LandingInfo.order[i].position.h = h
           }
         }
       },
       order_image_change(sign) {
         let file_data = event.target.files[0]
-        for (let i = 0; i < this.order_obj.length; i++) {
-          if (this.order_obj[i].sign == sign) {
-            this.order_obj[i].image_data = file_data
-            this.order_obj[i].image_url = URL.createObjectURL(file_data)
+        for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i++) {
+          if (this.dynamo_obj.LandingInfo.order[i].sign == sign) {
+            this.dynamo_obj.LandingInfo.order[i].image_data = file_data
+            this.dynamo_obj.LandingInfo.order[i].image_url = URL.createObjectURL(file_data)
           }
         }
       },
       order_name_change() {
-        for (let i = 0; i < this.order_obj.length; i++) {
-          if (this.order_obj[i].sign == this.order_selected) {
-            this.order_obj[i].name = this.console_obj.name
+        for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i++) {
+          if (this.dynamo_obj.LandingInfo.order[i].sign == this.order_selected) {
+            this.dynamo_obj.LandingInfo.order[i].name = this.console_obj.name
           }
         }
       },
       order_form_change() {
-        for (let i = 0; i < this.order_obj.length; i++) {
-          if (this.order_obj[i].sign == this.order_selected) {
-            this.order_obj[i].form_group = this.console_obj.form_group
+        for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i++) {
+          if (this.dynamo_obj.LandingInfo.order[i].sign == this.order_selected) {
+            this.dynamo_obj.LandingInfo.order[i].form_group = this.console_obj.form_group
           }
         }
       },
       order_video_type_change() {
-        for (let i = 0; i < this.order_obj.length; i++) {
-          if (this.order_obj[i].sign == this.order_selected) {
-            this.order_obj[i].video_type = this.console_obj.video_type
+        for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i++) {
+          if (this.dynamo_obj.LandingInfo.order[i].sign == this.order_selected) {
+            this.dynamo_obj.LandingInfo.order[i].video_type = this.console_obj.video_type
           }
         }
       },
       order_video_change() {
-        for (let i = 0; i < this.order_obj.length; i++) {
-          if (this.order_obj[i].sign == this.order_selected) {
-            this.order_obj[i].video_data = this.console_obj.video_data
+        for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i++) {
+          if (this.dynamo_obj.LandingInfo.order[i].sign == this.order_selected) {
+            this.dynamo_obj.LandingInfo.order[i].video_data = this.console_obj.video_data
           }
         }
       },
       order_type_change() {
-        for (let i = 0; i < this.order_obj.length; i++) {
-          if (this.order_obj[i].sign == this.order_selected) {
-            this.order_obj[i].type = this.console_obj.type
+        for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i++) {
+          if (this.dynamo_obj.LandingInfo.order[i].sign == this.order_selected) {
+            this.dynamo_obj.LandingInfo.order[i].type = this.console_obj.type
           }
         }
       },
@@ -1291,54 +1308,45 @@
       // File handle
       field_file_add(sign) {
         let file_data = event.target.files[0]
-        for (let i = 0; i < this.field_obj.length; i++) {
-          if (this.field_obj[i].sign == sign) {
-            this.field_obj[i].image_data[0] = file_data
-            this.field_obj[i].image_url = URL.createObjectURL(file_data)
+        for (let i = 0; i < this.dynamo_obj.LandingInfo.field.length; i++) {
+          if (this.dynamo_obj.LandingInfo.field[i].sign == sign) {
+            this.dynamo_obj.LandingInfo.field[i].image_data = file_data
+            this.dynamo_obj.LandingInfo.field[i].image_url = URL.createObjectURL(file_data)
           }
         }
       },
       field_file_delete(sign) {
-        // this.$refs.field_file_input.value = ''
-        document.getElementById('field_file_input' + sign).value = ''
-        for (let i = 0; i < this.field_obj.length; i++) {
-          if (this.field_obj[i].sign == sign) {
-            this.field_obj[i].image_data = []
-            this.field_obj[i].image_url = ''
+        document.getElementById('field_file_input'+sign).value = ''
+        for (let i = 0; i < this.dynamo_obj.LandingInfo.field.length; i++) {
+          if (this.dynamo_obj.LandingInfo.field[i].sign == sign) {
+            this.dynamo_obj.LandingInfo.field[i].image_data = []
+            this.dynamo_obj.LandingInfo.field[i].image_url = ''
           }
         }
       },
       term_file_add() {
         /* When file data changed */
         let file_data = event.target.files[0]
-        this.term_file_info = file_data
-        this.term_file[0] = file_data
-        this.term_file_flag = 1
+        this.dynamo_obj.LandingInfo.term.image = file_data
       },
       term_file_delete() {
         /* Remove file data */
         if (this.$refs.term_file_input) {
           this.$refs.term_file_input.value = ''
         }
-        this.term_file = []
-        this.term_file_info = ''
-        this.term_file_flag = 0
+        this.dynamo_obj.LandingInfo.term.image = ''
       },
       in_banner_file_add() {
         /* When file data changed */
         let file_data = event.target.files[0]
-        this.in_banner_file_info = file_data
-        this.in_banner_file[0] = file_data
-        this.in_banner_file_flag = 1
+        this.dynamo_obj.LandingInfo.banner_image = file_data
       },
       in_banner_file_delete() {
         /* Remove file data */
         if (this.$refs.in_banner_file_input) {
           this.$refs.in_banner_file_input.value = ''
         }
-        this.in_banner_file = []
-        this.in_banner_file_info = ''
-        this.in_banner_file_flag = 0
+        this.dynamo_obj.LandingInfo.banner_image = ''
       },
       /* e */
       /* n */
@@ -1354,7 +1362,6 @@
         } else {
           axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/?auth=staff')
             .then((response) => {
-              console.log(response)
               for (let i = 0; i < response.data.length; i++) {
                 if (response.data[i].LandingInfo['landing']['name'] !== null) {
                   if ((this.dynamo_obj.LandingInfo.landing.name).toLowerCase() == (response.data[i].LandingInfo.landing.name).toLowerCase()) {
@@ -1377,13 +1384,8 @@
         } else {
           axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/?auth=staff')
             .then((response) => {
-              console.log(response)
               for (let i = 0; i < response.data.length; i++) {
-                console.log('base url? ', response.data[i].LandingInfo['landing']['base_url'])
-                if(response.data[i].LandingInfo['landing']['base_url'] !== null || response.data[i].LandingInfo['landing']['base_url'] !== '') {
-                  console.log('not null!', response.data[i].LandingInfo['landing']['base_url'])
-                } else {
-                  console.log('null!', response.data[i].LandingInfo['landing']['base_url'])
+                if (response.data[i].LandingInfo['landing']['base_url'] !== null || response.data[i].LandingInfo['landing']['base_url'] !== '') {
                 }
                 if (response.data[i].LandingInfo['landing']['base_url'] !== null || response.data[i].LandingInfo['landing']['base_url'] !== '') {
                   if ((this.dynamo_obj.LandingInfo.landing.base_url).toLowerCase() == (response.data[i].LandingInfo['landing']['base_url']).toLowerCase()) {
@@ -1427,27 +1429,30 @@
         // Start validate before create
         this.$validator.validateAll()
         // Empty filtering first
-        if (this.landing_obj.company == -1) {
+        if (this.dynamo_obj.LandingInfo.landing.company == -1) {
           alert('업체를 선택하세요!')
           document.getElementById('company_id').focus()
-        } else if (this.landing_obj.manager == -1) {
+        } else if (this.dynamo_obj.LandingInfo.landing.manager == -1) {
           alert('관리자를 선택하세요!')
           document.getElementById('manager').focus()
-        } else if (!this.landing_obj.name) {
+        } else if (!this.dynamo_obj.LandingInfo.landing.name) {
           alert('랜딩페이지 이름을 입력하세요!')
           document.getElementById('landing').focus()
-        } else if (this.duplicated) {
+        } else if (this.duplicated_name_flag) {
           alert('랜딩페이지 이름이 이미 존재합니다!')
           document.getElementById('landing').focus()
-        } else if (!this.landing_obj.base_url) {
+        } else if (!this.dynamo_obj.LandingInfo.landing.base_url) {
           alert('메인 URL을 입력하세요!')
           document.getElementById('base_url').focus()
+        } else if (this.duplicated_url_flag) {
+          alert('메인 URL이 이미 존재합니다!')
+          document.getElementById('base_url').focus()
         } else {
-          if (this.form_obj.length > 0) {
+          if (this.dynamo_obj.LandingInfo.form.length > 0) {
             let flag = true
-            for (let i = 0; i < this.field_obj.length; i++) {
-              if (this.field_obj[i].name == '') {
-                alert('폼 그룹 필드 이름을 모두 입력해주세요!')
+            for (let i = 0; i < this.dynamo_obj.LandingInfo.field.length; i++) {
+              if (this.dynamo_obj.LandingInfo.field[i].name == '') {
+                alert('폼 그룹의 필드 이름을 모두 입력해주세요!')
                 document.getElementById('db_field').focus()
                 flag = false
                 return flag
@@ -1470,24 +1475,9 @@
             // 'Content-Type': 'multipart/form-data'
           }
         }
-        // Get landing objs
-        // "LandingName": req['LandingName']
-        // "LadingInfo": req['LadingInfo']
-        // "LadingNum": req['LadingNum']
-
-        // if (this.landing_obj.name == '') {
-        //   this.dynamo_obj.LandingName = '없음(None)'
-        // } else {
-        //   this.dynamo_obj.LandingName = this.landing_obj.name
-        // }
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
-        // this.dynamo_obj.CompanyNum = this.landing_obj.company.toString()
-        // this.dynamo_obj.LandingNum = this.epoch_time.toString()
-        // this.dynamo_obj.UpdatedTime = (Date.now()).toString()
-        // this.dynamo_obj.LandingInfo = {}
-        //
-        // this.dynamo_obj.LandingInfo.landing = {}
-        /* Landing Info blank to null */
+        this.dynamo_obj.CompanyNum = this.dynamo_obj.LandingInfo.landing.company.toString()
+        this.dynamo_obj.LandingNum = this.epoch_time.toString()
+        this.dynamo_obj.UpdatedTime = (Date.now()).toString()
         // landing, form, field, order, term
         for (let key in this.dynamo_obj.LandingInfo.landing) {
           if (this.dynamo_obj.LandingInfo.landing.hasOwnProperty(key)) {
