@@ -439,12 +439,14 @@
                   <img v-if="item.type == 1 && item.image_data.length !== 0" :src="item.image_url" alt="logo"
                        style="width: 100%; height: 100%; object-fit: contain;">-->
 
+                  <!-- Order layout for image -->
                   <img v-if="item.type == 1 && !item.image_data.name" src="../assets/logo1.png" alt="logo_none"
                        style="width: 100%; height: 100%; object-fit: contain;">
                   <img v-if="item.type == 1 && item.image_data.name" :src="item.image_url" alt="logo_in"
                        style="width: 100%; height: 100%; object-fit: contain;">
 
 
+                  <!-- Order layout for form group -->
                   <div v-if="item.type == 2" class="form_layout" v-for="form in dynamo_obj.LandingInfo.form">
                     <div class="container form_layout_cont" v-if="form.sign == item.form_group"
                          :style="'background:'+form.bg_color+';' + 'color:'+form.tx_color+';'+'z-index:10;'">
@@ -495,43 +497,45 @@
 
                           </div>
                         </div>
+
                         <div class="pl-3 pr-3 pt-1 pb-1 col"
                              v-else-if="field.type == 7 || field.type == 8 || field.type == 9">
                           <div v-if="field.form_group_id == item.form_group">
-                            <!-- link -->
-                            <button v-if="field.type == 7 && field.image_url.length == 0" type="button"
+
+                            <!-- link without image -->
+                            <button v-if="field.type == 7 && !field.image_url" type="button"
                                     class="btn w-100"
                                     :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">
                               {{ field.holder }}
                             </button>
-                            <button v-else-if="field.type == 7 && field.image_url.length >= 1" type="button"
+                            <!-- link with image -->
+                            <button v-else-if="field.type == 7 && field.image_url" type="button"
                                     class="btn w-100 p-0" style="background: transparent;">
-                              <img :src="field.image_url" alt="button image" class="w-100"
-                                   style="width: 100%; height: 100%; max-height: 50px; object-fit: contain;">
+                              <img :src="field.image_url" alt="button image" class="w-100 order_form_button_image">
                             </button>
 
-                            <!-- tel -->
-                            <button v-if="field.type == 8 && field.image_url.length == 0" type="button"
+                            <!-- tel without image -->
+                            <button v-if="field.type == 8 && !field.image_url" type="button"
                                     class="btn w-100"
                                     :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">
                               {{ field.holder }}
                             </button>
-                            <button v-else-if="field.type == 8 && field.image_url.length >= 1" type="button"
+                            <!-- tel with image -->
+                            <button v-else-if="field.type == 8 && field.image_url" type="button"
                                     class="btn w-100 p-0" style="background: transparent;">
-                              <img :src="field.image_url" alt="button image" class="w-100"
-                                   style="width: 100%; height: 100%; max-height: 50px; object-fit: contain;">
+                              <img :src="field.image_url" alt="button image" class="w-100 order_form_button_image">
                             </button>
 
-                            <!-- submit -->
-                            <button v-if="field.type == 9 && field.image_url.length == 0" type="button"
+                            <!-- submit without image -->
+                            <button v-if="field.type == 9 && !field.image_url" type="button"
                                     class="btn w-100"
                                     :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">
                               {{ field.holder }}
                             </button>
-                            <button v-else-if="field.type == 9 && field.image_url.length >= 1" type="button"
+                            <!-- submit with image -->
+                            <button v-else-if="field.type == 9 && field.image_url" type="button"
                                     class="btn w-100 p-0" style="background: transparent;">
-                              <img :src="field.image_url" alt="button image"
-                                   style="width: 100%; height: 100%; max-height: 50px; object-fit: contain;">
+                              <img :src="field.image_url" alt="button image" class="w-100 order_form_button_image">
                             </button>
                           </div>
                         </div>
@@ -539,6 +543,8 @@
                     </div>
                   </div>
 
+
+                  <!-- Order layout for video -->
                   <div v-if="item.type == 3">
                     <span class="video_handler">비디오 드래그</span>
                     <span class="video_handler_2">비디오 드래그</span>
@@ -654,7 +660,7 @@
                 <span>레이아웃 폰트</span>
               </label>
               <div class="col-sm-9 mt-sm-3 row ml-0">
-                <select class="form-control" name="layout_font" id="layout_font" v-model="layout_obj.font">
+                <select class="form-control" name="layout_font" id="layout_font" v-model="dynamo_obj.LandingInfo.landing.font">
                   <option value="-1">OS 기본</option>
                   <option value="1">Font 2</option>
                   <option value="2">Font 3</option>
@@ -680,7 +686,7 @@
               </label>
               <div class="col-sm-9 mt-sm-3">
                 <label class="switch" for="in_db">
-                  <input type="checkbox" id="in_db" v-model="layout_obj.inner_db">
+                  <input type="checkbox" id="in_db" v-model="dynamo_obj.LandingInfo.landing.inner_db">
                   <span class="slider round"></span>
                 </label>
               </div>
@@ -704,7 +710,7 @@
               </label>
               <div class="col-sm-9 mt-sm-3">
                 <label class="switch" for="in_company">
-                  <input type="checkbox" id="in_company" v-model="layout_obj.show_company">
+                  <input type="checkbox" id="in_company" v-model="dynamo_obj.LandingInfo.landing.show_company">
                   <span class="slider round"></span>
                 </label>
               </div>
@@ -728,16 +734,16 @@
               </label>
               <div class="col-sm-9 mt-sm-3">
                 <label class="switch" for="is_hijack">
-                  <input type="checkbox" id="is_hijack" v-model="landing_obj.is_hijack">
+                  <input type="checkbox" id="is_hijack" v-model="dynamo_obj.LandingInfo.landing.is_hijack">
                   <span class="slider round"></span>
                 </label>
               </div>
-              <label v-if="landing_obj.is_hijack" class="col-sm-3 col-form-label-sm mt-3" for="hijack">
+              <label v-if="dynamo_obj.LandingInfo.landing.is_hijack" class="col-sm-3 col-form-label-sm mt-3" for="hijack">
                 <span>후팝업 링크</span>
               </label>
-              <div v-if="landing_obj.is_hijack" class="col-sm-9 mt-sm-3 row ml-0">
+              <div v-if="dynamo_obj.LandingInfo.landing.is_hijack" class="col-sm-9 mt-sm-3 row ml-0">
                 <input type="text" class="form-control col" id="hijack" placeholder="후팝업 주소"
-                       v-model="landing_obj.hijack_url">
+                       v-model="dynamo_obj.LandingInfo.landing.hijack_url">
                 <hr>
               </div>
 
@@ -758,22 +764,22 @@
               </label>
               <div class="col-sm-9 mt-sm-3">
                 <label class="switch" for="in_banner">
-                  <input type="checkbox" id="in_banner" v-model="layout_obj.is_banner"
+                  <input type="checkbox" id="in_banner" v-model="dynamo_obj.LandingInfo.landing.is_banner"
                          @change="in_banner_file_delete()">
                   <span class="slider round"></span>
                 </label>
               </div>
 
-              <label v-if="layout_obj.is_banner" class="col-sm-3 col-form-label-sm mt-3" for="in_banner_img">
+              <label v-if="dynamo_obj.LandingInfo.landing.is_banner" class="col-sm-3 col-form-label-sm mt-3" for="in_banner_img">
                 <span>띠배너 옵션</span>
               </label>
-              <div v-if="layout_obj.is_banner" class="col-sm-9 mt-sm-3 row ml-0">
+              <div v-if="dynamo_obj.LandingInfo.landing.is_banner" class="col-sm-9 mt-sm-3 row ml-0">
 
                 <input type="file" class="form-control col-sm-5 col-md-5 pt-1" id="in_banner_img" placeholder="이미지"
                        ref="in_banner_file_input" @change="in_banner_file_add()" accept="image/*">
                 <div class="margin_div"></div>
                 <input type="text" class="form-control col-sm-7 col-md-5" id="in_banner_desc" placeholder="띠배너 주소"
-                       v-model="layout_obj.banner_url">
+                       v-model="dynamo_obj.LandingInfo.landing.banner_url">
                 <div class="margin_div"></div>
                 <!--<button type="button" class="btn btn-primary col-md-1 p-0">추가</button>-->
                 <button type="button" class="btn btn-danger col-md-1 p-0" @click.prevent="in_banner_file_delete()">
@@ -792,7 +798,7 @@
           <label class="col-sm-3 col-form-label-sm mt-3" for="status">활성상태</label>
           <div class="col-sm-9 mt-sm-3">
             <label class="switch" for="status">
-              <input type="checkbox" id="status" v-model="landing_obj.is_active">
+              <input type="checkbox" id="status" v-model="dynamo_obj.LandingInfo.landing.is_active">
               <span class="slider round"></span>
             </label>
           </div>
@@ -800,7 +806,7 @@
           <label class="col-sm-3 col-form-label-sm mt-3" for="mobile">모바일 전용</label>
           <div class="col-sm-9 mt-sm-3">
             <label class="switch" for="mobile">
-              <input type="checkbox" id="mobile" v-model="landing_obj.is_mobile">
+              <input type="checkbox" id="mobile" v-model="dynamo_obj.LandingInfo.landing.is_mobile">
               <span class="slider round"></span>
             </label>
           </div>
@@ -812,15 +818,14 @@
         <div class="form-group row">
           <div class="col-12">
             <button type="submit" class="btn btn-primary col-12">생성</button>
-            <router-link to="/landing">
-              <button type="button" class="btn btn-dark col-12 mt-2">취소</button>
-            </router-link>
+            <button type="button" class="btn btn-dark col-12 mt-2" @click="back_to_list">취소</button>
           </div>
         </div>
       </form>
 
     </div>
 
+    <!-- When first access for create landing, show the company choice modal -->
     <transition name="fade" mode="out-in">
       <div class="select_company_wrap" v-show="!company_flag">
         <div class="container company_list_box">
@@ -845,7 +850,7 @@
 
           <button class="col btn btn-info mt-3" @click="first_check">선택</button>
           <router-link to="/landing">
-            <button class="col btn btn-dark mt-1">취소</button>
+            <button type="button" class="btn btn-dark col-12 mt-2">취소</button>
           </router-link>
 
         </div>
@@ -861,7 +866,7 @@
     data: () => ({
       company_flag: false,
       window_width: window.innerWidth,
-      // msg is Tooltip messages. Static name by api.
+      // msg is Tooltip messages. 'msg' is static name by ToolTip api.
       msg: {
         base_url: '기본 주소를 지정합니다.',
         title: '사이트 내부 제목입니다.',
@@ -886,19 +891,19 @@
             company: -1,
             manager: -1,
             name: '',
-            title: '',
-            header_script: '',
-            body_script: '',
+            title: null,
+            header_script: null,
+            body_script: null,
             base_url: '',
             is_hijack: false,
-            hijack_url: '',
+            hijack_url: null,
             is_active: true,
             is_mobile: false,
             views: 0,
             collections: [],
             is_banner: false,
-            banner_url: '',
-            banner_image: '',
+            banner_url: null,
+            banner_image: null,
             inner_db: true,
             font: -1,
             is_term: false,
@@ -915,50 +920,15 @@
           order: []
         }
       },
-      // Name check
+      // Duplicate check
       duplicated_name_class: 'form-control',
       duplicated_name_flag: false,
       duplicated_url_class: 'form-control',
       duplicated_url_flag: false,
-      // landing_manager: [],
-      // // // Actual obj data what will be saved
-      // Landing
-      landing_obj: {
-        company: -1,
-        manager: -1,
-        name: '',
-        title: '',
-        header_script: '',
-        body_script: '',
-        base_url: '',
-        is_hijack: false,
-        hijack_url: '',
-        is_active: true,
-        is_mobile: false,
-        views: 0,
-        collections: []
-      },
-      // Layout
-      layout_obj: {
-        is_banner: false,
-        banner_url: '',
-        banner_image: '',
-        inner_db: true,
-        font: -1,
-        is_term: false,
-        image_term: false,
-        show_company: false
-      },
-      // in_banner obj
-      in_banner_file_flag: 0,
-      in_banner_file: [],
-      in_banner_file_info: '',
-      // Order
+      // Order relative
       order_focus_flag: false,
       order_selected: 0,
-      order_obj: [],
-      // Form obj
-      form_obj: [],
+      // Form relative
       form_temp: '',
       form_arrow: -1,
       form_selected: {
@@ -966,20 +936,10 @@
         bg_color: '#f9f9f9',
         tx_color: '#313131'
       },
-      // Field obj
-      field_obj: [],
+      // Filter relative
       filtered_fields: [],
       field_selected: -1,
       field_temp_name: '',
-      // // // Term info
-      term_obj: {
-        title: '',
-        content: '',
-        image: ''
-      },
-      term_file_flag: 0,
-      term_file: [],
-      term_file_info: ''
     }),
     methods: {
       // Form groups Handle
@@ -1077,7 +1037,7 @@
             if (this.dynamo_obj.LandingInfo.field.length != 0) {
               let highest = 0
               let flag = true
-              for (let i = 0; i < this.field_obj.length; i++) {
+              for (let i = 0; i < this.dynamo_obj.LandingInfo.field.length; i++) {
                 if (this.form_selected.sign == this.dynamo_obj.LandingInfo.field[i].form_group_id) {
                   if (this.field_temp_name == this.dynamo_obj.LandingInfo.field[i].name) {
                     alert('이미 존재하는 필드 이름입니다.')
@@ -1102,7 +1062,7 @@
                 back_color: '#287BFF',
                 text_color: '#f0f0f0',
                 list: [],
-                image_data: []
+                image_data: null
               })
               this.field_temp_name = ''
               this.filter_change()
@@ -1116,7 +1076,7 @@
                 back_color: '#287BFF',
                 text_color: '#fafafa',
                 list: [],
-                image_data: []
+                image_data: null
               })
               this.field_temp_name = ''
               this.filter_change()
@@ -1189,7 +1149,7 @@
             type: 1,
             name: 'new layout',
             position: {x: 0, y: 0, w: 100, h: 100, z: z + 1},
-            image_data: [],
+            image_data: '',
             image_url: '',
             video_type: 1
           }
@@ -1201,7 +1161,7 @@
             type: 1,
             name: 'new layout',
             position: {x: 0, y: 0, w: 100, h: 100, z: 1},
-            image_data: [],
+            image_data: '',
             image_url: '',
             video_type: 1
           }
@@ -1319,8 +1279,8 @@
         document.getElementById('field_file_input'+sign).value = ''
         for (let i = 0; i < this.dynamo_obj.LandingInfo.field.length; i++) {
           if (this.dynamo_obj.LandingInfo.field[i].sign == sign) {
-            this.dynamo_obj.LandingInfo.field[i].image_data = []
-            this.dynamo_obj.LandingInfo.field[i].image_url = ''
+            this.dynamo_obj.LandingInfo.field[i].image_data = null
+            this.dynamo_obj.LandingInfo.field[i].image_url = null
           }
         }
       },
@@ -1332,21 +1292,21 @@
       term_file_delete() {
         /* Remove file data */
         if (this.$refs.term_file_input) {
-          this.$refs.term_file_input.value = ''
+          this.$refs.term_file_input.value = null
         }
-        this.dynamo_obj.LandingInfo.term.image = ''
+        this.dynamo_obj.LandingInfo.term.image = null
       },
       in_banner_file_add() {
         /* When file data changed */
         let file_data = event.target.files[0]
-        this.dynamo_obj.LandingInfo.banner_image = file_data
+        this.dynamo_obj.LandingInfo.landing.banner_image = file_data
       },
       in_banner_file_delete() {
         /* Remove file data */
         if (this.$refs.in_banner_file_input) {
-          this.$refs.in_banner_file_input.value = ''
+          this.$refs.in_banner_file_input.value = null
         }
-        this.dynamo_obj.LandingInfo.banner_image = ''
+        this.dynamo_obj.LandingInfo.landing.banner_image = null
       },
       /* e */
       /* n */
@@ -1478,13 +1438,11 @@
         this.dynamo_obj.CompanyNum = this.dynamo_obj.LandingInfo.landing.company.toString()
         this.dynamo_obj.LandingNum = this.epoch_time.toString()
         this.dynamo_obj.UpdatedTime = (Date.now()).toString()
-        // landing, form, field, order, term
+        // Empty objects make as Null
         for (let key in this.dynamo_obj.LandingInfo.landing) {
           if (this.dynamo_obj.LandingInfo.landing.hasOwnProperty(key)) {
             if (this.dynamo_obj.LandingInfo.landing[key] === '' && typeof (this.dynamo_obj.LandingInfo.landing[key]) != 'boolean') {
               this.dynamo_obj.LandingInfo.landing[key] = null
-            } else {
-              this.dynamo_obj.LandingInfo.landing[key] = this.dynamo_obj.LandingInfo.landing[key]
             }
           }
         }
@@ -1492,26 +1450,24 @@
           if (this.dynamo_obj.LandingInfo.form.hasOwnProperty(key)) {
             if (this.dynamo_obj.LandingInfo.form[key] === '' && typeof (this.dynamo_obj.LandingInfo.form[key]) != 'boolean') {
               this.dynamo_obj.LandingInfo.form[key] = null
-            } else {
-              this.dynamo_obj.LandingInfo.form[key] = this.dynamo_obj.LandingInfo.form[key]
             }
           }
         }
         for (let key in this.dynamo_obj.LandingInfo.field) {
           if (this.dynamo_obj.LandingInfo.field.hasOwnProperty(key)) {
-            if (this.dynamo_obj.LandingInfo.field[key] === '' && typeof (this.dynamo_obj.LandingInfo.field[key]) != 'boolean') {
-              this.dynamo_obj.LandingInfo.field[key] = null
-            } else {
-              this.dynamo_obj.LandingInfo.field[key] = this.dynamo_obj.LandingInfo.field[key]
+            for (let j in this.dynamo_obj.LandingInfo.field[key]) {
+              if (this.dynamo_obj.LandingInfo.field[key][j] === '') {
+                this.dynamo_obj.LandingInfo.field[key][j] = null
+              }
             }
           }
         }
         for (let key in this.dynamo_obj.LandingInfo.order) {
           if (this.dynamo_obj.LandingInfo.order.hasOwnProperty(key)) {
-            if (this.dynamo_obj.LandingInfo.order[key] === '' && typeof (this.dynamo_obj.LandingInfo.order[key]) != 'boolean') {
-              this.dynamo_obj.LandingInfo.order[key] = null
-            } else {
-              this.dynamo_obj.LandingInfo.order[key] = this.dynamo_obj.LandingInfo.order[key]
+            for (let j in this.dynamo_obj.LandingInfo.order[key]) {
+              if (this.dynamo_obj.LandingInfo.order[key][j] === '') {
+                this.dynamo_obj.LandingInfo.order[key][j] = null
+              }
             }
           }
         }
@@ -1519,100 +1475,25 @@
           if (this.dynamo_obj.LandingInfo.term.hasOwnProperty(key)) {
             if (this.dynamo_obj.LandingInfo.term[key] === '' && typeof (this.dynamo_obj.LandingInfo.term[key]) != 'boolean') {
               this.dynamo_obj.LandingInfo.term[key] = null
-            } else {
-              this.dynamo_obj.LandingInfo.term[key] = this.dynamo_obj.LandingInfo.term[key]
             }
           }
         }
-        // // Get layout objs
-        // for (let key in this.layout_obj) {
-        //   if (this.layout_obj.hasOwnProperty(key)) {
-        //     if (this.layout_obj[key] == '' && typeof (this.layout_obj[key]) != 'boolean') {
-        //       this.dynamo_obj.LandingInfo.landing[key] = null
-        //     } else {
-        //       this.dynamo_obj.LandingInfo.landing[key] = this.layout_obj[key]
-        //     }
-        //   }
-        // }
-        // // If banner needs image file
-        // if (this.layout_obj.is_banner && this.in_banner_file_flag) {
-        //   if (this.in_banner_file[0] == '' && typeof (this.in_banner_file[0]) != 'boolean') {
-        //     this.dynamo_obj.LandingInfo.landing['banner_image'] = null
-        //   } else {
-        //     this.dynamo_obj.LandingInfo.landing['banner_image'] = this.in_banner_file[0]
-        //   }
-        // }
-        // // Get term objs
-        // this.dynamo_obj.LandingInfo.term = {}
-        // for (let key in this.term_obj) {
-        //   if (this.term_obj.hasOwnProperty(key)) {
-        //     if (this.term_obj[key] == '' && typeof (this.term_obj[key]) != 'boolean') {
-        //       this.dynamo_obj.LandingInfo.term[key] = null
-        //     } else {
-        //       this.dynamo_obj.LandingInfo.term[key] = this.term_obj[key]
-        //     }
-        //   }
-        // }
-        // // If term needs image file
-        // if (this.term_file_flag && this.layout_obj.image_term) {
-        //   if (this.term_file[0] == '' && typeof (this.term_file[0]) != 'boolean') {
-        //     this.dynamo_obj.LandingInfo.term['term_image'] = null
-        //   } else {
-        //     this.dynamo_obj.LandingInfo.term['term_image'] = this.term_file[0]
-        //   }
-        // }
-        // // Get form group objs
-        // this.dynamo_obj.LandingInfo.form = []
-        // for (let key in this.form_obj) {
-        //   if (this.form_obj.hasOwnProperty(key)) {
-        //     if (this.form_obj[key] == '' && typeof (this.form_obj[key]) != 'boolean') {
-        //       this.dynamo_obj.LandingInfo.form[key] = null
-        //     } else {
-        //       this.dynamo_obj.LandingInfo.form[key] = this.form_obj[key]
-        //     }
-        //   }
-        // }
-        // // Get field objs
-        // for (let i = 0; i < this.field_obj.length; i++) {
-        //   this.field_obj[i].type = this.field_obj[i].type * 1
-        // }
-        // this.dynamo_obj.LandingInfo.field = []
-        // for (let key in this.field_obj) {
-        //   if (this.field_obj.hasOwnProperty(key)) {
-        //     if (this.field_obj[key] == '' && typeof (this.field_obj[key]) != 'boolean') {
-        //       this.dynamo_obj.LandingInfo.field[key] = null
-        //     } else {
-        //       this.dynamo_obj.LandingInfo.field[key] = this.field_obj[key]
-        //     }
-        //   }
-        // }
-        // // Get order objs
-        // this.dynamo_obj.LandingInfo.order = []
-        // for (let key in this.order_obj) {
-        //   if (this.order_obj.hasOwnProperty(key)) {
-        //     if (this.order_obj[key] == '' && typeof (this.order_obj[key]) != 'boolean') {
-        //       this.dynamo_obj.LandingInfo.order[key] = null
-        //     } else {
-        //       this.dynamo_obj.LandingInfo.order[key] = this.order_obj[key]
-        //     }
-        //   }
-        // }
 
-        console.log('axios temporary disabled')
-        console.log(this.dynamo_obj)
-        // axios.post(this.$store.state.endpoints.baseUrl + 'landing/api/', this.dynamo_obj, config)
-        //   .then(() => {
-        //     if (option == 'checked') {
-        //       alert('랜딩이 생성되었습니다.')
-        //       this.bye()
-        //     }
-        //   })
-        //   .catch((error) => {
-        //     if (option == 'checked') {
-        //       alert('랜딩 생성이 실패하였습니다.')
-        //     }
-        //     console.log(error)
-        //   })
+        // console.log('axios temporary disabled')
+        // console.log(this.dynamo_obj)
+        axios.post(this.$store.state.endpoints.baseUrl + 'landing/api/', this.dynamo_obj, config)
+          .then(() => {
+            if (option == 'checked') {
+              alert('랜딩이 생성되었습니다.')
+              this.bye()
+            }
+          })
+          .catch((error) => {
+            if (option == 'checked') {
+              alert('랜딩 생성이 실패하였습니다.')
+            }
+            console.log(error)
+          })
       },
       /* e */
       /* n */
@@ -1630,7 +1511,19 @@
       /* n */
       /* d */
       back_to_list() {
-        this.$router.push({name: 'landing_list'})
+        if(confirm('정말 취소하시겠습니까?')) {
+          let axios = this.$axios
+          let landing_num = this.epoch_time
+          axios.delete(this.$store.state.endpoints.baseUrl + 'landing/api/' + landing_num)
+            .then(() => {
+              alert('목록으로 돌아갑니다.')
+              this.$router.currentRoute.meta.protect_leave = 'no'
+              this.$router.push({name: 'landing_list'})
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        }
       },
     },
     mounted() {
@@ -1903,5 +1796,12 @@
     transform: translate(-50%, -50%);
     border: 1px solid #eaeaea;
     border-radius: 8px;
+  }
+
+  .order_form_button_image {
+    width: 100%;
+    height: 100%;
+    max-height: 50px;
+    object-fit: contain;
   }
 </style>
