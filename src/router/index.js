@@ -30,7 +30,7 @@ import CompanyCreate from '@/components/CompanyCreate'
 import CompanyDetail from '@/components/CompanyDetail'
 
 // DBs in langings
-import DBList from '@/components/DBList'
+// import DBList from '@/components/DBList'
 import DBDetail from '@/components/DBDetail'
 
 // Manage users for marketer
@@ -151,22 +151,22 @@ const router = new Router({
         protect_leave: 'yes'
       }
     },
+    // {
+    //   path: '/db',
+    //   name: 'db_list',
+    //   component: DBList,
+    //   meta: {
+    //     signed: true,
+    //     auth_grade: 'manager'
+    //   }
+    // },
     {
-      path: '/db',
-      name: 'db_list',
-      component: DBList,
-      meta: {
-        signed: true,
-        auth_grade: 'manager'
-      }
-    },
-    {
-      path: '/db/detail',
+      path: '/db/detail/:landing_id',
       name: 'db_detail',
       component: DBDetail,
       meta: {
         signed: true,
-        auth_grade: 'manager',
+        auth_grade: 'customer',
         protect_leave: 'yes'
       }
     },

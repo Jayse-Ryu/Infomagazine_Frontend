@@ -54,7 +54,7 @@
             <div class="col-3 p-0">{{ content.LandingInfo.landing.manager_name }}</div>
             <div class="col-1 p-0 board_centre">{{ content.LandingInfo.landing.views }}</div>
             <div class="col-1 p-0 board_centre">
-              <router-link :to="'/landing/detail/' + content.LandingNum">{{ content.LandingInfo.landing.collection_amount }}</router-link>
+              <router-link :to="'/db/detail/' + content.LandingNum">{{ content.LandingInfo.landing.collection_amount }}</router-link>
             </div>
           </li>
         </ul>
@@ -83,7 +83,7 @@
             </div>
             <div class="col-3 p-0">{{ content.LandingInfo.landing.manager_name }}</div>
             <div class="col-2 p-0">
-              <router-link :to="'/landing/detail/' + content.LandingNum">{{ content.LandingInfo.landing.collection_amount }}</router-link>
+              <router-link :to="'/db/detail/' + content.LandingNum">{{ content.LandingInfo.landing.collection_amount }}</router-link>
             </div>
           </li>
         </ul>

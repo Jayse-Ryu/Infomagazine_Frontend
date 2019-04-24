@@ -1504,7 +1504,8 @@
       let axios = this.$axios
       // Get companies from logged in user's organization
       let this_url = 'company/'
-      axios.get(this.$store.state.endpoints.baseUrl + this_url + '?organization=' + this.access_obj.organization)
+      // axios.get(this.$store.state.endpoints.baseUrl + this_url + '?organization=' + this.access_obj.organization)
+      axios.get(this.$store.state.endpoints.baseUrl + this_url)
         .then((response) => {
           this.landing_company = response.data.results
         })
