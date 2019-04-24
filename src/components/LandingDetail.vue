@@ -59,6 +59,15 @@
                    v-model="dynamo_obj.LandingInfo.landing.base_url" @change="check_url">
           </div>
 
+          <label class="col-sm-3 col-form-label-sm mt-3" for="db_show">
+            <span>DB 조회</span>
+          </label>
+          <div class="col-sm-9 mt-sm-3">
+            <router-link :to="'/db/detail/' + epoch_time">
+              <button type="button" id="db_show" class="col-sm-12 btn btn-info">DB 보기</button>
+            </router-link>
+          </div>
+
         </div>
 
         <hr>
@@ -1333,25 +1342,6 @@
       // Create Landing Start
       // Create Landing Start
       // Create Landing Start
-      first_check() {
-        // Empty filtering first
-        // if (this.dynamo_obj.LandingInfo.landing.company == -1) {
-        //   alert('업체를 선택하세요!')
-        //   document.getElementById('company_id').focus()
-        // } else {
-        //   this.company_flag = true
-        //   while (this.access_obj.user) {
-        //     if (this.access_obj.user) {
-        //       this.dynamo_obj.LandingInfo.landing.manager = this.access_obj.user
-        //       if (this.epoch_time === 0) {
-        //         this.epoch_time = Date.now()
-        //       }
-        //       this.collect_dynamo('first')
-        //       break
-        //     }
-        //   }
-        // }
-      },
       landing_check() {
         // Start validate before create
         this.$validator.validateAll()
@@ -1521,6 +1511,11 @@
         .catch((error) => {
           console.log(error)
         })
+      // If not manager, push to db contents
+      if (this.access_obj.access != 1) {
+        this.$router.currentRoute.meta.protect_leave = 'no'
+        this.$router.push({name:'db_detail', params: {landing_id: this.epoch_time}})
+      }
     },
     computed: {
       user_obj() {

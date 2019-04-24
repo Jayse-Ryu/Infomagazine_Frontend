@@ -166,8 +166,8 @@ const router = new Router({
       component: DBDetail,
       meta: {
         signed: true,
-        auth_grade: 'customer',
-        protect_leave: 'yes'
+        auth_grade: 'customer'
+        // protect_leave: 'no'
       }
     },
     {

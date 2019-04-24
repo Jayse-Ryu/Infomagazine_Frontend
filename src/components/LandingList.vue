@@ -25,7 +25,6 @@
         </button>
       </div>
     </form>
-
     <div class="container">
       <div v-if="window_width > 1000" class="list_area">
         <div class="list_header">
@@ -48,8 +47,11 @@
               v-for="content in content_obj">
             <!--<div class="col-1 p-0 col-sm-1">{{ content.id }}</div>-->
             <div class="col-3 p-0 col-sm-3">{{ content.LandingInfo.landing.company_name }}</div>
-            <div class="col-3 p-0 col-sm-4">
+            <div v-if="access_obj.access == 1" class="col-3 p-0 col-sm-4">
               <router-link :to="'/landing/detail/' + content.LandingNum">{{ content.LandingInfo.landing.name }}</router-link>
+            </div>
+            <div v-else class="col-3 p-0 col-sm-4">
+              <router-link :to="'/db/detail/' + content.LandingNum">{{ content.LandingInfo.landing.name }}</router-link>
             </div>
             <div class="col-3 p-0">{{ content.LandingInfo.landing.manager_name }}</div>
             <div class="col-1 p-0 board_centre">{{ content.LandingInfo.landing.views }}</div>
@@ -78,7 +80,10 @@
           <li v-else class="list-group-item list-group-item-action d-inline-flex justify-content-between p-1"
               v-for="content in content_obj">
             <div class="col-2 p-0">{{ content.LandingInfo.landing.company_name }}</div>
-            <div class="col-5 p-0">
+            <div v-if="access_obj.access == 1" class="col-5 p-0">
+              <router-link :to="'/landing/detail/' + content.LandingNum">{{ content.LandingInfo.landing.name }}</router-link>
+            </div>
+            <div v-else class="col-5 p-0">
               <router-link :to="'/landing/detail/' + content.LandingNum">{{ content.LandingInfo.landing.name }}</router-link>
             </div>
             <div class="col-3 p-0">{{ content.LandingInfo.landing.manager_name }}</div>
