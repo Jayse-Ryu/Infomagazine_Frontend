@@ -536,6 +536,7 @@ export default {
   .nav_king {
     width: 100%;
     background: #f8f9fa;
+    box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.14);
   }
 
   .nav_wrap {

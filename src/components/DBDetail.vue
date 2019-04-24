@@ -9,8 +9,8 @@
     </div>
 
     <div class="container">
-      <div class="row col-12 m-0 p-0 justify-content-center">
-
+      <div class="landing_info">
+        <span>{{ landing_obj.LandingInfo.landing.name }}</span>
       </div>
     </div>
 
@@ -21,7 +21,8 @@
   export default {
     name: "db_detail",
     data: () => ({
-      landing_id: 0
+      landing_id: 0,
+      landing_obj: {}
     }),
     method: {
     },
@@ -31,6 +32,8 @@
       axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + this.landing_id)
         .then((response) => {
           console.log(response)
+          this.landing_obj = response.data
+          console.log(this.landing_obj)
         })
         .catch((error) => {
           console.log(error)

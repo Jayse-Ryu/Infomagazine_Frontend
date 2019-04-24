@@ -361,6 +361,7 @@
     font-family: 'Nanum Gothic', 'sans-serif';
     // font-weight: bold;
     border-radius: 10px;
+    box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.14);
   }
 
   .password_form {
@@ -386,6 +387,10 @@
     margin: 0 15px;
     border: 1px solid #ee5151;
     box-sizing: border-box;
+  }
+
+  .form-control, .btn-info {
+    box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.14);
   }
 
 </style>

@@ -124,6 +124,7 @@
     background-color: rgba(255, 255, 255, 0.4);
     padding: 30px 30px 10vh;
     border-radius: 10px;
+    box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.14);
   }
 
   @media (max-height: 400px) {
@@ -192,5 +193,9 @@
     font-weight: bold;
     font-size: 15px;
     color: #515151;
+  }
+
+  .form-control, .btn-info {
+    box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.14);
   }
 </style>
