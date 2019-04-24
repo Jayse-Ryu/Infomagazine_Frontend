@@ -817,7 +817,7 @@
 
         <div class="form-group row">
           <div class="col-12">
-            <button type="submit" class="btn btn-primary col-12">생성</button>
+            <button type="submit" class="btn btn-info col-12">수정</button>
             <button type="button" class="btn btn-dark col-12 mt-2" @click="back_to_list">취소</button>
           </div>
         </div>
@@ -1335,22 +1335,22 @@
       // Create Landing Start
       first_check() {
         // Empty filtering first
-        if (this.dynamo_obj.LandingInfo.landing.company == -1) {
-          alert('업체를 선택하세요!')
-          document.getElementById('company_id').focus()
-        } else {
-          this.company_flag = true
-          while (this.access_obj.user) {
-            if (this.access_obj.user) {
-              this.dynamo_obj.LandingInfo.landing.manager = this.access_obj.user
-              if (this.epoch_time === 0) {
-                this.epoch_time = Date.now()
-              }
-              this.collect_dynamo('first')
-              break
-            }
-          }
-        }
+        // if (this.dynamo_obj.LandingInfo.landing.company == -1) {
+        //   alert('업체를 선택하세요!')
+        //   document.getElementById('company_id').focus()
+        // } else {
+        //   this.company_flag = true
+        //   while (this.access_obj.user) {
+        //     if (this.access_obj.user) {
+        //       this.dynamo_obj.LandingInfo.landing.manager = this.access_obj.user
+        //       if (this.epoch_time === 0) {
+        //         this.epoch_time = Date.now()
+        //       }
+        //       this.collect_dynamo('first')
+        //       break
+        //     }
+        //   }
+        // }
       },
       landing_check() {
         // Start validate before create
@@ -1451,13 +1451,13 @@
         axios.post(this.$store.state.endpoints.baseUrl + 'landing/api/', this.dynamo_obj, config)
           .then(() => {
             if (option == 'checked') {
-              alert('랜딩이 생성되었습니다.')
+              alert('랜딩이 수정되었습니다.')
               this.bye()
             }
           })
           .catch((error) => {
             if (option == 'checked') {
-              alert('랜딩 생성이 실패하였습니다.')
+              alert('랜딩 수정이 실패하였습니다.')
             }
             console.log(error)
           })
@@ -1511,26 +1511,15 @@
         .catch((error) => {
           console.log(error)
         })
+      // Get landing obj from Landing Num
       this.epoch_time = this.$route.params.landing_id
       axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + this.$route.params.landing_id)
         .then((response) => {
-          console.log('get this db response?', response)
           this.dynamo_obj = response.data
-          console.log('detail obj is ', this.dynamo_obj)
         })
         .catch((error) => {
           console.log(error)
         })
-      // // Get company, manager
-      // // Get companies from logged in user's organization
-      // let this_url = 'company/'
-      // axios.get(this.$store.state.endpoints.baseUrl + this_url + '?organization=' + this.access_obj.organization)
-      //   .then((response) => {
-      //     this.landing_company = response.data.results
-      //   })
-      //   .catch((error) => {
-      //     console.log(error)
-      //   })
     },
     computed: {
       user_obj() {

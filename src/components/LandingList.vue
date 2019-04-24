@@ -209,7 +209,7 @@
         }
         axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + auth + auth_code + searcher)
           .then((response) => {
-            console.log('response', response)
+            // console.log('response', response)
             this.content_obj = response.data
           })
           .catch((error) => {
@@ -259,7 +259,7 @@
           }
         }
       } else {
-        console.log('else!')
+        // console.log('else!')
         this.calling_all_unit()
       }
     },
