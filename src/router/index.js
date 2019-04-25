@@ -40,6 +40,9 @@ import UserList from '@/components/UserList'
 // Update my information
 import MyInfo from '@/components/MyInfo'
 
+// Actual Landing page
+import Page from '@/components/Page'
+
 // use like this.$xx
 Vue.use(Router)
 Vue.use(Axios)
@@ -171,6 +174,12 @@ const router = new Router({
       }
     },
     {
+      path: '/page/:base',
+      name: 'page',
+      component: Page,
+      alias: '/page/:base/:url'
+    },
+    {
       path: '/users',
       name: 'user_list',
       component: UserList,
@@ -209,87 +218,91 @@ const router = new Router({
 
 // adding differnt authentication for user list or something.
 router.beforeEach((to, from, next) => {
-  // Catch what is not allowed router
-  if (!to.name) {
-    next({name: 'A404'})
-  }
-  // Protect leave functions
-  if (from.meta.protect_leave) {
-    if (from.meta.protect_leave === 'yes') {
-      if (confirm('정말 떠나시겠습니까?')) {
+  if (to.path === '/' || to.path === '') {
+    next({name: 'gateway'})
+  } else {
+    // Catch what is not allowed router
+    if (!to.name) {
+      next({name: 'A404'})
+    }
+    // Protect leave functions
+    if (from.meta.protect_leave) {
+      if (from.meta.protect_leave === 'yes') {
+        if (confirm('정말 떠나시겠습니까?')) {
+          next()
+        } else {
+          return true
+        }
+      } else if (from.meta.protect_leave === 'no') {
+        from.meta.protect_leave = 'yes'
         next()
-      } else {
         return true
       }
-    } else if (from.meta.protect_leave === 'no') {
-      from.meta.protect_leave = 'yes'
-      next()
-      return true
     }
-  }
-  // Block not applied users
-  if (to.meta.signed) {
-    Store.dispatch('inspectToken')
-    if (window.localStorage.token || Store.state.authUser.id) {
-      next()
-    } else {
-      alert('로그인 후 이용 가능합니다.')
-      next({name: 'sign_in'})
-      return true
-    }
-  }
-  // If permission exist in this router
-  if (to.meta.auth_grade) {
-    let auth = to.meta.auth_grade
-    if (auth === 'superuser') {
-      if (Store.state.authUser.is_superuser) {
+    // Block not applied users
+    if (to.meta.signed) {
+      Store.dispatch('inspectToken')
+      if (window.localStorage.token || Store.state.authUser.id) {
         next()
       } else {
-        next({name: 'gateway'})
+        alert('로그인 후 이용 가능합니다.')
+        next({name: 'sign_in'})
+        return true
       }
-    } else if (auth === 'staff') {
-      if (Store.state.authUser.is_staff) {
-        next()
-      } else {
-        next({name: 'gateway'})
-      }
-    } else if (auth === 'manager') {
-      if (Store.state.userAccess.access === 1) {
-        // eslint-disable-next-line
-        if (to.name == 'organization_detail' && Store.state.userAccess.organization == to.params.organization_id || Store.state.authUser.is_staff) {
+    }
+    // If permission exist in this router
+    if (to.meta.auth_grade) {
+      let auth = to.meta.auth_grade
+      if (auth === 'superuser') {
+        if (Store.state.authUser.is_superuser) {
           next()
-          // eslint-disable-next-line
-        } else if (to.name == 'organization_detail' && Store.state.userAccess.organization !== to.params.organization_id && !Store.state.authUser.is_staff) {
-          next({name: 'organization_list'})
         } else {
-          next()
+          next({name: 'gateway'})
         }
-      } else {
-        next({name: 'gateway'})
+      } else if (auth === 'staff') {
+        if (Store.state.authUser.is_staff) {
+          next()
+        } else {
+          next({name: 'gateway'})
+        }
+      } else if (auth === 'manager') {
+        if (Store.state.userAccess.access === 1) {
+          // eslint-disable-next-line
+          if (to.name == 'organization_detail' && Store.state.userAccess.organization == to.params.organization_id || Store.state.authUser.is_staff) {
+            next()
+            // eslint-disable-next-line
+          } else if (to.name == 'organization_detail' && Store.state.userAccess.organization !== to.params.organization_id && !Store.state.authUser.is_staff) {
+            next({name: 'organization_list'})
+          } else {
+            next()
+          }
+        } else {
+          next({name: 'gateway'})
+        }
+      } else if (auth === 'customer') {
+        if (Store.state.userAccess.access >= 1) {
+          next()
+        } else {
+          next({name: 'gateway'})
+        }
       }
-    } else if (auth === 'customer') {
-      if (Store.state.userAccess.access >= 1) {
-        next()
-      } else {
+    }
+    // When logged user, return to gateway page from sign_in
+    if (window.localStorage.token && to.name === 'sign_in') {
+      if (Store.state.authUser.id) {
         next({name: 'gateway'})
+      } else {
+        next({name: 'sign_in'})
+      }
+    } else if (window.localStorage.token && to.path === '/') {
+      if (Store.state.authUser.id) {
+        next({name: 'gateway'})
+      } else {
+        next({name: 'sign_in'})
       }
     }
+    next()
   }
-  // When logged user, return to gateway page from sign_in
-  if (window.localStorage.token && to.name === 'sign_in') {
-    if (Store.state.authUser.id) {
-      next({name: 'gateway'})
-    } else {
-      next({name: 'sign_in'})
-    }
-  } else if (window.localStorage.token && to.path === '/') {
-    if (Store.state.authUser.id) {
-      next({name: 'gateway'})
-    } else {
-      next({name: 'sign_in'})
-    }
-  }
-  next()
 })
 
 export default router
