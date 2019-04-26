@@ -1,6 +1,5 @@
 <template>
   <div class="main">
-
     <!-- If authUser(Login) is Marketer -->
     <div v-if="access_obj.access == -1">
 
@@ -238,6 +237,14 @@
     name: "Gateway",
     // LogIn check
     created() {
+      if (!this.$store.state.authUser) {
+        alert('로그인이 필요합니다.')
+        this.$router.push({
+          name: 'sign_in'
+        })
+      }
+    },
+    mounted() {
       if (!this.$store.state.authUser) {
         alert('로그인이 필요합니다.')
         this.$router.push({

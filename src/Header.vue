@@ -83,12 +83,6 @@
 <script>
   export default {
     name: 'app-header',
-    created() {
-      //
-    },
-    data: () => ({
-      //
-    }),
     methods: {
       logout() {
         this.$store.commit('removeToken')
@@ -100,22 +94,22 @@
         })
       }
     },
-    mounted() {
-      if (this.$store.state.jwt !== null) {
-        this.$store.dispatch('getAuthUser')
-      } else {
-        // alert('Where is JWT?')
-        // this.$router.push('/')
-      }
-    },
-    update() {
-      if (this.$store.state.jwt !== null) {
-        this.$store.dispatch('getAuthUser')
-      } else {
-        // alert('Where is JWT?')
-        // this.$router.push('/')
-      }
-    },
+    // mounted() {
+    //   if (this.$store.state.jwt !== null) {
+    //     this.$store.dispatch('getAuthUser')
+    //   } else {
+    //     // alert('Where is JWT?')
+    //     // this.$router.push('/')
+    //   }
+    // },
+    // update() {
+    //   if (this.$store.state.jwt !== null) {
+    //     this.$store.dispatch('getAuthUser')
+    //   } else {
+    //     // alert('Where is JWT?')
+    //     // this.$router.push('/')
+    //   }
+    // },
     computed: {
       header_name: function () {
         return this.$store.state.authUser.full_name

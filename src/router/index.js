@@ -3,7 +3,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Axios from 'axios'
 import Store from '@/main.js'
-// import Vuex from 'vuex'
 
 // 404 Page
 import A404 from '@/components/A404'
@@ -30,7 +29,6 @@ import CompanyCreate from '@/components/CompanyCreate'
 import CompanyDetail from '@/components/CompanyDetail'
 
 // DBs in langings
-// import DBList from '@/components/DBList'
 import DBDetail from '@/components/DBDetail'
 
 // Manage users for marketer
@@ -46,9 +44,7 @@ import Page from '@/components/Page'
 // use like this.$xx
 Vue.use(Router)
 Vue.use(Axios)
-// Vue.use(Vuex)
 
-// export default new Router({
 const router = new Router({
   routes: [
     {
@@ -72,10 +68,10 @@ const router = new Router({
     {
       path: '/gateway',
       name: 'gateway',
-      component: Gateway,
-      meta: {
-        signed: true
-      }
+      component: Gateway
+      // meta: {
+      //   signed: true
+      // }
     },
     {
       path: '/landing',
@@ -154,15 +150,6 @@ const router = new Router({
         protect_leave: 'yes'
       }
     },
-    // {
-    //   path: '/db',
-    //   name: 'db_list',
-    //   component: DBList,
-    //   meta: {
-    //     signed: true,
-    //     auth_grade: 'manager'
-    //   }
-    // },
     {
       path: '/db/detail/:landing_id',
       name: 'db_detail',
@@ -172,12 +159,6 @@ const router = new Router({
         auth_grade: 'customer'
         // protect_leave: 'no'
       }
-    },
-    {
-      path: '/page/:base',
-      name: 'page',
-      component: Page,
-      alias: '/page/:base/:url'
     },
     {
       path: '/users',
@@ -205,6 +186,12 @@ const router = new Router({
         signed: true,
         protect_leave: 'yes'
       }
+    },
+    {
+      path: '/page/:base',
+      name: 'page',
+      component: Page,
+      alias: '/page/:base/:url'
     }
   ],
   mode: 'history',
@@ -218,13 +205,16 @@ const router = new Router({
 
 // adding differnt authentication for user list or something.
 router.beforeEach((to, from, next) => {
-  if (to.path === '/' || to.path === '') {
-    next({name: 'gateway'})
+  console.log('before each', 'to =', to.path, '/ from =', from.path)
+  // If not exist page access
+  // eslint-disable-next-line
+  if (!to.name || to.name == null || to.name == '') {
+    next({name: 'A404'})
   } else {
-    // Catch what is not allowed router
-    if (!to.name) {
-      next({name: 'A404'})
+    if (to.path === '/' || to.path === '') {
+      next()
     }
+    // Catch what is not allowed router
     // Protect leave functions
     if (from.meta.protect_leave) {
       if (from.meta.protect_leave === 'yes') {
@@ -241,68 +231,56 @@ router.beforeEach((to, from, next) => {
     }
     // Block not applied users
     if (to.meta.signed) {
-      Store.dispatch('inspectToken')
-      if (window.localStorage.token || Store.state.authUser.id) {
-        next()
-      } else {
-        alert('로그인 후 이용 가능합니다.')
-        next({name: 'sign_in'})
-        return true
-      }
-    }
-    // If permission exist in this router
-    if (to.meta.auth_grade) {
-      let auth = to.meta.auth_grade
-      if (auth === 'superuser') {
-        if (Store.state.authUser.is_superuser) {
-          next()
-        } else {
-          next({name: 'gateway'})
-        }
-      } else if (auth === 'staff') {
-        if (Store.state.authUser.is_staff) {
-          next()
-        } else {
-          next({name: 'gateway'})
-        }
-      } else if (auth === 'manager') {
-        if (Store.state.userAccess.access === 1) {
-          // eslint-disable-next-line
-          if (to.name == 'organization_detail' && Store.state.userAccess.organization == to.params.organization_id || Store.state.authUser.is_staff) {
-            next()
-            // eslint-disable-next-line
-          } else if (to.name == 'organization_detail' && Store.state.userAccess.organization !== to.params.organization_id && !Store.state.authUser.is_staff) {
-            next({name: 'organization_list'})
-          } else {
-            next()
+      // Store.dispatch('inspectToken')
+      Store.dispatch('getAuthUser')
+        .then(() => {
+          if (window.localStorage.token || Store.state.authUser.id) {
+            // next()
+
+            // If permission exist in this router
+            if (to.meta.auth_grade) {
+              let auth = to.meta.auth_grade
+              if (auth === 'superuser') {
+                if (Store.state.authUser.is_superuser) {
+                  next()
+                } else {
+                  next({name: 'gateway'})
+                }
+              } else if (auth === 'staff') {
+                if (Store.state.authUser.is_staff) {
+                  next()
+                } else {
+                  next({name: 'gateway'})
+                }
+              } else if (auth === 'manager') {
+                if (Store.state.userAccess.access === 1) {
+                  // eslint-disable-next-line
+                  if (to.name == 'organization_detail' && Store.state.userAccess.organization == to.params.organization_id || Store.state.authUser.is_staff) {
+                    next()
+                    // eslint-disable-next-line
+                  } else if (to.name == 'organization_detail' && Store.state.userAccess.organization != to.params.organization_id && !Store.state.authUser.is_staff) {
+                    next({name: 'organization_list'})
+                  } else {
+                    next()
+                  }
+                } else {
+                  next({name: 'gateway'})
+                }
+              } else if (auth === 'customer') {
+                if (Store.state.userAccess.access >= 1) {
+                  next()
+                } else {
+                  next({name: 'gateway'})
+                }
+              }
+            }
           }
-        } else {
-          next({name: 'gateway'})
-        }
-      } else if (auth === 'customer') {
-        if (Store.state.userAccess.access >= 1) {
-          next()
-        } else {
-          next({name: 'gateway'})
-        }
-      }
+        })
     }
-    // When logged user, return to gateway page from sign_in
-    if (window.localStorage.token && to.name === 'sign_in') {
-      if (Store.state.authUser.id) {
-        next({name: 'gateway'})
-      } else {
-        next({name: 'sign_in'})
-      }
-    } else if (window.localStorage.token && to.path === '/') {
-      if (Store.state.authUser.id) {
-        next({name: 'gateway'})
-      } else {
-        next({name: 'sign_in'})
-      }
-    }
-    next()
+    // -
+    // next()
   }
+  next()
 })
 
 export default router
