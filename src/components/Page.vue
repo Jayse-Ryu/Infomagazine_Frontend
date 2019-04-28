@@ -7,6 +7,12 @@
 
       <div>PAGE LANDING</div>
 
+      <div v-for="order in landing.LandingInfo.order">
+        {{ order }}
+        {{ order.position }}
+        <div :style="{'width': '100px' }">aooo</div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -24,18 +30,22 @@
       this.$parent.$data.header_flag = 0
       // get id from url
       let main = '&main=' + this.$route.params.base
-      let split = this.$route.path.split('/')
-      let last = split[split.length-1]
+      let url_path = this.$route.path.substring(6)
       //
       console.log('let main ', main)
-      console.log('let last ', last)
+      console.log('url overall ', url_path)
       //
       let axios = this.$axios
       axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + '?auth=staff' + main)
         .then((response) => {
-          console.log(response)
-          for(let i = 0; i < response.data.length; i ++) {
-            console.log(response.data[i].LandingInfo.landing.base_url)
+          if (response.data.length !== 0) {
+            console.log(response.data[0].LandingInfo.landing.base_url)
+            this.landing = response.data[0]
+          } else {
+            console.log('i dont have any result')
+            this.$router.push({
+              name: 'A404'
+            })
           }
         })
     },
