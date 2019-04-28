@@ -2,16 +2,21 @@
   <div class="landing_overall">
     <div class="landing_wrap">
 
-      <div>{{ $route.params.base }}</div>
-      <div>{{ $route.path }}</div>
-
-      <div>PAGE LANDING</div>
+      <!--<div>{{ $route.params.base }}</div>-->
+      <!--<div>{{ $route.path }}</div>-->
 
       <div v-for="order in landing.LandingInfo.order">
-        {{ order }}
-        {{ order.position }}
         <!-- x y z / w h -->
-        <div :style="{'width': order.position.w + 'px', 'height': order.position.h + 'px' }">aooo</div>
+        <div class="order_content"
+             :style="{
+                'width': order.position.w + 'px',
+                'height': order.position.h + 'px',
+                'left': order.position.x + 'px',
+                'top': order.position.y + 'px',
+                'z-index': order.position.z
+             }">
+          aooo
+        </div>
       </div>
 
     </div>
@@ -61,10 +66,14 @@
     width: 100%;
   }
 
-  .landing_wrap{
+  .landing_wrap {
     width: 100%;
     min-width: 360px;
     max-width: 1000px;
     margin: 0 auto;
+  }
+
+  .order_content {
+    position: absolute;
   }
 </style>
