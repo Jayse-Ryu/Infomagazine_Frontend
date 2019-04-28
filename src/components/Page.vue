@@ -10,7 +10,8 @@
       <div v-for="order in landing.LandingInfo.order">
         {{ order }}
         {{ order.position }}
-        <div :style="{'width': '100px' }">aooo</div>
+        <!-- x y z / w h -->
+        <div :style="{'width': order.position.w + 'px', 'height': order.position.h + 'px' }">aooo</div>
       </div>
 
     </div>
