@@ -5,19 +5,19 @@
       <!--<div>{{ $route.params.base }}</div>-->
       <!--<div>{{ $route.path }}</div>-->
 
-      <div v-for="order in landing.LandingInfo.order">
-        <!-- x y z / w h -->
-        <div class="order_content"
-             :style="{
-                'width': order.position.w + 'px',
-                'height': order.position.h + 'px',
-                'left': order.position.x + 'px',
-                'top': order.position.y + 'px',
-                'z-index': order.position.z
-             }">
-          aooo
-        </div>
+      <!-- x y z / w h -->
+      <!--<div v-for="order in landing.LandingInfo.order">-->
+      <div v-for="order in landing.LandingInfo.order" class="order_content"
+           :style="{
+              'width': order.position.w + 'px',
+              'height': order.position.h + 'px',
+              'left': order.position.x + 'px',
+              'top': order.position.y + 'px',
+              'z-index': order.position.z
+           }">
+        {{ order }}
       </div>
+      <!--</div>-->
 
     </div>
   </div>
@@ -76,7 +76,8 @@
   }
 
   .order_content {
-    /*position: absolute;*/
+    position: absolute;
+    display: inline-block;
     box-sizing: border-box;
     border: 1px solid #c1c1c1;
   }
