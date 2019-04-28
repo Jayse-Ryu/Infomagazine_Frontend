@@ -64,6 +64,7 @@
 <style lang="scss" scoped>
   .landing_overall {
     width: 100%;
+    position: absolute;
   }
 
   .landing_wrap {
@@ -71,9 +72,12 @@
     min-width: 360px;
     max-width: 1000px;
     margin: 0 auto;
+    position: relative;
   }
 
   .order_content {
-    position: absolute;
+    /*position: absolute;*/
+    box-sizing: border-box;
+    border: 1px solid #c1c1c1;
   }
 </style>
