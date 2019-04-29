@@ -3,8 +3,8 @@
 
     <!-- Header component -->
     <transition name="fade">
-      <app-header v-if="header_flag === 1" key="header" />
-      <div v-else key="no_header"></div>
+      <div v-if="header_flag === 0" key="no_header"></div>
+      <app-header v-else-if="header_flag === 1" key="header" />
     </transition>
 
     <!-- Router component -->

@@ -205,7 +205,7 @@ const router = new Router({
 
 // adding differnt authentication for user list or something.
 router.beforeEach((to, from, next) => {
-  console.log('before each', 'to =', to.path, '/ from =', from.path)
+  console.log('Router before each', 'from =', from.path, '/ to =', to.path)
   // If not exist page access
   // eslint-disable-next-line
   if (!to.name || to.name == null || to.name == '') {

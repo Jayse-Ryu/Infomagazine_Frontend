@@ -1,5 +1,8 @@
 <template>
   <div class="landing_overall">
+
+    <div style="position: absolute;">{{ window_width }}</div>
+
     <div class="landing_wrap">
 
       <!--<div>{{ $route.params.base }}</div>-->
@@ -7,15 +10,16 @@
 
       <!-- x y z / w h -->
       <!--<div v-for="order in landing.LandingInfo.order">-->
-      <div v-for="order in landing.LandingInfo.order" class="order_content"
+      <div v-for="content in order" class="order_content"
            :style="{
-              'width': order.position.w + 'px',
-              'height': order.position.h + 'px',
-              'left': order.position.x + 'px',
-              'top': order.position.y + 'px',
-              'z-index': order.position.z
+              'width': content.position.w + 'px',
+              'height': content.position.h + 'px',
+              'left': content.position.x + 'px',
+              'top': content.position.y + 'px',
+              'z-index': content.position.z
            }">
-        {{ order }}
+        {{ content }}
+        <!-- image or form group or video -->
       </div>
       <!--</div>-->
 
@@ -27,7 +31,9 @@
   export default {
     name: "Page",
     data: () => ({
-      landing: {}
+      window_width: window.innerWidth,
+      landing: {},
+      order: []
     }),
     created() {
       this.$parent.$data.header_flag = 0
@@ -41,12 +47,24 @@
       console.log('let main ', main)
       console.log('url overall ', url_path)
       //
+
+      // Window width calculator
+      let that = this
+      this.$nextTick(function () {
+        window.addEventListener('resize', function (e) {
+          that.window_width = window.innerWidth
+          if (window.innerWidth < 1000) {
+            console.log('less than 1000!')
+          }
+        })
+      })
       let axios = this.$axios
       axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + '?auth=staff' + main)
         .then((response) => {
           if (response.data.length !== 0) {
             console.log(response.data[0].LandingInfo.landing.base_url)
             this.landing = response.data[0]
+            this.order = this.landing.LandingInfo.order
           } else {
             console.log('i dont have any result')
             this.$router.push({
@@ -79,6 +97,8 @@
     position: absolute;
     display: inline-block;
     box-sizing: border-box;
+
+    background-color: #fefefe;
     border: 1px solid #c1c1c1;
   }
 </style>

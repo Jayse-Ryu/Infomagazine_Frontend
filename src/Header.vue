@@ -1,5 +1,5 @@
 <template>
-  <div class="nav_king">
+  <div class="nav_king" id="nav_king">
     <div class="nav_wrap">
       <nav class="navbar navbar-light bg-light navbar-expand-md">
 
@@ -94,22 +94,19 @@
         })
       }
     },
-    // mounted() {
-    //   if (this.$store.state.jwt !== null) {
-    //     this.$store.dispatch('getAuthUser')
-    //   } else {
-    //     // alert('Where is JWT?')
-    //     // this.$router.push('/')
-    //   }
-    // },
-    // update() {
-    //   if (this.$store.state.jwt !== null) {
-    //     this.$store.dispatch('getAuthUser')
-    //   } else {
-    //     // alert('Where is JWT?')
-    //     // this.$router.push('/')
-    //   }
-    // },
+    mounted() {
+      let block = [
+        'A404',
+        'page',
+        'sign_in',
+        'sign_up'
+      ]
+      if (block.includes(this.$route.name)) {
+        document.getElementById('nav_king').setAttribute('style', 'display: none;')
+      } else {
+        document.getElementById('nav_king').setAttribute('style', 'display: block;')
+      }
+    },
     computed: {
       header_name: function () {
         return this.$store.state.authUser.full_name

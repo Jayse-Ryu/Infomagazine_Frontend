@@ -122,6 +122,7 @@ const store = new Vuex.Store({
         })
     },
     refreshToken () {
+      console.log('Refresh')
       const payload = {
         token: this.state.jwt
       }
@@ -136,45 +137,37 @@ const store = new Vuex.Store({
     },
     inspectToken () {
       console.log('Inspect')
-      if (this.state.jwt != null) {
-        const token = this.state.jwt
-        if (token) {
-          const decoded = Decoder(token)
-          const exp = decoded.exp
-          const orig_iat = decoded.orig_iat
-          const a_day = 86400 // 7*24*60*60
-          const thirty_minutes = 1800 // 30*60
-          if ((Date.now() / 1000) > exp) {
-            // If token expired then send to login page
-            this.commit('removeToken')
-            alert('로그인 시간이 만료되었습니다. 다시 로그인 해 주세요.')
-            router.push('/')
-            return false
-          } else if ((Date.now() / 1000) > exp - thirty_minutes && (Date.now() / 1000) < orig_iat + a_day) {
-            // If token expire in less than 30 minutes but still in refresh period then refresh
-            // alert('토큰이 자동 업데이트 되었습니다.')
-            this.dispatch('refreshToken')
-              .then(() => {
-                router.push('/')
-                return true
-              })
-              .catch((error) => {
-                console.log('refresh Error - ', error)
-              })
-          }
-          // Nor Nothing
-        } else {
-          // If no token then send to login page
+      const token = this.state.jwt
+      if (token) {
+        const decoded = Decoder(token)
+        const exp = decoded.exp
+        const orig_iat = decoded.orig_iat
+        const a_day = 86400 // 7*24*60*60
+        const thirty_minutes = 1800 // 30*60
+        if ((Date.now() / 1000) > exp) {
+          // If token expired then send to login page
           this.commit('removeToken')
-          alert('로그인 후 이용 가능합니다.')
-          console.log('No token -> login')
+          alert('로그인 시간이 만료되었습니다.')
           router.push('/')
           return false
+        } else if ((Date.now() / 1000) > exp - thirty_minutes && (Date.now() / 1000) < orig_iat + a_day) {
+          // If token expire in less than 30 minutes but still in refresh period then refresh
+          // alert('토큰이 자동 업데이트 되었습니다.')
+          this.dispatch('refreshToken')
+            .then(() => {
+              router.push('/')
+              return true
+            })
+            .catch((error) => {
+              console.log('refresh Error - ', error)
+            })
         }
+        // Nor Nothing
       } else {
+        // If no token then send to login page
         this.commit('removeToken')
         alert('로그인 후 이용 가능합니다.')
-        console.log('JWT missing -> login')
+        console.log('No token -> login')
         router.push('/')
         return false
       }
@@ -182,8 +175,8 @@ const store = new Vuex.Store({
     getAuthUser () {
       console.log('Get auth')
       this.dispatch('inspectToken')
-        .then((response) => {
-          console.log('dispatch response', response)
+        .then(() => {
+          console.log('Get auth-inspect then')
           // if (this.dispatch('inspectToken')) {
           // If token is alive
           if (this.state.jwt !== null) {
@@ -237,7 +230,7 @@ const store = new Vuex.Store({
           // }
         })
         .catch((error) => {
-          console.log('getauth e', error)
+          console.log('Get auth', error)
         })
     }
   }
