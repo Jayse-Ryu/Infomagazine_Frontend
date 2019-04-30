@@ -660,7 +660,7 @@
             </div>
 
             <div class="preview">
-              <button type="button" class="btn btn-info w-100">미리보기</button>
+              <button type="button" class="btn btn-info w-100" @click="temp">미리보기</button>
             </div>
 
             <div class="form-group row mb-0">
@@ -1482,6 +1482,14 @@
             })
         }
       },
+      temp () {
+        let axios = this.$axios
+        let landing_num = this.$route.params.landing_id
+        axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + landing_num + '&preview=ture')
+          .then((response) => {
+            console.log('temp res', response)
+          })
+      }
     },
     mounted() {
       // Window width calculator

@@ -90,7 +90,7 @@
           </label>
           <div v-if="form_selected.sign != -1" class="col-sm-9 mt-sm-3 row ml-0">
             <div class="color_wrap form-control col-sm-2" id="form_group_bg">
-              <input type="color" v-model="form_selected.bg_color" class="color_picker">
+              <input type="color" v-model="form_selected.bg_color" class="color_picker" colorformat="rgba">
             </div>
             <div class="margin_div"></div>
             <input type="text" v-model="form_selected.bg_color" class="form-control col-sm-3" maxlength="7">
