@@ -234,16 +234,16 @@
 
 <script>
   export default {
-    name: "Gateway",
+    name: "gateway",
     // LogIn check
-    created() {
-      if (!this.$store.state.authUser) {
-        alert('로그인이 필요합니다.')
-        this.$router.push({
-          name: 'sign_in'
-        })
-      }
-    },
+    // created() {
+      // if (!this.$store.state.authUser) {
+      //   alert('로그인이 필요합니다.')
+      //   this.$router.push({
+      //     name: 'sign_in'
+      //   })
+      // }
+    // },
     mounted() {
       if (!this.$store.state.authUser) {
         alert('로그인이 필요합니다.')

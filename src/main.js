@@ -110,19 +110,17 @@ const store = new Vuex.Store({
       axios.post(this.state.endpoints.obtainJWT, payload)
         .then((response) => {
           this.commit('updateToken', response.data.token)
-          return this.dispatch('getAuthUser')
+          return this.dispatch('inspectToken')
         })
         .then(() => {
           router.push('/gateway')
         })
-        // eslint-disable-next-line
-        .catch((error) => {
-          // console.log('Obtain Token action error..', error)
+        .catch(() => {
+          // Check the account or password
           alert('아이디와 비밀번호를 확인해주세요.')
         })
     },
     refreshToken () {
-      console.log('Refresh')
       const payload = {
         token: this.state.jwt
       }
@@ -132,11 +130,10 @@ const store = new Vuex.Store({
           return this.dispatch('getAuthUser')
         })
         .catch((error) => {
-          console.log('Refresh Token action error..', error)
+          console.log('Refresh error..', error)
         })
     },
     inspectToken () {
-      console.log('Inspect')
       const token = this.state.jwt
       if (token) {
         const decoded = Decoder(token)
@@ -147,96 +144,85 @@ const store = new Vuex.Store({
         if ((Date.now() / 1000) > exp) {
           // If token expired then send to login page
           this.commit('removeToken')
-          alert('로그인 시간이 만료되었습니다.')
-          router.push('/')
-          return false
-        } else if ((Date.now() / 1000) > exp - thirty_minutes && (Date.now() / 1000) < orig_iat + a_day) {
-          // If token expire in less than 30 minutes but still in refresh period then refresh
-          // alert('토큰이 자동 업데이트 되었습니다.')
-          this.dispatch('refreshToken')
             .then(() => {
+              alert('로그인 시간이 만료되었습니다.')
               router.push('/')
-              return true
+              return false
             })
             .catch((error) => {
-              console.log('refresh Error - ', error)
+              console.log('Inspect -> Remove token error', error)
             })
+        } else if ((Date.now() / 1000) > exp - thirty_minutes && (Date.now() / 1000) < orig_iat + a_day) {
+          // If token expire in less than 30 minutes but still in refresh period then refresh
+          this.dispatch('refreshToken')
+            .then(() => {
+              return this.dispatch('getAuthUser')
+            })
+            .catch((error) => {
+              console.log('Refresh Error - ', error)
+            })
+        } else {
+          return this.dispatch('getAuthUser')
         }
-        // Nor Nothing
       } else {
         // If no token then send to login page
         this.commit('removeToken')
-        alert('로그인 후 이용 가능합니다.')
-        console.log('No token -> login')
-        router.push('/')
-        return false
+          .then(() => {
+            alert('로그인 후 이용 가능합니다.')
+            router.push('/')
+            return false
+          })
       }
     },
     getAuthUser () {
-      console.log('Get auth')
-      this.dispatch('inspectToken')
-        .then(() => {
-          console.log('Get auth-inspect then')
-          // if (this.dispatch('inspectToken')) {
-          // If token is alive
-          if (this.state.jwt !== null) {
-            // If jwt object is really exist in local store
-            const token = this.state.jwt
-            const decoded = Decoder(token)
-            const user_id = decoded.user_id
-            const base = {
-              baseURL: this.state.endpoints.baseUrl,
-              headers: {
-                // Set your Authorization to 'JWT', not Bearer!!!
-                Authorization: `JWT ${this.state.jwt}`,
-                'Content-Type': 'application/json'
-              },
-              xhrFields: {
-                withCredentials: true
-              }
-            }
-            // Even though the authentication returned a user object that can be
-            // decoded, we fetch it again. This way we aren't super dependant on
-            // JWT and can plug in something else.
-            const axiosInstance = axios.create(base)
-            axiosInstance({
-              url: '/user/' + user_id + '/',
-              method: 'get',
-              params: {}
-            })
-              .then((response) => {
-                if (response.data) {
-                  let user_obj = response.data
-                  delete user_obj['password']
-                  this.commit('setAuthUser', {
-                    authUser: user_obj,
-                    isAuthenticated: true
-                  })
-                }
-                return axios.get(this.state.endpoints.baseUrl + 'user_access/' + user_id + '/')
-              })
-              .then((response) => {
-                this.commit('setAccess', {
-                  userAccess: response.data
-                })
-              })
-              .catch((error) => {
-                console.log('get Auth user failed..', error)
-              })
+      // If token is alive
+      if (this.state.jwt !== null) {
+        // If jwt object is really exist in local store
+        const token = this.state.jwt
+        const decoded = Decoder(token)
+        const user_id = decoded.user_id
+        const base = {
+          baseURL: this.state.endpoints.baseUrl,
+          headers: {
+            // Set your Authorization to 'JWT', not Bearer!!!
+            Authorization: `JWT ${this.state.jwt}`,
+            'Content-Type': 'application/json'
+          },
+          xhrFields: {
+            withCredentials: true
           }
-          // } else {
-          //   // If token is didn't survived, activate inspect token
-          //   this.dispatch('inspectToken')
-          // }
+        }
+        // Even though the authentication returned a user object that can be
+        // decoded, we fetch it again. This way we aren't super dependant on
+        // JWT and can plug in something else.
+        const axiosInstance = axios.create(base)
+        axiosInstance({
+          url: '/user/' + user_id + '/',
+          method: 'get',
+          params: {}
         })
-        .catch((error) => {
-          console.log('Get auth', error)
-        })
+          .then((response) => {
+            if (response.data) {
+              let user_obj = response.data
+              delete user_obj['password']
+              this.commit('setAuthUser', {
+                authUser: user_obj,
+                isAuthenticated: true
+              })
+            }
+            return axios.get(this.state.endpoints.baseUrl + 'user_access/' + user_id + '/')
+          })
+          .then((response) => {
+            this.commit('setAccess', {
+              userAccess: response.data
+            })
+          })
+          .catch((error) => {
+            console.log('get Auth user failed..', error)
+          })
+      }
     }
   }
-  // modules: {
-  //   module_auth
-  // }
 })
 
 export default store

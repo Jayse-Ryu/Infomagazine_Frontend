@@ -280,7 +280,8 @@
                       <div v-if="content.type == 7 || content.type == 8 || content.type == 9" class="col-sm-9 mt-sm-3">
                         <input type="file" class="input_one_btn form-control col-md-11 pt-1" id="f_img"
                                placeholder="이미지" :id="'field_file_input'+content.sign"
-                               :ref="'field_file_input_' + content.type" @change="field_file_add(content.sign)" :value="content.image"
+                               :ref="'field_file_input_' + content.type" @change="field_file_add(content.sign)"
+                               :value="content.image"
                                accept="image/*">
                         <button type="button" class="btn btn-danger w-100 mt-1" id="f_imgg"
                                 @click.prevent="field_file_delete(content.sign)">
@@ -378,7 +379,8 @@
                   }">?</span>
           </label>
           <div class="col-sm-12">
-            <input type="text" class="form-control" id="page_title" maxlength="50" v-model="dynamo_obj.LandingInfo.landing.title">
+            <input type="text" class="form-control" id="page_title" maxlength="50"
+                   v-model="dynamo_obj.LandingInfo.landing.title">
           </div>
 
           <label class="col-sm-3 col-form-label-sm mt-3" for="header_script">
@@ -619,7 +621,9 @@
                              @change="order_image_change(info.sign)">
                       <select v-if="info.type == 2" class="form-control" id="form_set" v-model="info.form_group">
                         <option value="0">폼 그룹을 선택하세요</option>
-                        <option v-for="content in dynamo_obj.LandingInfo.form" :value="content.sign">{{ content.name }}</option>
+                        <option v-for="content in dynamo_obj.LandingInfo.form" :value="content.sign">{{ content.name
+                          }}
+                        </option>
                       </select>
                       <input v-if="info.type == 3" type="text" class="form-control" id="video_set"
                              v-model="info.video_data">
@@ -660,7 +664,7 @@
             </div>
 
             <div class="preview">
-              <button type="button" class="btn btn-info w-100" @click="temp">미리보기</button>
+              <button type="button" class="btn btn-info w-100" @click="preview">미리보기</button>
             </div>
 
             <div class="form-group row mb-0">
@@ -669,7 +673,8 @@
                 <span>레이아웃 폰트</span>
               </label>
               <div class="col-sm-9 mt-sm-3 row ml-0">
-                <select class="form-control" name="layout_font" id="layout_font" v-model="dynamo_obj.LandingInfo.landing.font">
+                <select class="form-control" name="layout_font" id="layout_font"
+                        v-model="dynamo_obj.LandingInfo.landing.font">
                   <option value="-1">OS 기본</option>
                   <option value="1">Font 2</option>
                   <option value="2">Font 3</option>
@@ -747,7 +752,8 @@
                   <span class="slider round"></span>
                 </label>
               </div>
-              <label v-if="dynamo_obj.LandingInfo.landing.is_hijack" class="col-sm-3 col-form-label-sm mt-3" for="hijack">
+              <label v-if="dynamo_obj.LandingInfo.landing.is_hijack" class="col-sm-3 col-form-label-sm mt-3"
+                     for="hijack">
                 <span>후팝업 링크</span>
               </label>
               <div v-if="dynamo_obj.LandingInfo.landing.is_hijack" class="col-sm-9 mt-sm-3 row ml-0">
@@ -779,7 +785,8 @@
                 </label>
               </div>
 
-              <label v-if="dynamo_obj.LandingInfo.landing.is_banner" class="col-sm-3 col-form-label-sm mt-3" for="in_banner_img">
+              <label v-if="dynamo_obj.LandingInfo.landing.is_banner" class="col-sm-3 col-form-label-sm mt-3"
+                     for="in_banner_img">
                 <span>띠배너 옵션</span>
               </label>
               <div v-if="dynamo_obj.LandingInfo.landing.is_banner" class="col-sm-9 mt-sm-3 row ml-0">
@@ -827,6 +834,7 @@
         <div class="form-group row">
           <div class="col-12">
             <button type="submit" class="btn btn-info col-12">수정</button>
+            <button type="submit" class="btn btn-danger col-12" @click="delete_landing">삭제</button>
             <button type="button" class="btn btn-dark col-12 mt-2" @click="back_to_list">취소</button>
           </div>
         </div>
@@ -1252,7 +1260,7 @@
         }
       },
       field_file_delete(sign) {
-        document.getElementById('field_file_input'+sign).value = ''
+        document.getElementById('field_file_input' + sign).value = ''
         for (let i = 0; i < this.dynamo_obj.LandingInfo.field.length; i++) {
           if (this.dynamo_obj.LandingInfo.field[i].sign == sign) {
             this.dynamo_obj.LandingInfo.field[i].image_data = null
@@ -1467,13 +1475,13 @@
       /* e */
       /* n */
       /* d */
-      back_to_list() {
-        if(confirm('정말 취소하시겠습니까?')) {
+      delete_landing() {
+        if (confirm('정말 삭제하시겠습니까?')) {
           let axios = this.$axios
           let landing_num = this.epoch_time
           axios.delete(this.$store.state.endpoints.baseUrl + 'landing/api/' + landing_num)
             .then(() => {
-              alert('목록으로 돌아갑니다.')
+              alert('삭제되었습니다.')
               this.$router.currentRoute.meta.protect_leave = 'no'
               this.$router.push({name: 'landing_list'})
             })
@@ -1482,12 +1490,21 @@
             })
         }
       },
-      temp () {
+      back_to_list() {
+        if (confirm('목록으로 돌아갈까요?')) {
+          this.$router.currentRoute.meta.protect_leave = 'no'
+          this.$router.push({name: 'landing_list'})
+        }
+      },
+      preview() {
         let axios = this.$axios
         let landing_num = this.$route.params.landing_id
-        axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + landing_num + '&preview=ture')
+        axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + landing_num + '/?preview=true')
           .then((response) => {
-            console.log('temp res', response)
+            console.log('preview res', response)
+          })
+          .catch((error) => {
+            console.log(error)
           })
       }
     },
@@ -1522,7 +1539,7 @@
       // If not manager, push to db contents
       if (this.access_obj.access != 1) {
         this.$router.currentRoute.meta.protect_leave = 'no'
-        this.$router.push({name:'db_detail', params: {landing_id: this.epoch_time}})
+        this.$router.push({name: 'db_detail', params: {landing_id: this.epoch_time}})
       }
     },
     computed: {
