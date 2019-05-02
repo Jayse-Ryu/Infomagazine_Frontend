@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>랜딩 페이지</title>
+
+  <style type="text/css">
+/*    @media (min-width: 576px) {  }
+
+    @media (min-width: 768px) {  }
+
+    @media (min-width: 992px) {  }
+
+    @media (min-width: 1200px) {  }*/
+
+    /* Main */
+    * {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+    body {
+      padding: 0;
+      margin: 0;
+      font-size: 1.2em;
+    }
+    main {
+      position: absolute;
+      width: 100%;
+    }
+    /* /Main */
+
+    /* Responsive Wrap */
+    .overall_wrap {
+      position: relative;
+      width: 100%;
+      min-width: 360px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      * {
+        font-size: 0.9em;
+      }
+
+      .overall_wrap {
+        max-width: 576px;
+      }
+    }
+    @media (min-width: 768px) and (max-width: 1200px) {
+      * {
+        font-size: 1em;
+      }
+
+      .overall_wrap {
+        max-width: 768px;
+      }
+    }
+    @media (min-width: 1201px) {
+      .overall_wrap {
+        max-width: 1000px;
+      }
+    }
+    /* /Responsive Wrap */
+
+
+    /* Layout Initial */
+    section {
+      position: absolute;
+      width: 100%;
+    }
+    section form {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      /*padding: 15px;*/
+    }
+
+    .form_wrap {
+      position: absolute;
+      width: 100%;
+      padding: 15px;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      -moz-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+      -o-transform: translateY(-50%);
+      transform: translateY(-50%);
+    }
+
+    @media (max-width: 768px) {
+      .form_wrap {
+        top: 0;
+        -webkit-transform: none;
+        -moz-transform: none;
+        -ms-transform: none;
+        -o-transform: none;
+        transform: none;
+      }
+    }
+
+    form input {
+      position: relative;
+      display: inline-block;
+      height: calc(2.25rem + 2px);
+      padding: .375rem .75rem;
+      font-size: 1em;
+      vertical-align: middle;
+      line-height: 1.5;
+      color: #495057;
+      background-color: #fff;
+      border: 1px solid #ced4da;
+      border-radius: .25rem;
+    }
+    form label {
+      vertical-align: top;
+      text-align: center;
+      margin-top: 0.5rem;
+      padding-top: calc(.25rem - 2px);
+      padding-bottom: calc(.25rem + 1px);
+      font-size: .875rem;
+      line-height: 1.5;
+    }
+    figure {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      text-align: center;
+    }
+    figure img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+    /* /Layout Initial */
+
+    .field_wrap {
+      display: inline-block;
+      margin: 0.5rem 0;
+    }
+
+    .box_with_label .field_label {
+      display: inline-block;
+      width: calc(25% - 10px);
+    }
+    .box_with_label input {
+      width: 75%;
+    }
+
+    .box_without_label .field_label {
+      display: none;
+    }
+    .box_without_label input {
+      width: 100%;
+    }
+
+    .radio_with_label .field_label {
+      display: inline-block;
+      width: calc(25% - 10px);
+    }
+
+    .radio_with_label .radio_wrap{
+      display: inline-block;
+      width: 75%;
+    }
+
+    .radio_without_label .field_label {
+      display: none;
+    }
+
+    .radio_without_label .radio_wrap{
+      display: inline-block;
+      width: 100%;
+    }
+
+    .radio_label {
+      vertical-align: middle;
+    }
+
+    @media (max-width: 768px) {
+      .field_wrap {
+        width: 100% !important;
+      }
+
+      .box_with_label label {
+        width: 100%;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+        text-align: left;
+      }
+      .box_with_label input {
+        width: 100%;
+      }
+    }
+
+  </style>
+
+</head>
+
+<body>
+  <main>
+    <div class="overall_wrap">
+
+      <section id="section_1" style="margin-top: 0%; left: 0%; width: 100%; padding-bottom: 129%; background-color: bisque;">
+        <figure>
+          <img src="./s3_image/Top_bg_big.jpg" alt="Top_bg_big">
+        </figure>
+        <!-- 생년월일, 남녀// 이름 // 전화// 7세이하 자녀 // 개인동의 // 상담신 -->
+      </section>
+
+      <section id="section_2" style="margin-top: 50%; left: 17%; width: 66%; padding-bottom: 64%; background-color: cadetblue;">
+        <form>
+          <div class="form_wrap">
+
+            <div class="field_wrap box_with_label" style="width: 100%;">
+              <label class="field_label">생일</label>
+              <input type="date">
+            </div>
+
+            <div class="field_wrap radio_without_label" style="width: 100%;">
+
+              <div class="radio_wrap">
+                <label for="radio1_1">
+                  <input type="radio" value="남" name="radio1" id="radio1_1">
+                  <span class="radio_label">남</span>
+                </label>
+                <label for="radio1_2">
+                  <input type="radio" value="여" name="radio1" id="radio1_2">
+                  <span class="radio_label">여</span>
+                </label>
+              </div>
+
+            </div>
+
+            <div class="field_wrap radio_with_label" style="width: 100%;">
+              <label class="field_label">지역</label>
+              <div class="radio_wrap">
+                <label for="lo1">
+                  <input type="radio" value="서울" name="lo" id="lo1">
+                  <span class="radio_label">서울</span>
+                </label>
+                <label for="lo2">
+                  <input type="radio" value="부산" name="lo" id="lo2">
+                  <span class="radio_label">부산</span>
+                </label>
+                <label for="lo3">
+                  <input type="radio" value="울산" name="lo" id="lo3">
+                  <span class="radio_label">울산</span>
+                </label>
+                <label for="lo4">
+                  <input type="radio" value="광주" name="lo" id="lo4">
+                  <span class="radio_label">광주</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field_wrap box_with_label" style="width: 100%;">
+              <label class="field_label">전화</label>
+              <input type="tel">
+            </div>
+
+          </div>
+          <!-- /form_wrap -->
+        </form>
+      </section>
+
+      <section id="section_3" style="margin-top: 129%; left: 0%; width: 100%; padding-bottom: 248%; background-color: cadetblue;">
+        <figure>
+          <img src="./s3_image/midd_bg.jpg" alt="middle img">
+        </figure>
+      </section>
+
+      <section id="section_4" style="margin-top: 180%; left: 5%; width: 66%; padding-bottom: 63%; background-color: cadetblue;">
+        <div id="video"></div>
+      </section>
+
+      <footer>
+        footer
+      </footer>
+
+    </div>
+    <!-- /overall wrap -->
+  </main>
+</body>
+
+</html>

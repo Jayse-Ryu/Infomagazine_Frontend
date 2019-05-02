@@ -451,9 +451,9 @@
                        style="width: 100%; height: 100%; object-fit: contain;">-->
 
                   <!-- Order layout for image -->
-                  <img v-if="item.type == 1 && !item.image_data.name" src="../assets/logo1.png" alt="logo_none"
+                  <img v-if="item.type == 1 && !item.image_data" src="../assets/logo1.png" alt="logo_none"
                        style="width: 100%; height: 100%; object-fit: contain;">
-                  <img v-if="item.type == 1 && item.image_data.name" :src="item.image_url" alt="logo_in"
+                  <img v-if="item.type == 1 && item.image_data" :src="item.image_url" alt="logo_in"
                        style="width: 100%; height: 100%; object-fit: contain;">
 
 
@@ -621,8 +621,8 @@
                              @change="order_image_change(info.sign)">
                       <select v-if="info.type == 2" class="form-control" id="form_set" v-model="info.form_group">
                         <option value="0">폼 그룹을 선택하세요</option>
-                        <option v-for="content in dynamo_obj.LandingInfo.form" :value="content.sign">{{ content.name
-                          }}
+                        <option v-for="content in dynamo_obj.LandingInfo.form" :value="content.sign">
+                          {{ content.name }}
                         </option>
                       </select>
                       <input v-if="info.type == 3" type="text" class="form-control" id="video_set"
@@ -834,7 +834,7 @@
         <div class="form-group row">
           <div class="col-12">
             <button type="submit" class="btn btn-info col-12">수정</button>
-            <button type="submit" class="btn btn-danger col-12" @click="delete_landing">삭제</button>
+            <button type="button" class="btn btn-danger col-12 mt-2" @click="delete_landing">삭제</button>
             <button type="button" class="btn btn-dark col-12 mt-2" @click="back_to_list">취소</button>
           </div>
         </div>
@@ -847,7 +847,7 @@
 
 <script>
   export default {
-    name: "landing_create",
+    name: "landing_detail",
     data: () => ({
       window_width: window.innerWidth,
       // msg is Tooltip messages. Static name by api.
@@ -1487,6 +1487,7 @@
             })
             .catch((error) => {
               console.log(error)
+              alert('삭제 중 에러가 발생하였습니다. 다시 시도해주세요.')
             })
         }
       },
@@ -1517,21 +1518,20 @@
       })
       // Get company, manager
       let axios = this.$axios
-      // Get companies from logged in user's organization
-      let this_url = 'company/'
-      // axios.get(this.$store.state.endpoints.baseUrl + this_url + '?organization=' + this.access_obj.organization)
-      axios.get(this.$store.state.endpoints.baseUrl + this_url)
-        .then((response) => {
-          this.landing_company = response.data.results
-        })
-        .catch((error) => {
-          console.log(error)
-        })
       // Get landing obj from Landing Num
       this.epoch_time = this.$route.params.landing_id
       axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + this.$route.params.landing_id)
         .then((response) => {
           this.dynamo_obj = response.data
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      // Get companies from logged in user's organization
+      let this_url = 'company/'
+      axios.get(this.$store.state.endpoints.baseUrl + this_url)
+        .then((response) => {
+          this.landing_company = response.data.results
         })
         .catch((error) => {
           console.log(error)

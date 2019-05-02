@@ -63,9 +63,9 @@
 
 
         <!-- Order layout for image -->
-        <img v-if="content.type == 1 && !content.image_data.name" src="../assets/logo1.png" alt="logo_none"
+        <img v-if="content.type == 1 && !content.image_data" src="../assets/logo1.png" alt="logo_none"
              style="width: 100%; height: 100%; object-fit: contain;">
-        <img v-if="content.type == 1 && content.image_data.name" :src="content.image_url" alt="logo_in"
+        <img v-if="content.type == 1 && content.image_data" :src="content.image_url" alt="logo_in"
              style="width: 100%; height: 100%; object-fit: contain;">
 
 
