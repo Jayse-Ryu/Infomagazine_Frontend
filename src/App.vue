@@ -530,6 +530,10 @@ export default {
     appearance: none;
   }
 
+  #app {
+    min-width: 320px;
+  }
+
   .main {
     max-width: 1600px;
     margin: auto;
