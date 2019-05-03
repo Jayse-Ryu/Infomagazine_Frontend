@@ -420,9 +420,10 @@
             <button type="button" class="btn btn-primary btn-sm p-1" @click.prevent="order_add">객체 추가</button>
             <button type="button" class="btn btn-danger btn-sm p-1" @click.prevent="order_delete">선택 삭제</button>
           </div>
+          {{ order_wrap_height }}
           <div class="col-sm-12">
             <div class="main_layout" id="main_layout">
-              <div class="basket" :style="'height: {{ order_wrap_height }}'">
+              <div class="basket" :style="{'height': order_wrap_height + 'px'}">
                 <vue-draggable-resizable v-for="item in dynamo_obj.LandingInfo.order"
                                          @activated="order_activated(item.sign)"
                                          @deactivated="order_deactivated"
@@ -1554,7 +1555,7 @@
         return access
       },
       order_wrap_height() {
-        let highest = 500
+        let highest = 450
         for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i ++) {
           let sum = this.dynamo_obj.LandingInfo.order[i].position.y + this.dynamo_obj.LandingInfo.order[i].position.h
           if (sum > highest) {
