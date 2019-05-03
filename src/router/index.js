@@ -204,12 +204,10 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  // Router always works with Local token
-  Store.dispatch('inspectToken')
-    .then(() => {
-      // IIFE for router not works before it filtered
-      // eslint-disable-next-line
-      let work = (() => {
+  // Check authentication by token
+  let work = () => {
+    Store.dispatch('inspectToken')
+      .then(() => {
         // eslint-disable-next-line
         if (!to.name || to.name == null || to.name == '') {
           next({name: 'A404'})
@@ -220,6 +218,7 @@ router.beforeEach((to, from, next) => {
             if (to.meta.signed) {
               if (window.localStorage.token || Store.state.authUser.id) {
                 if (to.meta.auth_grade) {
+                  // Auth grade filter
                   let auth = to.meta.auth_grade
                   if (auth === 'superuser') {
                     if (Store.state.authUser.is_superuser) {
@@ -235,8 +234,7 @@ router.beforeEach((to, from, next) => {
                     }
                   } else if (auth === 'manager') {
                     if (Store.state.userAccess.access === 1) {
-                      // eslint-disable-next-line
-                      if (to.name == 'organization_detail') {
+                      if (to.name === 'organization_detail') {
                         // eslint-disable-next-line
                         if (Store.state.userAccess.organization == to.params.organization_id || Store.state.authUser.is_staff) {
                           next()
@@ -258,33 +256,46 @@ router.beforeEach((to, from, next) => {
                     }
                   }
                 }
+                // /Auth grade filter
               } else {
+                // Store has not token or Auth user not exist
                 next({name: 'sign_in'})
               }
             } else {
+              // If no sign meta, Let them go to next.
               next()
             }
           }
-          // Last next work for router default (necessary)
+          // The last next work for router default (NECESSARY)
           next()
         }
+      }) // /inspectToken .then
+      .catch((error) => {
+        console.log('Router Inspect error => ', error)
       })
-      // /IIFE
-      // Check (from.leave) first
-      if (from.meta.protect_leave) {
-        if (from.meta.protect_leave === 'yes') {
-          // Are you sure to leave this page?
-          if (confirm('정말 떠나시겠습니까?')) {
-            work()
-          }
-        } else if (from.meta.protect_leave === 'no') {
-          from.meta.protect_leave = 'yes'
-          work()
-        }
-      } else {
-        work()
+  }
+  // Set let user go rightly or not
+  let intro = () => {
+    if (to.path === '/' || to.path === '' || to.name === 'page' || to.name === 'A404') {
+      next()
+    } else {
+      work()
+    }
+  }
+  // Check meta(from.leave) first
+  if (from.meta.protect_leave) {
+    if (from.meta.protect_leave === 'yes') {
+      // Are you sure to leave this page?
+      if (confirm('정말 떠나시겠습니까?')) {
+        intro()
       }
-    }) // /inspectToken .then
+    } else if (from.meta.protect_leave === 'no') {
+      from.meta.protect_leave = 'yes'
+      intro()
+    }
+  } else {
+    intro()
+  }
 })
 
 export default router

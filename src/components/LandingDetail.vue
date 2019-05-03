@@ -422,7 +422,7 @@
           </div>
           <div class="col-sm-12">
             <div class="main_layout" id="main_layout">
-              <div class="basket">
+              <div class="basket" :style="'height: {{ order_wrap_height }}'">
                 <vue-draggable-resizable v-for="item in dynamo_obj.LandingInfo.order"
                                          @activated="order_activated(item.sign)"
                                          @deactivated="order_deactivated"
@@ -1552,6 +1552,16 @@
         // Get access information the user
         let access = this.$store.state.userAccess
         return access
+      },
+      order_wrap_height() {
+        let highest = 500
+        for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i ++) {
+          let sum = this.dynamo_obj.LandingInfo.order[i].position.y + this.dynamo_obj.LandingInfo.order[i].position.h
+          if (sum > highest) {
+            highest = sum + 50
+          }
+        }
+        return highest
       }
     }
   }

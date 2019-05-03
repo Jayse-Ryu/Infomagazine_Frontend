@@ -144,14 +144,9 @@ const store = new Vuex.Store({
         if ((Date.now() / 1000) > exp) {
           // If token expired then send to login page
           this.commit('removeToken')
-            .then(() => {
-              alert('로그인 시간이 만료되었습니다.')
-              router.push('/')
-              return false
-            })
-            .catch((error) => {
-              console.log('Inspect -> Remove token error', error)
-            })
+          alert('로그인 시간이 만료되었습니다.')
+          router.push('/')
+          return false
         } else if ((Date.now() / 1000) > exp - thirty_minutes && (Date.now() / 1000) < orig_iat + a_day) {
           // If token expire in less than 30 minutes but still in refresh period then refresh
           this.dispatch('refreshToken')
@@ -167,11 +162,9 @@ const store = new Vuex.Store({
       } else {
         // If no token then send to login page
         this.commit('removeToken')
-          .then(() => {
-            alert('로그인 후 이용 가능합니다.')
-            router.push('/')
-            return false
-          })
+        alert('로그인 후 이용 가능합니다.')
+        router.push('/')
+        return false
       }
     },
     getAuthUser () {
