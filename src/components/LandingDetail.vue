@@ -102,7 +102,19 @@
               <input type="color" v-model="form_selected.bg_color" class="color_picker">
             </div>
             <div class="margin_div"></div>
-            <input type="text" v-model="form_selected.bg_color" class="form-control col-sm-3" maxlength="7">
+            <input type="text" v-model="form_selected.bg_color" class="form-control col-sm-5" maxlength="7">
+            <div class="margin_div"></div>
+          </div>
+
+          <label v-if="form_selected.sign != -1" class="col-sm-3 col-form-label-sm mt-3" for="opacity_slider">
+            배경 불투명도
+          </label>
+          <div v-if="form_selected.sign != -1" class="col-sm-9 mt-sm-3 row ml-0">
+            <div class="form-control col-sm-2">{{ form_selected.opacity * 10 }}%</div>
+            <div class="margin_div"></div>
+            <div class="slide_container col-sm-5 form-control border-0 p-0">
+              <input class="opacity_slider w-100 h-100" id="opacity_slider" type="range" min="0" max="10" value="10" v-model="form_selected.opacity">
+            </div>
           </div>
 
           <label v-if="form_selected.sign != -1" class="col-sm-3 col-form-label-sm mt-3" for="form_group_col">
@@ -113,7 +125,7 @@
               <input type="color" v-model="form_selected.tx_color" class="color_picker">
             </div>
             <div class="margin_div"></div>
-            <input type="text" v-model="form_selected.tx_color" class="form-control col-sm-3" maxlength="7">
+            <input type="text" v-model="form_selected.tx_color" class="form-control col-sm-5" maxlength="7">
           </div>
         </div>
 
@@ -171,6 +183,14 @@
                      data-parent="#form_field_list">
                   <form v-on:submit.prevent="field_option_close">
                     <div class="form-group row p-4 mb-0">
+
+                      <label class="col-sm-3 col-form-label-sm mt-3" :for="'la_switch'+content.sign">라벨 켜기</label>
+                      <div class="col-sm-9 mt-sm-3">
+                        <label class="switch" :for="'la_switch'+content.sign">
+                          <input type="checkbox" :id="'la_switch'+content.sign" v-model="content.label">
+                          <span class="slider round"></span>
+                        </label>
+                      </div>
 
                       <label class="col-sm-3 col-form-label-sm mt-3" for="f_type">타입*</label>
                       <div class="col-sm-9 mt-sm-3">
@@ -420,7 +440,6 @@
             <button type="button" class="btn btn-primary btn-sm p-1" @click.prevent="order_add">객체 추가</button>
             <button type="button" class="btn btn-danger btn-sm p-1" @click.prevent="order_delete">선택 삭제</button>
           </div>
-          {{ order_wrap_height }}
           <div class="col-sm-12">
             <div class="main_layout" id="main_layout">
               <div class="basket" :style="{'height': order_wrap_height + 'px'}">
@@ -919,7 +938,8 @@
       form_selected: {
         sign: -1,
         bg_color: '#f9f9f9',
-        tx_color: '#313131'
+        tx_color: '#313131',
+        opacity: 10
       },
       // Filter relative
       filtered_fields: [],
@@ -953,7 +973,8 @@
                 sign: highest + 1,
                 name: this.form_temp,
                 bg_color: '#fafafa',
-                tx_color: '#313131'
+                tx_color: '#313131',
+                opacity: 10,
               })
               this.form_temp = ''
               alert('폼 그룹이 생성되었습니다.')
@@ -963,7 +984,8 @@
               sign: 1,
               name: this.form_temp,
               bg_color: '#fafafa',
-              tx_color: '#313131'
+              tx_color: '#313131',
+              opacity: 10
             })
             this.form_temp = ''
             alert('폼 그룹이 생성되었습니다.')
@@ -977,7 +999,7 @@
           if (confirm('이 폼그룹을 삭제하시겠습니까?')) {
             this.dynamo_obj.LandingInfo.form = this.dynamo_obj.LandingInfo.form.filter(el => el.sign != id)
             this.form_arrow = -1
-            this.form_selected = {sign: -1, tx_color: '#313131', bg_color: '#fafafa'}
+            this.form_selected = {sign: -1, tx_color: '#313131', bg_color: '#fafafa', opacity: 10}
             // Field objs delete also
             this.dynamo_obj.LandingInfo.field = this.dynamo_obj.LandingInfo.field.filter(el => el.form_group_id != id)
           }
@@ -987,7 +1009,7 @@
       },
       form_changed(id) {
         if (id == -1) {
-          this.form_selected = {sign: -1, tx_color: '#313131', bg_color: '#fafafa'}
+          this.form_selected = {sign: -1, tx_color: '#313131', bg_color: '#fafafa', opacity: 10}
         } else {
           for (let i = 0; i < this.dynamo_obj.LandingInfo.form.length; i++) {
             if (this.dynamo_obj.LandingInfo.form[i].sign == id) {
@@ -1041,11 +1063,13 @@
               this.dynamo_obj.LandingInfo.field.push({
                 sign: highest + 1,
                 type: this.field_selected * 1,
+                label: true,
                 name: this.field_temp_name,
                 holder: this.field_temp_name,
                 form_group_id: this.form_selected.sign,
                 back_color: '#287BFF',
                 text_color: '#f0f0f0',
+                opacity: 10,
                 list: [],
                 image_data: null
               })
@@ -1055,11 +1079,13 @@
               this.dynamo_obj.LandingInfo.field.push({
                 sign: 1,
                 type: this.field_selected * 1,
+                label: true,
                 name: this.field_temp_name,
                 holder: this.field_temp_name,
                 form_group_id: this.form_selected.sign,
                 back_color: '#287BFF',
                 text_color: '#fafafa',
+                opacity: 10,
                 list: [],
                 image_data: null
               })
@@ -1790,5 +1816,42 @@
     height: 100%;
     max-height: 50px;
     object-fit: contain;
+  }
+
+  /* The slider itself */
+  .opacity_slider {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    background: #eaeaea; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.9; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+    border-radius: 5px;
+    padding: 0 0.25em;
+  }
+
+  /* Mouse-over effects */
+  .opacity_slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+  }
+
+  /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+  .opacity_slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 30px; /* Set a specific slider handle width */
+    height: 30px; /* Slider handle height */
+    background: #17a2b8; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+    border-radius: 5px;
+  }
+
+  .opacity_slider::-moz-range-thumb {
+    width: 30px; /* Set a specific slider handle width */
+    height: 30px; /* Slider handle height */
+    background: #17a2b8; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+    border-radius: 5px;
   }
 </style>
