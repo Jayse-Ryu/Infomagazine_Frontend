@@ -496,7 +496,7 @@
                             </select>
 
                             <div v-if="field.type == 4" :id="'label'+field.name"
-                                 class="form-check-inline d-flex flex-wrap justify-content-around">
+                                 class="form-check-inline d-flex flex-wrap ">
                               <div class="p-2" v-for="list in field.list">
                                 <label class="form-check-label" :for="'field_' + list">
                                   <input class="form-check-input" type="radio" :name="field.sign" :value="list"
@@ -507,7 +507,7 @@
                             </div>
 
                             <div v-if="field.type == 5" :id="'label'+field.name"
-                                 class="form-check-inline d-flex flex-wrap justify-content-around">
+                                 class="form-check-inline d-flex flex-wrap ">
                               <div class="p-2" v-for="list in field.list">
                                 <label class="form-check-label" :for="'field_' + list">
                                   <input class="form-check-input" type="checkbox" :id="'field_' + list" :value="list">
@@ -520,7 +520,8 @@
                                    placeholder="Datepicker" :id="'label'+field.name">
                           </div>
 
-                          <div v-else-if="field.form_group_id == item.form_group && field.label == false" class="col-sm-12 mt-sm-3">
+                          <div v-else-if="field.form_group_id == item.form_group && field.label == false"
+                               class="col-sm-12 mt-sm-3">
 
                             <input v-if="field.type == 1" type="text" class="form-control" maxlength="0"
                                    :placeholder="field.holder" :id="'label'+field.name">
@@ -535,7 +536,7 @@
                             </select>
 
                             <div v-if="field.type == 4" :id="'label'+field.name"
-                                 class="form-check-inline d-flex flex-wrap justify-content-around">
+                                 class="form-check-inline d-flex flex-wrap ">
                               <div class="p-2" v-for="list in field.list">
                                 <label class="form-check-label" :for="'field_' + list">
                                   <input class="form-check-input" type="radio" :name="field.sign" :value="list"
@@ -546,7 +547,7 @@
                             </div>
 
                             <div v-if="field.type == 5" :id="'label'+field.name"
-                                 class="form-check-inline d-flex flex-wrap justify-content-around">
+                                 class="form-check-inline d-flex flex-wrap ">
                               <div class="p-2" v-for="list in field.list">
                                 <label class="form-check-label" :for="'field_' + list">
                                   <input class="form-check-input" type="checkbox" :id="'field_' + list" :value="list">
@@ -633,7 +634,7 @@
                             </select>
 
                             <div v-if="field.type == 4" :id="'label'+field.name"
-                                 class="form-check-inline d-flex flex-wrap justify-content-around">
+                                 class="form-check-inline d-flex flex-wrap ">
                               <div class="p-2" v-for="list in field.list">
                                 <label class="form-check-label" :for="'field_' + list">
                                   <input class="form-check-input" type="radio" :name="field.sign" :value="list"
@@ -644,7 +645,7 @@
                             </div>
 
                             <div v-if="field.type == 5" :id="'label'+field.name"
-                                 class="form-check-inline d-flex flex-wrap justify-content-around">
+                                 class="form-check-inline d-flex flex-wrap ">
                               <div class="p-2" v-for="list in field.list">
                                 <label class="form-check-label" :for="'field_' + list">
                                   <input class="form-check-input" type="checkbox" :id="'field_' + list" :value="list">
@@ -672,7 +673,7 @@
                             </select>
 
                             <div v-if="field.type == 4" :id="'label'+field.name"
-                                 class="form-check-inline d-flex flex-wrap justify-content-around">
+                                 class="form-check-inline d-flex flex-wrap ">
                               <div class="p-2" v-for="list in field.list">
                                 <label class="form-check-label" :for="'field_' + list">
                                   <input class="form-check-input" type="radio" :name="field.sign" :value="list"
@@ -683,7 +684,7 @@
                             </div>
 
                             <div v-if="field.type == 5" :id="'label'+field.name"
-                                 class="form-check-inline d-flex flex-wrap justify-content-around">
+                                 class="form-check-inline d-flex flex-wrap ">
                               <div class="p-2" v-for="list in field.list">
                                 <label class="form-check-label" :for="'field_' + list">
                                   <input class="form-check-input" type="checkbox" :id="'field_' + list" :value="list">
