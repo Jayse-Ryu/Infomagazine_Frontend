@@ -579,7 +579,7 @@
                   <div v-if="item.type == 3">
                     <span class="video_handler">비디오 드래그</span>
                     <span class="video_handler_2">비디오 드래그</span>
-                    <div style="position: relative; width: 100%; max-width: 1000px; margin: auto;">
+                    <div style="position: absolute; width: 100%; max-width: 1000px; margin: auto; left: 0; top: 50%; transform: translateY(-50%)">
                       <div style=" position: relative; padding-bottom: 56.25%; height:0;">
                         <iframe v-if="item.video_type == 1"
                                 style="width: 100%; height: 100%; top:0; left:0; position: absolute;" type="text/html"
@@ -663,13 +663,15 @@
 
                     <label for="console_w" class="col-sm-3 col-form-label-sm mt-3">너비</label>
                     <div class="col-sm-9 mt-sm-3">
-                      <input type="number" id="console_w" v-model.number="info.position.w" class="form-control"
+                      <input type="number" id="console_w" v-model.number="info.position.w"
+                             class="form-control"
                              step="5">
                     </div>
 
                     <label for="console_h" class="col-sm-3 col-form-label-sm mt-3">높이</label>
                     <div class="col-sm-9 mt-sm-3">
-                      <input type="number" id="console_h" v-model.number="info.position.h" class="form-control"
+                      <input type="number" id="console_h" v-model.number="info.position.h"
+                             class="form-control"
                              step="5">
                     </div>
 
@@ -1227,47 +1229,23 @@
           }
         }
       },
+      // order_resize_console(info, pos) {
+      //   if (info.type == 3) {
+      //     if (pos == 'w') {
+      //       let calc = info.position.w * 0.5625
+      //       info.position.h = Math.ceil(calc/5)*5
+      //     } else if (pos == 'h') {
+      //       let calc = info.position.h / 0.5625
+      //       info.position.w = Math.ceil(calc/5)*5
+      //     }
+      //   }
+      // },
       order_image_change(sign) {
         let file_data = event.target.files[0]
         for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i++) {
           if (this.dynamo_obj.LandingInfo.order[i].sign == sign) {
             this.dynamo_obj.LandingInfo.order[i].image_data = file_data
             this.dynamo_obj.LandingInfo.order[i].image_url = URL.createObjectURL(file_data)
-          }
-        }
-      },
-      order_name_change() {
-        for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i++) {
-          if (this.dynamo_obj.LandingInfo.order[i].sign == this.order_selected) {
-            this.dynamo_obj.LandingInfo.order[i].name = this.console_obj.name
-          }
-        }
-      },
-      order_form_change() {
-        for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i++) {
-          if (this.dynamo_obj.LandingInfo.order[i].sign == this.order_selected) {
-            this.dynamo_obj.LandingInfo.order[i].form_group = this.console_obj.form_group
-          }
-        }
-      },
-      order_video_type_change() {
-        for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i++) {
-          if (this.dynamo_obj.LandingInfo.order[i].sign == this.order_selected) {
-            this.dynamo_obj.LandingInfo.order[i].video_type = this.console_obj.video_type
-          }
-        }
-      },
-      order_video_change() {
-        for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i++) {
-          if (this.dynamo_obj.LandingInfo.order[i].sign == this.order_selected) {
-            this.dynamo_obj.LandingInfo.order[i].video_data = this.console_obj.video_data
-          }
-        }
-      },
-      order_type_change() {
-        for (let i = 0; i < this.dynamo_obj.LandingInfo.order.length; i++) {
-          if (this.dynamo_obj.LandingInfo.order[i].sign == this.order_selected) {
-            this.dynamo_obj.LandingInfo.order[i].type = this.console_obj.type
           }
         }
       },
@@ -1776,9 +1754,9 @@
 
   .video_handler {
     position: absolute;
-    border-radius: 7px 7px 0px 0px;
-    top: -30px;
-    left: -1px;
+    border-radius: 7px 0px 0px 7px;
+    top: -1px;
+    left: -104px;
     background-color: #515151;
     color: #e1e1e1;
     font-weight: bold;
@@ -1787,9 +1765,9 @@
 
   .video_handler_2 {
     position: absolute;
-    border-radius: 0px 0px 7px 7px;
+    border-radius: 0px 7px 7px 7px;
     bottom: -34px;
-    right: -1px;
+    right: -54px;
     background-color: #515151;
     color: #e1e1e1;
     font-weight: bold;

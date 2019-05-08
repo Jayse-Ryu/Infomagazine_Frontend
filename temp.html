@@ -82,7 +82,7 @@
     .form_wrap {
       position: absolute;
       width: 100%;
-      padding: 15px;
+      padding: 4%;
       top: 50%;
       -webkit-transform: translateY(-50%);
       -moz-transform: translateY(-50%);
@@ -102,7 +102,7 @@
       }
     }
 
-    form input {
+    form input, form select {
       position: relative;
       display: inline-block;
       height: calc(2.25rem + 2px);
@@ -115,6 +115,11 @@
       border: 1px solid #ced4da;
       border-radius: .25rem;
     }
+
+    input[type=radio], input[type=checkbox] {
+      height: calc(1.9rem + 2px);
+    }
+
     form label {
       vertical-align: top;
       text-align: center;
@@ -146,37 +151,42 @@
       display: inline-block;
       width: calc(25% - 10px);
     }
-    .box_with_label input {
+    .box_with_label input, .box_with_label select {
       width: 75%;
     }
 
     .box_without_label .field_label {
       display: none;
     }
-    .box_without_label input {
+    .box_without_label input, .box_without_label select {
       width: 100%;
     }
 
-    .radio_with_label .field_label {
+    .list_with_label .field_label {
       display: inline-block;
       width: calc(25% - 10px);
     }
 
-    .radio_with_label .radio_wrap{
+    .list_with_label .list_wrap{
       display: inline-block;
       width: 75%;
+      padding-top: calc(.25rem - 2px);
+      padding-bottom: calc(.25rem + 1px);
     }
 
-    .radio_without_label .field_label {
+    .list_without_label .field_label {
       display: none;
     }
 
-    .radio_without_label .radio_wrap{
+    .list_without_label .list_wrap{
       display: inline-block;
       width: 100%;
+      margin-top: 0.5rem;
+      padding-top: calc(.25rem - 2px);
+      padding-bottom: calc(.25rem + 1px);
     }
 
-    .radio_label {
+    .list_label {
       vertical-align: middle;
     }
 
@@ -191,9 +201,52 @@
         margin-bottom: 0.5rem;
         text-align: left;
       }
-      .box_with_label input {
+      .box_with_label input, .box_with_label select {
         width: 100%;
       }
+
+      .list_with_label .field_label {
+        width: 100%;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+        text-align: left;
+      }
+
+      .list_with_label .list_wrap {
+        width: 100%;
+      }
+    }
+
+    .form_button {
+      width: 100%;
+      display: inline-block;
+      font-weight: 400;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      border: 1px solid transparent;
+      padding: .375rem .75rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      cursor: pointer;
+      border-radius: .25rem;
+      transition: opacity .15s ease-in-out;
+    }
+
+    .form_button:hover {
+      opacity: 0.7;
+    }
+
+    .video_wrap {
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
     }
 
   </style>
@@ -220,46 +273,50 @@
               <input type="date">
             </div>
 
-            <div class="field_wrap radio_without_label" style="width: 100%;">
+            <div class="field_wrap list_without_label" style="width: 100%;">
 
-              <div class="radio_wrap">
-                <label for="radio1_1">
+              <div class="list_wrap">
+                <span>
                   <input type="radio" value="남" name="radio1" id="radio1_1">
-                  <span class="radio_label">남</span>
-                </label>
-                <label for="radio1_2">
+                  <label class="list_label" for="radio1_1">남</label>
+                </span>
+                <span>
                   <input type="radio" value="여" name="radio1" id="radio1_2">
-                  <span class="radio_label">여</span>
-                </label>
+                  <label class="list_label" for="radio1_2">여</label>
+                </span>
               </div>
 
             </div>
 
-            <div class="field_wrap radio_with_label" style="width: 100%;">
+            <div class="field_wrap list_with_label" style="width: 100%;">
               <label class="field_label">지역</label>
-              <div class="radio_wrap">
-                <label for="lo1">
+              <div class="list_wrap">
+                <span>
                   <input type="radio" value="서울" name="lo" id="lo1">
-                  <span class="radio_label">서울</span>
-                </label>
-                <label for="lo2">
+                  <label class="list_label" for="lo1">서울</label>
+                </span>
+                <span>
                   <input type="radio" value="부산" name="lo" id="lo2">
-                  <span class="radio_label">부산</span>
-                </label>
-                <label for="lo3">
+                  <label class="list_label" for="lo2">부산</label>
+                </span>
+                <span>
                   <input type="radio" value="울산" name="lo" id="lo3">
-                  <span class="radio_label">울산</span>
-                </label>
-                <label for="lo4">
+                  <label class="list_label" for="lo3">울산</label>
+                </span>
+                <span>
                   <input type="radio" value="광주" name="lo" id="lo4">
-                  <span class="radio_label">광주</span>
-                </label>
+                  <label class="list_label" for="lo4">광주</label>
+                </span>
               </div>
             </div>
 
             <div class="field_wrap box_with_label" style="width: 100%;">
               <label class="field_label">전화</label>
               <input type="tel">
+            </div>
+
+            <div class="field_wrap">
+              <a href="" target="_blank"></a>
             </div>
 
           </div>
@@ -275,6 +332,7 @@
 
       <section id="section_4" style="margin-top: 180%; left: 5%; width: 66%; padding-bottom: 63%; background-color: cadetblue;">
         <div id="video"></div>
+
       </section>
 
       <footer>
