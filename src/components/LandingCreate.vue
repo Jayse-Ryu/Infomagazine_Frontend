@@ -466,9 +466,10 @@
 
 
                   <!-- Order layout for form group -->
-                  <div v-if="item.type == 2" class="form_layout" v-for="form in dynamo_obj.LandingInfo.form">
-                    <div class="form_layout_cont" v-if="form.sign == item.form_group"
-                         :style="'background:'+form.bg_color+';' + 'color:'+form.tx_color+';'+'z-index:10;'">
+                  <div v-if="item.type == 2" class="form_layout" v-for="form in dynamo_obj.LandingInfo.form"
+                       :style="'background:'+form.bg_color+';' + 'color:'+form.tx_color+';'+'z-index:10;'">
+
+                    <div class="form_layout_cont" v-if="form.sign == item.form_group">
 
                       <!-- big form -->
                       <div class="form-group row mb-1" v-if="item.position.w > 768" v-for="field in dynamo_obj.LandingInfo.field">
@@ -867,10 +868,13 @@
                 <span>레이아웃 폰트</span>
               </label>
               <div class="col-sm-9 mt-sm-3 row ml-0">
-                <select class="form-control" name="layout_font" id="layout_font" v-model="dynamo_obj.LandingInfo.landing.font">
+                <select class="form-control" name="layout_font" id="layout_font"
+                        v-model="dynamo_obj.LandingInfo.landing.font">
                   <option value="-1">OS 기본</option>
-                  <option value="1">Font 2</option>
-                  <option value="2">Font 3</option>
+                  <option value="1">Sans-serif</option>
+                  <option value="2">나눔고딕 (Nanum Gothic)</option>
+                  <option value="3">나눔명조 (Nanum Myeongjo)</option>
+                  <option value="4">제주고딕 (Jeju Gothic)</option>
                 </select>
               </div>
 

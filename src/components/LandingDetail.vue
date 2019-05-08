@@ -478,9 +478,9 @@
 
 
                   <!-- Order layout for form group -->
-                  <div v-if="item.type == 2" class="form_layout" v-for="form in dynamo_obj.LandingInfo.form">
-                    <div class="form_layout_cont" v-if="form.sign == item.form_group"
-                         :style="'background:'+form.bg_color+';' + 'color:'+form.tx_color+';'+'z-index:10;'">
+                  <div v-if="item.type == 2" class="form_layout" v-for="form in dynamo_obj.LandingInfo.form"
+                       :style="'background:'+form.bg_color+';' + 'color:'+form.tx_color+';'+'z-index:10;'">
+                    <div class="form_layout_cont" v-if="form.sign == item.form_group">
 
                       <!-- big form -->
                       <div class="form-group row mb-1" v-if="item.position.w > 768" v-for="field in dynamo_obj.LandingInfo.field">
@@ -885,8 +885,10 @@
                 <select class="form-control" name="layout_font" id="layout_font"
                         v-model="dynamo_obj.LandingInfo.landing.font">
                   <option value="-1">OS 기본</option>
-                  <option value="1">Font 2</option>
-                  <option value="2">Font 3</option>
+                  <option value="1">Sans-serif</option>
+                  <option value="2">나눔고딕 (Nanum Gothic)</option>
+                  <option value="3">나눔명조 (Nanum Myeongjo)</option>
+                  <option value="4">제주고딕 (Jeju Gothic)</option>
                 </select>
               </div>
 
@@ -1965,18 +1967,25 @@
     position: absolute;
     width: 100%;
     height: 100%;
+    overflow: auto;
   }
 
   .form_layout_cont {
     position: relative;
-    top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
     padding: 0 15px;
-    overflow: auto;
     /*max-width: 750px;*/
   }
+
+  /*.form_group_big {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .form_group_small {
+    top: 0;
+  }*/
 
   .order_form_label {
     width: 25%;
