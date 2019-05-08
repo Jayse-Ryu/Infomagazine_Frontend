@@ -479,16 +479,21 @@
 
                   <!-- Order layout for form group -->
                   <div v-if="item.type == 2" class="form_layout" v-for="form in dynamo_obj.LandingInfo.form">
-                    <div class="container form_layout_cont" v-if="form.sign == item.form_group"
+                    <div class="form_layout_cont" v-if="form.sign == item.form_group"
                          :style="'background:'+form.bg_color+';' + 'color:'+form.tx_color+';'+'z-index:10;'">
-                      <div class="form-group row mb-1" v-for="field in dynamo_obj.LandingInfo.field">
+
+                      <!-- big form -->
+                      <div class="form-group row mb-1" v-if="item.position.w > 768" v-for="field in dynamo_obj.LandingInfo.field">
+
+                        <!-- input form area -->
                         <div class="w-100 row m-0" v-if="field.type != 7 && field.type != 8 && field.type != 9">
-                          <label v-if="field.form_group_id == item.form_group"
-                                 class="col-sm-3 col-form-label-sm mt-3 text-center font-weight-bold pr-0 pl-0 pt-2"
+                          <label v-if="field.form_group_id == item.form_group && field.label == true"
+                                 class="mt-3 text-center font-weight-bold pr-0 pt-2 order_form_label"
                                  :for="'label'+field.name">
                             {{ field.name }}
                           </label>
-                          <div v-if="field.form_group_id == item.form_group" class="col-sm-9 mt-sm-3">
+                          <div v-if="field.form_group_id == item.form_group && field.label == true"
+                               class="mt-sm-3 order_form_box">
 
                             <input v-if="field.type == 1" type="text" class="form-control" maxlength="0"
                                    :placeholder="field.holder" :id="'label'+field.name">
@@ -525,10 +530,51 @@
 
                             <input v-if="field.type == 6" type="text" class="form-control" disabled
                                    placeholder="Datepicker" :id="'label'+field.name">
-
                           </div>
-                        </div>
 
+                          <div v-else-if="field.form_group_id == item.form_group && field.label == false" class="col-sm-12 mt-sm-3">
+
+                            <input v-if="field.type == 1" type="text" class="form-control" maxlength="0"
+                                   :placeholder="field.holder" :id="'label'+field.name">
+
+                            <input v-if="field.type == 2" type="number" class="form-control" maxlength="0"
+                                   :placeholder="field.holder" :id="'label'+field.name">
+
+                            <select v-if="field.type == 3" type="number" class="form-control" maxlength="0"
+                                    :placeholder="field.holder" :id="'label'+field.name">
+                              <option value="0">select here</option>
+                              <option v-for="list in field.list" :value="list">{{ list }}</option>
+                            </select>
+
+                            <div v-if="field.type == 4" :id="'label'+field.name"
+                                 class="form-check-inline d-flex flex-wrap justify-content-around">
+                              <div class="p-2" v-for="list in field.list">
+                                <label class="form-check-label" :for="'field_' + list">
+                                  <input class="form-check-input" type="radio" :name="field.sign" :value="list"
+                                         :id="'field_'+list">
+                                  {{ list }}
+                                </label>
+                              </div>
+                            </div>
+
+                            <div v-if="field.type == 5" :id="'label'+field.name"
+                                 class="form-check-inline d-flex flex-wrap justify-content-around">
+                              <div class="p-2" v-for="list in field.list">
+                                <label class="form-check-label" :for="'field_' + list">
+                                  <input class="form-check-input" type="checkbox" :id="'field_' + list" :value="list">
+                                  {{ list }}
+                                </label>
+                              </div>
+                            </div>
+
+                            <input v-if="field.type == 6" type="text" class="form-control" disabled
+                                   placeholder="Datepicker" :id="'label'+field.name">
+                          </div>
+
+                        </div>
+                        <!-- /input form area -->
+
+                        <!-- button area -->
                         <div class="pl-3 pr-3 pt-1 pb-1 col"
                              v-else-if="field.type == 7 || field.type == 8 || field.type == 9">
                           <div v-if="field.form_group_id == item.form_group">
@@ -570,9 +616,150 @@
                             </button>
                           </div>
                         </div>
+                        <!-- /button area -->
                       </div>
+                      <!-- /big form -->
+
+                      <!-- small form -->
+                      <div class="form-group row mb-1" v-else-if="item.position.w < 769">
+                        <!-- input form area -->
+                        <div class="w-100 row m-0" v-if="field.type != 7 && field.type != 8 && field.type != 9">
+                          <label v-if="field.form_group_id == item.form_group && field.label == true"
+                                 class="col-12 font-weight-bold pr-0 pt-2 order_form_label"
+                                 :for="'label'+field.name">
+                            {{ field.name }}
+                          </label>
+                          <div v-if="field.form_group_id == item.form_group && field.label == true"
+                               class="col-12 order_form_box">
+
+                            <input v-if="field.type == 1" type="text" class="form-control" maxlength="0"
+                                   :placeholder="field.holder" :id="'label'+field.name">
+
+                            <input v-if="field.type == 2" type="number" class="form-control" maxlength="0"
+                                   :placeholder="field.holder" :id="'label'+field.name">
+
+                            <select v-if="field.type == 3" type="number" class="form-control" maxlength="0"
+                                    :placeholder="field.holder" :id="'label'+field.name">
+                              <option value="0">select here</option>
+                              <option v-for="list in field.list" :value="list">{{ list }}</option>
+                            </select>
+
+                            <div v-if="field.type == 4" :id="'label'+field.name"
+                                 class="form-check-inline d-flex flex-wrap justify-content-around">
+                              <div class="p-2" v-for="list in field.list">
+                                <label class="form-check-label" :for="'field_' + list">
+                                  <input class="form-check-input" type="radio" :name="field.sign" :value="list"
+                                         :id="'field_'+list">
+                                  {{ list }}
+                                </label>
+                              </div>
+                            </div>
+
+                            <div v-if="field.type == 5" :id="'label'+field.name"
+                                 class="form-check-inline d-flex flex-wrap justify-content-around">
+                              <div class="p-2" v-for="list in field.list">
+                                <label class="form-check-label" :for="'field_' + list">
+                                  <input class="form-check-input" type="checkbox" :id="'field_' + list" :value="list">
+                                  {{ list }}
+                                </label>
+                              </div>
+                            </div>
+
+                            <input v-if="field.type == 6" type="text" class="form-control" disabled
+                                   placeholder="Datepicker" :id="'label'+field.name">
+                          </div>
+
+                          <div v-else-if="field.form_group_id == item.form_group && field.label == false" class="col-sm-12 mt-sm-3">
+
+                            <input v-if="field.type == 1" type="text" class="form-control" maxlength="0"
+                                   :placeholder="field.holder" :id="'label'+field.name">
+
+                            <input v-if="field.type == 2" type="number" class="form-control" maxlength="0"
+                                   :placeholder="field.holder" :id="'label'+field.name">
+
+                            <select v-if="field.type == 3" type="number" class="form-control" maxlength="0"
+                                    :placeholder="field.holder" :id="'label'+field.name">
+                              <option value="0">select here</option>
+                              <option v-for="list in field.list" :value="list">{{ list }}</option>
+                            </select>
+
+                            <div v-if="field.type == 4" :id="'label'+field.name"
+                                 class="form-check-inline d-flex flex-wrap justify-content-around">
+                              <div class="p-2" v-for="list in field.list">
+                                <label class="form-check-label" :for="'field_' + list">
+                                  <input class="form-check-input" type="radio" :name="field.sign" :value="list"
+                                         :id="'field_'+list">
+                                  {{ list }}
+                                </label>
+                              </div>
+                            </div>
+
+                            <div v-if="field.type == 5" :id="'label'+field.name"
+                                 class="form-check-inline d-flex flex-wrap justify-content-around">
+                              <div class="p-2" v-for="list in field.list">
+                                <label class="form-check-label" :for="'field_' + list">
+                                  <input class="form-check-input" type="checkbox" :id="'field_' + list" :value="list">
+                                  {{ list }}
+                                </label>
+                              </div>
+                            </div>
+
+                            <input v-if="field.type == 6" type="text" class="form-control" disabled
+                                   placeholder="Datepicker" :id="'label'+field.name">
+                          </div>
+
+                        </div>
+                        <!-- /input form area -->
+
+                        <!-- button area -->
+                        <div class="pl-3 pr-3 pt-1 pb-1 col"
+                             v-else-if="field.type == 7 || field.type == 8 || field.type == 9">
+                          <div v-if="field.form_group_id == item.form_group">
+
+                            <!-- link without image -->
+                            <button v-if="field.type == 7 && !field.image_url" type="button"
+                                    class="btn w-100"
+                                    :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">
+                              {{ field.holder }}
+                            </button>
+                            <!-- link with image -->
+                            <button v-else-if="field.type == 7 && field.image_url" type="button"
+                                    class="btn w-100 p-0" style="background: transparent;">
+                              <img :src="field.image_url" alt="button image" class="w-100 order_form_button_image">
+                            </button>
+
+                            <!-- tel without image -->
+                            <button v-if="field.type == 8 && !field.image_url" type="button"
+                                    class="btn w-100"
+                                    :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">
+                              {{ field.holder }}
+                            </button>
+                            <!-- tel with image -->
+                            <button v-else-if="field.type == 8 && field.image_url" type="button"
+                                    class="btn w-100 p-0" style="background: transparent;">
+                              <img :src="field.image_url" alt="button image" class="w-100 order_form_button_image">
+                            </button>
+
+                            <!-- submit without image -->
+                            <button v-if="field.type == 9 && !field.image_url" type="button"
+                                    class="btn w-100"
+                                    :style="'background:'+field.back_color+';' + 'color:'+field.text_color+';'">
+                              {{ field.holder }}
+                            </button>
+                            <!-- submit with image -->
+                            <button v-else-if="field.type == 9 && field.image_url" type="button"
+                                    class="btn w-100 p-0" style="background: transparent;">
+                              <img :src="field.image_url" alt="button image" class="w-100 order_form_button_image">
+                            </button>
+                          </div>
+                        </div>
+                        <!-- /button area -->
+                      </div>
+                      <!-- /small form -->
                     </div>
+                    <!-- /form_layout_cont -->
                   </div>
+                  <!-- /form_layout -->
 
 
                   <!-- Order layout for video -->
@@ -1786,7 +1973,18 @@
     left: 0;
     width: 100%;
     height: 100%;
+    padding: 0 15px;
+    overflow: auto;
     /*max-width: 750px;*/
+  }
+
+  .order_form_label {
+    width: 25%;
+  }
+
+  .order_form_box {
+    width: 75%;
+    padding: 0 15px;
   }
 
   .order_form_button_image {
@@ -1832,4 +2030,6 @@
     cursor: pointer; /* Cursor on hover */
     border-radius: 5px;
   }
+
+
 </style>
