@@ -286,8 +286,15 @@ router.beforeEach((to, from, next) => {
   if (from.meta.protect_leave) {
     if (from.meta.protect_leave === 'yes') {
       // Are you sure to leave this page?
-      if (confirm('정말 떠나시겠습니까?')) {
+      // eslint-disable-next-line
+      if (from.meta.forced == 'yes') {
+        // eslint-disable-next-line
+        from.meta.forced == 'no'
         intro()
+      } else {
+        if (confirm('정말 떠나시겠습니까?')) {
+          intro()
+        }
       }
     } else if (from.meta.protect_leave === 'no') {
       from.meta.protect_leave = 'yes'

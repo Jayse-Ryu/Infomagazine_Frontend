@@ -145,6 +145,7 @@ const store = new Vuex.Store({
           // If token expired then send to login page
           this.commit('removeToken')
           alert('로그인 시간이 만료되었습니다.')
+          router.currentRoute.meta.forced = 'yes'
           router.push('/')
           return false
         } else if ((Date.now() / 1000) > exp - thirty_minutes && (Date.now() / 1000) < orig_iat + a_day) {
@@ -163,6 +164,7 @@ const store = new Vuex.Store({
         // If no token then send to login page
         this.commit('removeToken')
         alert('로그인 후 이용 가능합니다.')
+        router.currentRoute.meta.forced = 'yes'
         router.push('/')
         return false
       }
