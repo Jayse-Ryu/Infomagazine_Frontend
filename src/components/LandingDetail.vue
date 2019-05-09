@@ -1693,10 +1693,15 @@
       },
       preview() {
         let axios = this.$axios
-        let landing_num = this.$route.params.landing_id
-        axios.get(this.$store.state.endpoints.baseUrl + 'landing/api/' + landing_num + '/?preview=true')
+        const config = {
+          headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'multipart/form-data'
+          }
+        }
+        axios.post(this.$store.state.endpoints.baseUrl + 'preview/', this.dynamo_obj, config)
           .then((response) => {
-            console.log('preview res', response)
+            console.log(response)
           })
           .catch((error) => {
             console.log(error)
