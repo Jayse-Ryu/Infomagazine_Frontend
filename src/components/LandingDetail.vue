@@ -102,7 +102,7 @@
               <input type="color" v-model="form_selected.bg_color" class="color_picker">
             </div>
             <div class="margin_div"></div>
-            <input type="text" v-model="form_selected.bg_color" class="form-control col-sm-5" maxlength="7">
+            <input type="text" v-model="form_selected.bg_color" class="form-control col-sm-5" maxlength="10">
             <div class="margin_div"></div>
           </div>
 
@@ -113,7 +113,7 @@
             <div class="form-control col-sm-2">{{ form_selected.opacity * 10 }}%</div>
             <div class="margin_div"></div>
             <div class="slide_container col-sm-5 form-control border-0 p-0">
-              <input class="opacity_slider w-100 h-100" id="opacity_slider" type="range" min="0" max="10" value="10" v-model="form_selected.opacity">
+              <input class="opacity_slider w-100 h-100" id="opacity_slider" type="range" min="0" max="10" value="10" v-model="form_selected.opacity" >
             </div>
           </div>
 
@@ -125,7 +125,7 @@
               <input type="color" v-model="form_selected.tx_color" class="color_picker">
             </div>
             <div class="margin_div"></div>
-            <input type="text" v-model="form_selected.tx_color" class="form-control col-sm-5" maxlength="7">
+            <input type="text" v-model="form_selected.tx_color" class="form-control col-sm-5" maxlength="10">
           </div>
         </div>
 
@@ -143,6 +143,7 @@
               <option value="7">링크 버튼</option>
               <option value="8">전화 버튼</option>
               <option value="9">완료 버튼</option>
+              <option value="10">약관 동의</option>
             </select>
             <div class="margin_div"></div>
             <input type="text" class="form-control col-sm-7 col-md-5" placeholder="필드이름" maxlength="10"
@@ -170,6 +171,7 @@
                 <div class="col-3 p-2 text-center" v-if="content.type == 7">링크 버튼</div>
                 <div class="col-3 p-2 text-center" v-if="content.type == 8">전화 버튼</div>
                 <div class="col-3 p-2 text-center" v-if="content.type == 9">완료 버튼</div>
+                <div class="col-3 p-2 text-center" v-if="content.type == 10">약관 동의</div>
                 <div class="col-3 p-2 text-center">{{ content.name }}</div>
                 <button type="button" class="btn btn-outline-info p-0 col-3 col-sm-2 m-auto" data-toggle="collapse"
                         v-bind:href="'#collapse_option'+ content.sign" aria-expanded="false">
@@ -194,7 +196,6 @@
 
                       <label class="col-sm-3 col-form-label-sm mt-3" for="f_type">타입*</label>
                       <div class="col-sm-9 mt-sm-3">
-                        <!--<input type="text" class="form-control" id="f_name" maxlength="10" v-model="content.type">-->
                         <select class="form-control" id="f_type" v-model="content.type">
                           <option value="1">텍스트 입력</option>
                           <option value="2">번호 입력</option>
@@ -205,6 +206,7 @@
                           <option value="7">링크 버튼</option>
                           <option value="8">전화 버튼</option>
                           <option value="9">완료 버튼</option>
+                          <option value="10">약관 동의</option>
                         </select>
                       </div>
 
@@ -232,17 +234,17 @@
                               }">?</span>
                       </label>
                       <div v-if="content.type != 4 && content.type != 5 && content.type != 6" class="col-sm-9 mt-sm-3">
-                        <input type="text" class="form-control" id="f_holder" maxlength="10" v-model="content.holder">
+                        <input type="text" class="form-control" id="f_holder" maxlength="50" v-model="content.holder">
                       </div>
 
                       <label v-if="content.type == 8" class="col-sm-3 col-form-label-sm mt-3" for="f_val">전화번호</label>
                       <div v-if="content.type == 8" class="col-sm-9 mt-sm-3">
-                        <input type="text" class="form-control" id="f_val" maxlength="10" v-model="content.value">
+                        <input type="text" class="form-control" id="f_val" maxlength="12" v-model="content.value">
                       </div>
 
                       <label v-if="content.type == 7" class="col-sm-3 col-form-label-sm mt-3" for="f_link">링크</label>
                       <div v-if="content.type == 7" class="col-sm-9 mt-sm-3">
-                        <input type="text" class="form-control" id="f_link" maxlength="10" v-model="content.url">
+                        <input type="text" class="form-control" id="f_link" maxlength="200" v-model="content.url">
                       </div>
 
                       <label v-if="content.type == 3 || content.type == 4 || content.type == 5"
@@ -478,9 +480,9 @@
 
 
                   <!-- Order layout for form group -->
-                  <div v-if="item.type == 2" class="form_layout" v-for="form in dynamo_obj.LandingInfo.form"
-                       :style="'background:'+form.bg_color+';' + 'color:'+form.tx_color+';'+'z-index:10;'">
-                    <div class="form_layout_cont" v-if="form.sign == item.form_group">
+                  <div v-if="item.type == 2" class="form_layout" v-for="form in dynamo_obj.LandingInfo.form">
+                    <div class="form_layout_cont" v-if="form.sign === item.form_group"
+                         :style="'background:'+form.bg_color+';' + 'color:'+form.tx_color+';'+'z-index:10;'+'min-height: 100%;'">
 
                       <!-- big form -->
                       <div class="form-group row mb-1" v-if="item.position.w > 768" v-for="field in dynamo_obj.LandingInfo.field">
@@ -530,6 +532,20 @@
 
                             <input v-if="field.type == 6" type="text" class="form-control" disabled
                                    placeholder="Datepicker" :id="'label'+field.name">
+
+                            <div v-if="field.type == 10" :id="'label'+field.name"
+                                 class="form-check-inline d-flex flex-wrap ">
+                              <div class="p-2">
+                                <label class="form-check-label" :for="'term' + field.name">
+                                  <input class="form-check-input" type="checkbox" :id="'term'+field.name" value="1">
+                                  {{ field.holder }}
+                                </label>
+                                <button type="button" v-if="dynamo_obj.LandingInfo.landing.is_term"
+                                        class="btn-sm btn-link p-0 border-0"
+                                        style="line-height: 15px;">[{{ field.name }}]</button>
+                              </div>
+                            </div>
+
                           </div>
 
                           <div v-else-if="field.form_group_id == item.form_group && field.label == false" class="col-sm-12 mt-sm-3">
@@ -569,6 +585,20 @@
 
                             <input v-if="field.type == 6" type="text" class="form-control" disabled
                                    placeholder="Datepicker" :id="'label'+field.name">
+
+                            <div v-if="field.type == 10" :id="'label'+field.name"
+                                 class="form-check-inline d-flex flex-wrap justify-content-end">
+                              <div class="p-2">
+                                <label class="form-check-label" :for="'term' + field.name">
+                                  <input class="form-check-input" type="checkbox" :id="'term'+field.name" value="1">
+                                  {{ field.holder }}
+                                </label>
+                                <button type="button" v-if="dynamo_obj.LandingInfo.landing.is_term"
+                                        class="btn-sm btn-link p-0 border-0"
+                                        style="line-height: 15px;">[{{ field.name }}]</button>
+                              </div>
+                            </div>
+
                           </div>
 
                         </div>
@@ -617,6 +647,7 @@
                           </div>
                         </div>
                         <!-- /button area -->
+
                       </div>
                       <!-- /big form -->
 
@@ -667,6 +698,20 @@
 
                             <input v-if="field.type == 6" type="text" class="form-control" disabled
                                    placeholder="Datepicker" :id="'label'+field.name">
+
+                            <div v-if="field.type == 10" :id="'label'+field.name"
+                                 class="form-check-inline d-flex flex-wrap">
+                              <div class="p-2">
+                                <label class="form-check-label" :for="'term' + field.name">
+                                  <input class="form-check-input" type="checkbox" :id="'term'+field.name" value="1">
+                                  {{ field.holder }}
+                                </label>
+                                <button type="button" v-if="dynamo_obj.LandingInfo.landing.is_term"
+                                        class="btn-sm btn-link p-0 border-0"
+                                        style="line-height: 15px;">[{{ field.name }}]</button>
+                              </div>
+                            </div>
+
                           </div>
 
                           <div v-else-if="field.form_group_id == item.form_group && field.label == false" class="col-sm-12 mt-sm-3">
@@ -706,6 +751,20 @@
 
                             <input v-if="field.type == 6" type="text" class="form-control" disabled
                                    placeholder="Datepicker" :id="'label'+field.name">
+
+                            <div v-if="field.type == 10" :id="'label'+field.name"
+                                 class="form-check-inline d-flex flex-wrap justify-content-end">
+                              <div class="p-2">
+                                <label class="form-check-label" :for="'term' + field.name">
+                                  <input class="form-check-input" type="checkbox" :id="'term'+field.name" value="1">
+                                  {{ field.holder }}
+                                </label>
+                                <button type="button" v-if="dynamo_obj.LandingInfo.landing.is_term"
+                                        class="btn-sm btn-link p-0 border-0"
+                                        style="line-height: 15px;">[{{ field.name }}]</button>
+                              </div>
+                            </div>
+
                           </div>
 
                         </div>
@@ -1160,23 +1219,35 @@
                   highest = this.dynamo_obj.LandingInfo.form[i].sign
                 }
               }
+              let hex = '#fafafa'
+              let r = parseInt(hex.slice(1, 3), 16)
+              let g = parseInt(hex.slice(3, 5), 16)
+              let b = parseInt(hex.slice(5, 7), 16)
+              let o = 1
               this.dynamo_obj.LandingInfo.form.push({
                 sign: highest + 1,
                 name: this.form_temp,
                 bg_color: '#fafafa',
                 tx_color: '#313131',
                 opacity: 10,
+                rgba: (r+','+g+','+b+','+o)
               })
               this.form_temp = ''
               alert('폼 그룹이 생성되었습니다.')
             }
           } else {
+            let hex = '#fafafa'
+            let r = parseInt(hex.slice(1, 3), 16)
+            let g = parseInt(hex.slice(3, 5), 16)
+            let b = parseInt(hex.slice(5, 7), 16)
+            let o = 1
             this.dynamo_obj.LandingInfo.form.push({
               sign: 1,
               name: this.form_temp,
               bg_color: '#fafafa',
               tx_color: '#313131',
-              opacity: 10
+              opacity: 10,
+              rgba: (r+','+g+','+b+','+o),
             })
             this.form_temp = ''
             alert('폼 그룹이 생성되었습니다.')
@@ -1210,6 +1281,20 @@
           }
         }
       },
+      // form_color_get(id) {
+      //   for(let i = 0; i< this.dynamo_obj.LandingInfo.form.length; i++) {
+      //     if (this.dynamo_obj.LandingInfo.form[i].sign == id) {
+      //       let hex = this.dynamo_obj.LandingInfo.form[i].bg_color
+      //       let opacity = this.dynamo_obj.LandingInfo.form[i].opacity
+      //       let r = parseInt(hex.slice(1, 3), 16)
+      //       let g = parseInt(hex.slice(3, 5), 16)
+      //       let b = parseInt(hex.slice(5, 7), 16)
+      //       let o = opacity / 10
+      //       console.log(r, g, b, o)
+      //       this.dynamo_obj.LandingInfo.form[i].rgba = (r+','+g+','+b+','+o)
+      //     }
+      //   }
+      // },
       // Filtered fields by form group
       filter_change() {
         this.filtered_fields = []
