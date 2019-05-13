@@ -1093,7 +1093,41 @@
 
     <!-- When first access for create landing, show the company choice modal -->
     <transition name="fade" mode="out-in">
-      <div class="select_company_wrap" v-show="!company_flag">
+      <div class="select_company_wrap" v-show="auto_flag">
+        <div class="container company_list_box">
+
+          <h4>임시저장된 랜딩페이지가 있습니다.</h4>
+
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label-sm mt-3" for="auto_id">
+              <span>랜딩선택</span>
+            </label>
+
+            <div class="col-md-8 mt-sm-3">
+              <select class="form-control" name="company" id="auto_id"
+                      v-model="recovery">
+                <option value="-1">선택하세요</option>
+                <option v-for="content in auto_saved" :value="content.LandingNum">
+                  {{content.LandingInfo.landing.company_name }} / {{ content.LandingInfo.landing.init_date }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-1 mt-sm-3 pl-md-0">
+              <button type="button" class="btn btn-danger p-md-0 w-100 h-100" @click="auto_saved_delete">삭제</button>
+            </div>
+          </div>
+
+          <button type="button" class="col btn btn-info mt-3" @click="auto_saved_detail">선택</button>
+          <button type="button" class="btn btn-secondary col-12 mt-2" @click="auto_saved_not">선택 안함</button>
+          <router-link to="/landing">
+            <button type="button" class="btn btn-dark col-12 mt-2">취소</button>
+          </router-link>
+        </div>
+      </div>
+    </transition>
+
+    <transition name="fade" mode="out-in">
+      <div class="select_company_wrap" v-show="company_flag">
         <div class="container company_list_box">
 
           <h4>고객업체를 먼저 선택해주세요.</h4>
@@ -1114,11 +1148,10 @@
             </div>
           </div>
 
-          <button class="col btn btn-info mt-3" @click="first_check">선택</button>
+          <button type="button" class="col btn btn-info mt-3" @click="first_check">선택</button>
           <router-link to="/landing">
             <button type="button" class="btn btn-dark col-12 mt-2">취소</button>
           </router-link>
-
         </div>
       </div>
     </transition>
@@ -1130,6 +1163,7 @@
   export default {
     name: "landing_create",
     data: () => ({
+      auto_flag: false,
       company_flag: false,
       window_width: window.innerWidth,
       // msg is Tooltip messages. 'msg' is static name by ToolTip api.
@@ -1145,6 +1179,8 @@
         list: '선택 옵션을 선택하고 제공할 수 있습니다.'
       },
       // Get org's companies and managers lists
+      auto_saved: [],
+      recovery: -1,
       landing_company: [],
       epoch_time: 0,
       // Landing obj
@@ -1610,7 +1646,7 @@
           alert('업체를 선택하세요!')
           document.getElementById('company_id').focus()
         } else {
-          this.company_flag = true
+          this.company_flag = false
           while (this.access_obj.user) {
             if (this.access_obj.user) {
               this.dynamo_obj.LandingInfo.landing.manager = this.access_obj.user
@@ -1773,6 +1809,77 @@
           .catch((error) => {
             console.log(error)
           })
+      },
+      auto_saved_get() {
+        let axios = this.$axios
+        // Check temporary saved landings
+        let this_url = 'landing/api/'
+        this.auto_saved = []
+        axios.get(this.$store.state.endpoints.baseUrl + this_url + '?auth=staff' + '&manager=' + this.access_obj.user_name + '&auto=true')
+          .then((response) => {
+            let auto_flag = false
+            for(let i = 0; i < response.data.length; i ++) {
+              if (response.data[i].LandingInfo.landing.name === null) {
+                // auto saved list on
+                auto_flag = true
+                let temp_date = response.data[i].UpdatedTime
+                let init_date = new Date(temp_date * 1)
+                let date_string = init_date.getFullYear()
+                if (init_date.getMonth() < 10) {
+                  date_string += '-0' + init_date.getMonth()
+                } else {
+                  date_string += '-' + init_date.getMonth()
+                }
+                if (init_date.getDate() < 10) {
+                  date_string += '-0' + init_date.getDate()
+                } else {
+                  date_string += '-' + init_date.getDate()
+                }
+                response.data[i].LandingInfo.landing.init_date = date_string
+                this.auto_saved.push(response.data[i])
+              }
+            }
+            if (auto_flag == true) {
+              this.auto_flag = auto_flag
+              this.company_flag = false
+            } else {
+              this.auto_flag = auto_flag
+              this.company_flag = true
+            }
+          })
+      },
+      auto_saved_delete() {
+        if (this.recovery != -1) {
+          let axios = this.$axios
+          let landing_num = this.recovery
+          axios.delete(this.$store.state.endpoints.baseUrl + 'landing/api/' + landing_num)
+            .then(() => {
+              this.recovery = -1
+              this.auto_saved_get()
+            })
+            .catch((error) => {
+              console.log(error)
+              alert('삭제 중 에러가 발생하였습니다. 다시 시도해주세요.')
+            })
+        } else {
+          alert('삭제 할 페이지를 먼저 선택하세요.')
+        }
+      },
+      auto_saved_not() {
+        if(confirm('무시하고 생성하시겠습니까?')) {
+          this.auto_flag = !this.auto_flag
+          this.company_flag = !this.company_flag
+        }
+      },
+      auto_saved_detail() {
+        if (this.recovery != -1) {
+          if(confirm('수정페이지로 이동 하시겠습니까?')) {
+            this.$router.currentRoute.meta.protect_leave = 'no'
+            this.$router.push({path: '/landing/detail/' + this.recovery})
+          }
+        } else {
+          alert('수정 할 페이지를 먼저 선택하세요.')
+        }
       }
     },
     mounted() {
@@ -1784,6 +1891,8 @@
       })
       // Get company, manager
       let axios = this.$axios
+      // Check if this manager has auto saved landing page
+      this.auto_saved_get()
       // Get companies from logged in user's organization
       let this_url = 'company/'
       axios.get(this.$store.state.endpoints.baseUrl + this_url + '?organization=' + this.access_obj.organization)
