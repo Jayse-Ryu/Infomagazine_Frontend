@@ -2111,7 +2111,7 @@
     opacity: 1; /* Fully shown on mouse-over */
   }
 
-  /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+  /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz (Firefox) to override default look) */
   .opacity_slider::-webkit-slider-thumb {
     -webkit-appearance: none; /* Override default look */
     appearance: none;
